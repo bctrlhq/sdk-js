@@ -1,0 +1,53 @@
+{
+  "name": "@bctrl/sdk",
+  "version": "1.0.8",
+  "description": "BCTRL SDK - Remote browser automation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bctrlhq/sdk-js.git"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js"
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "prepack": "pnpm run build",
+    "dev": "tsc --watch",
+    "test": "tsx --test tests/v1/*.test.ts tests/v1/e2e/*.test.ts",
+    "test:v1": "tsx --test tests/v1/*.test.ts tests/v1/e2e/*.test.ts",
+    "test:v1:e2e": "BCTRL_E2E=1 tsx --test tests/v1/e2e/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "packageManager": "pnpm@10.12.4",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
+    "eslint": "^10.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "files": [
+    "dist"
+  ]
+}
