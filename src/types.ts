@@ -90,9 +90,9 @@ export interface V1PageQuery {
   limit?: number;
 }
 
-export type V1HelpAudience = NonNullable<OpenApiSchemas['HelpRequest']['audience']>;
+export type V1HelpAudience = NonNullable<OpenApiQuery<'help'>['audience']>;
 
-export type V1HelpRequest = OpenApiSchemas['HelpRequest'];
+export type V1HelpRequest = OpenApiQuery<'help'>;
 
 export type V1HelpField = OpenApiSchemas['HelpField'];
 
