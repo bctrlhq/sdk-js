@@ -2,13 +2,26 @@
 
 This package is intended to live at `bctrlhq/sdk-js` and publish `@bctrl/sdk`.
 
-## Publish Setup
+## Manual Publish
 
-1. Create the GitHub repository under `bctrlhq`.
-2. Configure npm trusted publishing for package `@bctrl/sdk` with this repository and the `npm` environment.
-3. Push a tag like `v1.0.9`.
+Publish from a local terminal with the `bctrlhq` npm account:
 
-The publish workflow uses GitHub OIDC plus npm provenance. Do not add long-lived npm tokens.
+```bash
+npm whoami
+npm publish --access public --provenance=false --otp <code>
+```
+
+Use `--provenance=false` for local publishes. Provenance is only available from supported CI providers.
+
+After npm publish succeeds, tag the exact commit and create a GitHub release:
+
+```bash
+git tag -a v1.0.10 -m "@bctrl/sdk v1.0.10"
+git push origin v1.0.10
+gh release create v1.0.10 --title "@bctrl/sdk v1.0.10" --notes "Published @bctrl/sdk v1.0.10."
+```
+
+The GitHub Actions release workflow is a verification gate only. It does not publish to npm.
 
 ## Contract Sync
 
