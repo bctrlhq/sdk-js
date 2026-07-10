@@ -2018,21 +2018,15 @@ export interface components {
             profile: boolean;
             proxy?: components["schemas"]["RuntimeProxyConfig"] | null;
             /** @enum {string} */
-            stealth?: "medium" | "high" | "ultra";
+            stealth?: "normal" | "best" | "experimental";
             webRtcProxyOnly?: boolean;
         };
         BrowserRuntimeCreateConfig: {
             autoUpgrade?: boolean;
             extensionIds?: string[];
             fingerprint?: {
-                /** @enum {string} */
-                browser?: "chrome" | "edge" | "safari";
-                browserVersion?: string;
-                /** @enum {string} */
-                device?: "desktop" | "mobile";
-                locale?: string | string[];
-                /** @enum {string} */
-                os?: "windows" | "macos" | "android" | "ios";
+                /** @constant */
+                browser?: "chrome";
                 viewport?: {
                     height: number;
                     width: number;
@@ -2044,7 +2038,7 @@ export interface components {
             profile?: boolean;
             proxy?: components["schemas"]["RuntimeProxyInput"] | null;
             /** @enum {string} */
-            stealth?: "medium" | "high" | "ultra";
+            stealth?: "normal" | "best" | "experimental";
             webRtcProxyOnly?: boolean;
         };
         /**
@@ -2676,10 +2670,7 @@ export interface components {
             /** @enum {string} */
             status: "provisioning" | "active" | "expired" | "renewal_failed";
             subaccountId?: string | null;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
+            /** @constant */
             type: "managed-static";
             updatedAt: string;
         };
@@ -2840,10 +2831,7 @@ export interface components {
             /** @enum {string} */
             protocol: "http" | "socks5";
             subaccountId?: string | null;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
+            /** @constant */
             type: "custom";
             updatedAt: string;
             username?: string | null;
@@ -2879,7 +2867,7 @@ export interface components {
             country: string;
             geoId: string;
             name: string;
-            pools: ("pool1" | "pool2")[];
+            pools: components["schemas"]["ProxyLocationPool"][];
             region?: string;
             subdivision?: string;
             /** @enum {string} */
@@ -2889,53 +2877,76 @@ export interface components {
             data: components["schemas"]["ProxyLocation"][];
             nextCursor: string | null;
         };
+        /** @enum {string} */
+        ProxyLocationPool: "pool1" | "pool2";
         ProxyManagedRotating: {
             city?: string;
             country?: string;
             createdAt: string;
             /** @enum {string} */
-            device?: "windows" | "macos" | "linux" | "android" | "ios";
-            deviceStrict?: boolean;
-            /** @enum {string} */
             dnsResolution?: "local" | "proxy";
             geoId?: string;
-            geoStrict?: boolean;
             id: string;
             /** @enum {string} */
             ipFamily?: "dual-stack" | "ipv4-only";
             isp?: string;
             name: string;
+            /** @constant */
+            pool: "pool1";
             /** @enum {string} */
             preference?: "balanced" | "speed" | "quality" | "coverage";
             /** @enum {string} */
             protocol?: "http" | "socks5";
             region?: string;
+            /** @enum {string} */
+            rotation?: "sticky" | "rotating";
+            stickyKey?: string;
+            subaccountId?: string | null;
+            /** @constant */
+            type: "managed-rotating";
+            updatedAt: string;
+        } | {
+            city?: string;
+            country?: string;
+            createdAt: string;
+            /** @enum {string} */
+            device?: "windows" | "macos" | "linux" | "android" | "ios";
+            /** @enum {string} */
+            dnsResolution?: "local" | "proxy";
+            geoId?: string;
+            id: string;
+            name: string;
+            /** @constant */
+            pool: "pool2";
+            /** @enum {string} */
+            protocol?: "http" | "socks5";
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
             state?: string;
             stickyKey?: string;
             subaccountId?: string | null;
+            /** @constant */
+            type: "managed-rotating";
+            updatedAt: string;
+        };
+        ProxyManagedRotatingCreateRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             type: "managed-rotating";
-            updatedAt: string;
-        };
-        ProxyManagedRotatingCreateRequest: {
+        } & ({
             city?: string;
             country?: string;
             /** @enum {string} */
-            device?: "windows" | "macos" | "linux" | "android" | "ios";
-            deviceStrict?: boolean;
-            /** @enum {string} */
             dnsResolution?: "local" | "proxy";
             geoId?: string;
-            geoStrict?: boolean;
             /** @enum {string} */
             ipFamily?: "dual-stack" | "ipv4-only";
             isp?: string;
             name?: string;
+            /** @constant */
+            pool: "pool1";
             /** @enum {string} */
             preference?: "balanced" | "speed" | "quality" | "coverage";
             /** @enum {string} */
@@ -2943,18 +2954,34 @@ export interface components {
             region?: string;
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
+            stickyKey?: string;
+            /** @constant */
+            type: "managed-rotating";
+        } | {
+            city?: string;
+            country?: string;
+            /** @enum {string} */
+            device?: "windows" | "macos" | "linux" | "android" | "ios";
+            /** @enum {string} */
+            dnsResolution?: "local" | "proxy";
+            geoId?: string;
+            name?: string;
+            /** @constant */
+            pool: "pool2";
+            /** @enum {string} */
+            protocol?: "http" | "socks5";
+            /** @enum {string} */
+            rotation?: "sticky" | "rotating";
             state?: string;
             stickyKey?: string;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
+            /** @constant */
             type: "managed-rotating";
-        };
+        });
         ProxyPool: {
             availableCount: number;
             /** @enum {string} */
-            category: "tickets" | "sneakers" | "social" | "retail";
+            category: "tickets" | "sneakers" | "social" | "retail" | "pkc" | "ip-quality" | "aio";
+            city?: string;
             country: string;
             id: string;
             label: string;
@@ -2979,17 +3006,16 @@ export interface components {
             country?: string;
             /** @enum {string} */
             device?: "windows" | "macos" | "linux" | "android" | "ios";
-            deviceStrict?: boolean;
             /** @enum {string} */
             dnsResolution?: "local" | "proxy";
             geoId?: string;
-            geoStrict?: boolean;
             host?: string;
             /** @enum {string} */
             ipFamily?: "dual-stack" | "ipv4-only";
             isp?: string;
             name?: string;
             password?: string | null;
+            pool?: components["schemas"]["ProxyLocationPool"];
             port?: number;
             /** @enum {string} */
             preference?: "balanced" | "speed" | "quality" | "coverage";
@@ -3223,7 +3249,7 @@ export interface components {
             runtimePath?: string;
         };
         RuntimeFingerprint: {
-            browser?: ("chrome" | "edge" | "safari") | string;
+            browser?: "chrome" | string;
             browserVersion?: string;
             /** @enum {string} */
             device?: "desktop" | "mobile";
@@ -3259,22 +3285,41 @@ export interface components {
             username?: string;
         };
         RuntimeInlineManagedRotatingProxyInput: {
+            city?: string;
             country?: string;
-            /** @enum {string} */
-            device?: "windows" | "macos" | "linux" | "android" | "ios";
-            deviceStrict?: boolean;
             /** @enum {string} */
             dnsResolution?: "local" | "proxy";
             geoId?: string;
-            geoStrict?: boolean;
             /** @enum {string} */
             ipFamily?: "dual-stack" | "ipv4-only";
+            isp?: string;
+            /** @constant */
+            pool: "pool1";
             /** @enum {string} */
             preference?: "balanced" | "speed" | "quality" | "coverage";
             /** @enum {string} */
             protocol?: "http" | "socks5";
+            region?: string;
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
+            stickyKey?: string;
+            /** @constant */
+            type: "managed-rotating";
+        } | {
+            city?: string;
+            country?: string;
+            /** @enum {string} */
+            device?: "windows" | "macos" | "linux" | "android" | "ios";
+            /** @enum {string} */
+            dnsResolution?: "local" | "proxy";
+            geoId?: string;
+            /** @constant */
+            pool: "pool2";
+            /** @enum {string} */
+            protocol?: "http" | "socks5";
+            /** @enum {string} */
+            rotation?: "sticky" | "rotating";
+            state?: string;
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
@@ -3306,19 +3351,17 @@ export interface components {
             /** @constant */
             type: "custom";
             username?: string | null;
-        } | {
+        } | ({
             city?: string;
             country?: string;
             /** @enum {string} */
-            device?: "windows" | "macos" | "linux" | "android" | "ios";
-            deviceStrict?: boolean;
-            /** @enum {string} */
             dnsResolution?: "local" | "proxy";
             geoId?: string;
-            geoStrict?: boolean;
             /** @enum {string} */
             ipFamily?: "dual-stack" | "ipv4-only";
             isp?: string;
+            /** @constant */
+            pool: "pool1";
             /** @enum {string} */
             preference?: "balanced" | "speed" | "quality" | "coverage";
             /** @enum {string} */
@@ -3326,31 +3369,62 @@ export interface components {
             region?: string;
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
+            stickyKey?: string;
+            /** @constant */
+            type: "managed-rotating";
+        } | {
+            city?: string;
+            country?: string;
+            /** @enum {string} */
+            device?: "windows" | "macos" | "linux" | "android" | "ios";
+            /** @enum {string} */
+            dnsResolution?: "local" | "proxy";
+            geoId?: string;
+            /** @constant */
+            pool: "pool2";
+            /** @enum {string} */
+            protocol?: "http" | "socks5";
+            /** @enum {string} */
+            rotation?: "sticky" | "rotating";
             state?: string;
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
-        };
+        });
         RuntimeProxyInput: string | components["schemas"]["RuntimeSavedProxyInput"] | components["schemas"]["RuntimeInlineCustomProxyUrlInput"] | components["schemas"]["RuntimeInlineCustomProxyConnectionInput"] | components["schemas"]["RuntimeInlineManagedRotatingProxyInput"];
         RuntimeSavedProxyInput: {
             city?: string;
             country?: string;
             /** @enum {string} */
-            device?: "windows" | "macos" | "linux" | "android" | "ios";
-            deviceStrict?: boolean;
-            /** @enum {string} */
             dnsResolution?: "local" | "proxy";
             geoId?: string;
-            geoStrict?: boolean;
             id: string;
             /** @enum {string} */
             ipFamily?: "dual-stack" | "ipv4-only";
             isp?: string;
+            /** @constant */
+            pool: "pool1";
             /** @enum {string} */
             preference?: "balanced" | "speed" | "quality" | "coverage";
             /** @enum {string} */
             protocol?: "http" | "socks5";
             region?: string;
+            /** @enum {string} */
+            rotation?: "sticky" | "rotating";
+            stickyKey?: string;
+        } | {
+            city?: string;
+            country?: string;
+            /** @enum {string} */
+            device?: "windows" | "macos" | "linux" | "android" | "ios";
+            /** @enum {string} */
+            dnsResolution?: "local" | "proxy";
+            geoId?: string;
+            id: string;
+            /** @constant */
+            pool: "pool2";
+            /** @enum {string} */
+            protocol?: "http" | "socks5";
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
             state?: string;
@@ -7541,7 +7615,7 @@ export interface operations {
                 country?: string;
                 region?: string;
                 type?: "country" | "subdivision" | "region" | "city";
-                pool?: "pool1" | "pool2";
+                pool?: components["schemas"]["ProxyLocationPool"];
             };
             header?: never;
             path?: never;
@@ -7610,7 +7684,7 @@ export interface operations {
                 country?: string;
                 region?: string;
                 type?: "country" | "subdivision" | "region" | "city";
-                pool?: "pool1" | "pool2";
+                pool?: components["schemas"]["ProxyLocationPool"];
             };
             header?: never;
             path?: never;
@@ -7676,7 +7750,7 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
                 country?: string;
-                category?: "tickets" | "sneakers" | "social" | "retail";
+                category?: "tickets" | "sneakers" | "social" | "retail" | "pkc" | "ip-quality" | "aio";
                 available?: boolean;
             };
             header?: never;

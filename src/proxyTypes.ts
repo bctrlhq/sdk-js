@@ -1,5 +1,11 @@
 import type { OpenApiQuery, OpenApiSchemas } from './openapi.js';
 
+type PropertyOfUnion<T, K extends PropertyKey> = T extends unknown
+  ? K extends keyof T
+    ? T[K]
+    : never
+  : never;
+
 export type V1ProxyProtocol = NonNullable<
   OpenApiSchemas['ProxyManagedRotatingCreateRequest']['protocol']
 >;
@@ -8,13 +14,13 @@ export type V1ProxyDnsResolution = NonNullable<
 >;
 export type V1ProxyType = OpenApiSchemas['Proxy']['type'];
 export type V1ManagedRotatingPreference = NonNullable<
-  OpenApiSchemas['ProxyManagedRotatingCreateRequest']['preference']
+  PropertyOfUnion<OpenApiSchemas['ProxyManagedRotatingCreateRequest'], 'preference'>
 >;
 export type V1ManagedRotatingRotation = NonNullable<
   OpenApiSchemas['ProxyManagedRotatingCreateRequest']['rotation']
 >;
 export type V1ManagedRotatingDevice = NonNullable<
-  OpenApiSchemas['ProxyManagedRotatingCreateRequest']['device']
+  PropertyOfUnion<OpenApiSchemas['ProxyManagedRotatingCreateRequest'], 'device'>
 >;
 
 export interface V1ProxyBase {
