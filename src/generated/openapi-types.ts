@@ -2013,6 +2013,7 @@ export interface components {
             extensionIds?: string[];
             fingerprint?: components["schemas"]["RuntimeFingerprint"];
             forceOpenShadowRoots?: boolean;
+            headless: boolean;
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
             profile: boolean;
@@ -2033,6 +2034,7 @@ export interface components {
                 };
             };
             forceOpenShadowRoots?: boolean;
+            headless?: boolean;
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
             profile?: boolean;
@@ -2833,6 +2835,8 @@ export interface components {
             subaccountId?: string | null;
             /** @constant */
             type: "custom";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             updatedAt: string;
             username?: string | null;
         };
@@ -2850,6 +2854,8 @@ export interface components {
              * @enum {string}
              */
             type: "custom";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             url?: string;
             username?: string;
         };
@@ -2904,6 +2910,8 @@ export interface components {
             subaccountId?: string | null;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             updatedAt: string;
         } | {
             city?: string;
@@ -2927,6 +2935,8 @@ export interface components {
             subaccountId?: string | null;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             updatedAt: string;
         };
         ProxyManagedRotatingCreateRequest: {
@@ -2957,6 +2967,8 @@ export interface components {
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         } | {
             city?: string;
             country?: string;
@@ -2976,6 +2988,8 @@ export interface components {
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         });
         ProxyPool: {
             availableCount: number;
@@ -3026,6 +3040,8 @@ export interface components {
             rotation?: "sticky" | "rotating";
             state?: string;
             stickyKey?: string;
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             url?: string;
             username?: string | null;
         };
@@ -3194,7 +3210,7 @@ export interface components {
             config?: components["schemas"]["BrowserRuntimeConfig"];
             /**
              * Format: uri
-             * @description Connect endpoint for the active run. Stable: the same URL is returned on every read and start for this run, supports concurrent clients, and stops working when the run ends. Present only while the runtime is active with a run open.
+             * @description Run-scoped CDP endpoint. The same URL is returned on every read and start for this run; one external controller may be connected at a time, and the URL stops working when the run ends. Present only while the runtime is active with a run open.
              */
             connectUrl?: string;
             /** Format: date-time */
@@ -3273,6 +3289,8 @@ export interface components {
             protocol: "http" | "socks5";
             /** @constant */
             type?: "custom";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             username?: string;
         };
         RuntimeInlineCustomProxyUrlInput: {
@@ -3281,8 +3299,37 @@ export interface components {
             password?: string;
             /** @constant */
             type?: "custom";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             url: string;
             username?: string;
+        };
+        RuntimeInlineManagedRotatingDefaultProxyInput: {
+            city?: string;
+            country?: string;
+            /** @enum {string} */
+            dnsResolution?: "local" | "proxy";
+            geoId?: string;
+            /** @enum {string} */
+            ipFamily?: "dual-stack" | "ipv4-only";
+            isp?: string;
+            /**
+             * @default pool1
+             * @constant
+             */
+            pool: "pool1";
+            /** @enum {string} */
+            preference?: "balanced" | "speed" | "quality" | "coverage";
+            /** @enum {string} */
+            protocol?: "http" | "socks5";
+            region?: string;
+            /** @enum {string} */
+            rotation?: "sticky" | "rotating";
+            stickyKey?: string;
+            /** @constant */
+            type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         };
         RuntimeInlineManagedRotatingProxyInput: {
             city?: string;
@@ -3305,6 +3352,8 @@ export interface components {
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         } | {
             city?: string;
             country?: string;
@@ -3323,6 +3372,8 @@ export interface components {
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         };
         RuntimeInvocationCreateRequest: components["schemas"]["ActRequest"] | components["schemas"]["ObserveRequest"] | components["schemas"]["ExtractRequest"] | components["schemas"]["StagehandAgentRequest"] | components["schemas"]["BrowserUseAgentRequest"] | components["schemas"]["SolveCaptchaRequest"];
         RuntimeInvocationMetadata: {
@@ -3350,6 +3401,8 @@ export interface components {
             protocol: "http" | "socks5";
             /** @constant */
             type: "custom";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
             username?: string | null;
         } | ({
             city?: string;
@@ -3372,6 +3425,8 @@ export interface components {
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         } | {
             city?: string;
             country?: string;
@@ -3390,8 +3445,10 @@ export interface components {
             stickyKey?: string;
             /** @constant */
             type: "managed-rotating";
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         });
-        RuntimeProxyInput: string | components["schemas"]["RuntimeSavedProxyInput"] | components["schemas"]["RuntimeInlineCustomProxyUrlInput"] | components["schemas"]["RuntimeInlineCustomProxyConnectionInput"] | components["schemas"]["RuntimeInlineManagedRotatingProxyInput"];
+        RuntimeProxyInput: string | components["schemas"]["RuntimeSavedProxyInput"] | components["schemas"]["RuntimeInlineCustomProxyUrlInput"] | components["schemas"]["RuntimeInlineCustomProxyConnectionInput"] | components["schemas"]["RuntimeInlineManagedRotatingProxyInput"] | components["schemas"]["RuntimeInlineManagedRotatingDefaultProxyInput"];
         RuntimeSavedProxyInput: {
             city?: string;
             country?: string;
@@ -3412,6 +3469,8 @@ export interface components {
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
             stickyKey?: string;
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         } | {
             city?: string;
             country?: string;
@@ -3429,6 +3488,8 @@ export interface components {
             rotation?: "sticky" | "rotating";
             state?: string;
             stickyKey?: string;
+            /** @enum {string} */
+            udpMode?: "disabled" | "auto" | "required";
         };
         RuntimeStagedFile: {
             expiresAt: string | null;
@@ -3451,7 +3512,7 @@ export interface components {
         RuntimeStartResponse: {
             /**
              * Format: uri
-             * @description Connect endpoint for the run — attach Playwright/Puppeteer/Stagehand here. Stable: the same URL is returned on every start and read for this run, supports concurrent clients, and stops working when the run ends.
+             * @description Run-scoped endpoint — attach Playwright/Puppeteer/Stagehand here. The same URL is returned on every start and read for this run; one external controller may be connected at a time, and the URL stops working when the run ends.
              */
             connectUrl: string;
             /** @enum {string} */
