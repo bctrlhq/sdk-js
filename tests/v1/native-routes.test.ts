@@ -200,6 +200,7 @@ test('runtime helpers use native v1 invocations and files routes', async () => {
 
   assert.equal(runtime.id, 'runtime_1');
   assert.equal(start.connectUrl, 'wss://example.test/devtools');
+  assert.equal(start.webdriverUrl, 'https://example.test/webdriver/token');
   assert.equal(start.protocol, 'cdp');
   assert.equal(start.started, true);
   assert.equal(invocation.id, 'invocation_1');
@@ -240,6 +241,7 @@ test('runtimes.start maps directly to start route without hidden get', async () 
   assert.equal(started.runtimeId, 'runtime_1');
   assert.equal(started.runId, 'run_1');
   assert.equal(started.connectUrl, 'wss://example.test/devtools');
+  assert.equal(started.webdriverUrl, 'https://example.test/webdriver/token');
   assert.deepEqual(paths(server.requests), ['POST /v1/runtimes/runtime_1/start']);
 });
 
@@ -905,6 +907,7 @@ async function createMockServer(): Promise<MockServer> {
         status: 'active',
         connectUrl: 'wss://example.test/devtools',
         protocol: 'cdp',
+        webdriverUrl: 'https://example.test/webdriver/token',
         started: true,
       });
     }
