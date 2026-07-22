@@ -2728,7 +2728,7 @@ export interface components {
             pricing?: components["schemas"]["ManagedStaticProxyPricing"];
             renewsAt?: string | null;
             /** @enum {string} */
-            status: "provisioning" | "active" | "expired" | "renewal_failed";
+            status: "provisioning" | "provisioning_failed" | "active" | "expired" | "renewal_failed";
             subaccountId?: string | null;
             /** @constant */
             type: "managed-static";
