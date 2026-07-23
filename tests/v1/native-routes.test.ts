@@ -50,6 +50,8 @@ test('root SDK export uses v1 routes and exposes public account/auth surface', a
 
   assert.equal('auth' in client, true);
   assert.equal('whoami' in client, false);
+  assert.equal('views' in client, true);
+  assert.equal('webhooks' in client, true);
   assert.equal('handle' in client.runtimes, false);
   assert.equal('handle' in client.runs, false);
   assert.equal('handle' in client.spaces, false);
@@ -131,6 +133,64 @@ test('account, ai, toolset, and tool-call clients mirror public routes', async (
   ]);
 });
 
+test('account branding, views, and webhooks mirror their public routes', async () => {
+  assert(server);
+  const client = new Bctrl({ apiKey: 'test_key', baseUrl: server.baseUrl });
+
+  const account = await client.account.get();
+  const preview = await client.account.update(
+    { branding: { productName: 'Acme Ops', accent: '#6f8fd4' } },
+    { dryRun: true }
+  );
+  const view = await client.views.create({
+    scope: { runtimeId: 'runtime_1' },
+    components: { live: { control: 'none' }, activity: {} },
+  });
+  const listedViews = await client.views.list({ limit: 10 });
+  await client.views.get(view.id);
+  await client.views.delete(view.id);
+
+  const webhook = await client.webhooks.create({
+    name: 'Operations',
+    url: 'https://ops.example.test/bctrl',
+    events: ['run.completed'],
+  });
+  await client.webhooks.list({ limit: 10 });
+  await client.webhooks.get(webhook.id);
+  await client.webhooks.update(webhook.id, { enabled: false });
+  const rotated = await client.webhooks.rotateSecret(webhook.id);
+  const testDelivery = await client.webhooks.test(webhook.id);
+  const deliveries = await client.webhooks.deliveries.list(webhook.id, { limit: 5 });
+  await client.webhooks.deliveries.redeliver(webhook.id, testDelivery.id);
+  await client.webhooks.delete(webhook.id);
+
+  assert.equal(account.branding.resolved.productName, 'bctrl');
+  assert.equal(preview.branding.resolved.productName, 'Acme Ops');
+  assert.equal(view.token, 'view_token_test');
+  assert.equal(listedViews.data[0]?.id, view.id);
+  assert.match(webhook.secret, /^whsec_/);
+  assert.match(rotated.secret, /^whsec_/);
+  assert.equal(deliveries.data[0]?.id, testDelivery.id);
+
+  assert.deepEqual(paths(server.requests), [
+    'GET /v1/account',
+    'PATCH /v1/account?dryRun=true',
+    'POST /v1/views',
+    'GET /v1/views?limit=10',
+    'GET /v1/views/view_1',
+    'DELETE /v1/views/view_1',
+    'POST /v1/webhooks',
+    'GET /v1/webhooks?limit=10',
+    'GET /v1/webhooks/webhook_1',
+    'PATCH /v1/webhooks/webhook_1',
+    'POST /v1/webhooks/webhook_1/rotate-secret',
+    'POST /v1/webhooks/webhook_1/test',
+    'GET /v1/webhooks/webhook_1/deliveries?limit=5',
+    'POST /v1/webhooks/webhook_1/deliveries/delivery_1/redeliver',
+    'DELETE /v1/webhooks/webhook_1',
+  ]);
+});
+
 test('client uses BCTRL_BASE_URL when baseUrl option is omitted', async () => {
   assert(server);
   const previous = process.env.BCTRL_BASE_URL;
@@ -154,7 +214,8 @@ test('help helper uses canonical GET route with query filters', async () => {
 
   const help = await client.help.get({ topic: 'runtimes.create', audience: 'api' });
 
-  assert.equal(help.kind, 'topic');
+  assert.equal(help.type, 'topic');
+  if (help.type !== 'topic') throw new Error('Expected topic help response');
   assert.equal(help.topic, 'runtimes.create');
   assert.deepEqual(paths(server.requests), ['GET /v1/help?topic=runtimes.create&audience=api']);
 });
@@ -213,7 +274,7 @@ test('runtime helpers use native v1 invocations and files routes', async () => {
     'GET /v1/runtimes/runtime_1',
     'POST /v1/runtimes/runtime_1/invocations',
     'GET /v1/runs/run_1',
-    'GET /v1/runs/run_1/files',
+    'GET /v1/files?runId=run_1',
     'GET /v1/files?spaceId=space_1',
     'POST /v1/runtimes/runtime_1/files/upload',
     'POST /v1/runtimes/runtime_1/files/stage',
@@ -301,7 +362,7 @@ test('browser extension helpers use the cleaned v1 browser extension routes', as
 
   assert.equal(listed.data[0]?.id, 'ext_1');
   assert.equal(uploaded.id, 'ext_1');
-  assert.equal(imported.sourceUrl?.includes('chromewebstore.google.com'), true);
+  assert.equal(imported.id, 'ext_imported');
   assert.equal(updated.name, 'Renamed Wallet');
   assert.deepEqual(deleted, { id: 'ext_1', deleted: true });
 
@@ -670,6 +731,8 @@ test('hosted tools are created and versioned under tools routes', async () => {
   });
 
   assert.equal(tool.id, 'tool_1');
+  assert.equal(tool.type, 'hosted');
+  if (tool.type !== 'hosted') throw new Error('Expected hosted tool response');
   assert.equal(tool.currentVersionId, 'hosted_fn_version_1');
   assert.equal(version.id, 'hosted_fn_version_2');
   assert.deepEqual(paths(server.requests), ['POST /v1/tools', 'POST /v1/tools/tool_1/versions']);
@@ -751,7 +814,7 @@ async function createMockServer(): Promise<MockServer> {
 
     if (method === 'GET' && url.pathname === '/v1/help') {
       return json(res, 200, {
-        kind: 'topic',
+        type: 'topic',
         topic: url.searchParams.get('topic') ?? 'runtimes.create',
         audience: url.searchParams.get('audience') ?? undefined,
         title: 'Create a runtime',
@@ -873,6 +936,120 @@ async function createMockServer(): Promise<MockServer> {
         createdAt: iso(),
         updatedAt: iso(),
       });
+    }
+
+    const branding = {
+      config: {},
+      resolved: {
+        productName: method === 'PATCH' ? 'Acme Ops' : 'bctrl',
+        logo: null,
+        showPoweredBy: true,
+        tokens: {
+          bg: '#181512',
+          inset: '#101110',
+          surfaceRaised: '#211d18',
+          panel: '#211d18',
+          hairline: '#332c24',
+          borderStrong: '#4a4035',
+          text: '#ece7de',
+          textMuted: '#a89c8b',
+          textFaint: '#776e62',
+          accent: method === 'PATCH' ? '#6f8fd4' : '#aa9c82',
+          accentSoft: 'rgba(111,143,212,0.16)',
+          accentBorder: 'rgba(111,143,212,0.42)',
+        },
+      },
+    };
+    if (url.pathname === '/v1/account' && (method === 'GET' || method === 'PATCH')) {
+      return json(res, 200, {
+        id: 'org_1',
+        name: 'Test Organization',
+        branding,
+        updatedAt: iso(),
+      });
+    }
+
+    const view = {
+      id: 'view_1',
+      scope: { runtimeId: 'runtime_1' },
+      components: { live: { control: 'none' }, activity: {} },
+      branding: branding.resolved,
+      createdAt: iso(),
+      expiresAt: iso(),
+    };
+    if (method === 'POST' && url.pathname === '/v1/views') {
+      return json(res, 201, {
+        ...view,
+        token: 'view_token_test',
+        url: 'https://view.example.test/#view_token_test',
+      });
+    }
+    if (method === 'GET' && url.pathname === '/v1/views') {
+      return json(res, 200, { data: [view], nextCursor: null });
+    }
+    if (method === 'GET' && url.pathname === '/v1/views/view_1') {
+      return json(res, 200, view);
+    }
+    if (method === 'DELETE' && url.pathname === '/v1/views/view_1') {
+      return json(res, 200, { id: 'view_1', deleted: true });
+    }
+
+    const webhook = {
+      id: 'webhook_1',
+      subaccountId: null,
+      name: 'Operations',
+      url: 'https://ops.example.test/bctrl',
+      events: ['run.completed'],
+      enabled: method === 'PATCH' ? false : true,
+      createdAt: iso(),
+      updatedAt: iso(),
+    };
+    const delivery = {
+      id: 'delivery_1',
+      webhookId: 'webhook_1',
+      eventId: 'event_1',
+      eventType: 'run.completed',
+      status: 'pending',
+      attemptCount: 0,
+      responseStatus: null,
+      nextAttemptAt: iso(),
+      sentAt: null,
+      lastError: null,
+      createdAt: iso(),
+      updatedAt: iso(),
+    };
+    if (method === 'POST' && url.pathname === '/v1/webhooks') {
+      return json(res, 201, { ...webhook, secret: `whsec_${'a'.repeat(40)}` });
+    }
+    if (method === 'GET' && url.pathname === '/v1/webhooks') {
+      return json(res, 200, { data: [webhook], nextCursor: null });
+    }
+    if (
+      (method === 'GET' || method === 'PATCH') &&
+      url.pathname === '/v1/webhooks/webhook_1'
+    ) {
+      return json(res, 200, webhook);
+    }
+    if (method === 'DELETE' && url.pathname === '/v1/webhooks/webhook_1') {
+      return json(res, 200, { id: 'webhook_1', deleted: true });
+    }
+    if (method === 'POST' && url.pathname === '/v1/webhooks/webhook_1/rotate-secret') {
+      return json(res, 200, {
+        id: 'webhook_1',
+        secret: `whsec_${'b'.repeat(40)}`,
+      });
+    }
+    if (method === 'POST' && url.pathname === '/v1/webhooks/webhook_1/test') {
+      return json(res, 202, delivery);
+    }
+    if (method === 'GET' && url.pathname === '/v1/webhooks/webhook_1/deliveries') {
+      return json(res, 200, { data: [delivery], nextCursor: null });
+    }
+    if (
+      method === 'POST' &&
+      url.pathname === '/v1/webhooks/webhook_1/deliveries/delivery_1/redeliver'
+    ) {
+      return json(res, 202, delivery);
     }
 
     if (method === 'GET' && url.pathname === '/v1/tool-calls') {
@@ -1040,10 +1217,6 @@ async function createMockServer(): Promise<MockServer> {
       return json(res, 200, runFixture());
     }
 
-    if (method === 'GET' && url.pathname === '/v1/runs/run_1/files') {
-      return json(res, 200, { data: [fileFixture()], nextCursor: null });
-    }
-
     if (method === 'GET' && url.pathname === '/v1/files') {
       return json(res, 200, { data: [fileFixture()], nextCursor: null });
     }
@@ -1063,8 +1236,6 @@ async function createMockServer(): Promise<MockServer> {
         browserExtensionFixture({
           id: 'ext_imported',
           name: 'Wallet import',
-          sourceUrl:
-            'https://chromewebstore.google.com/detail/wallet/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         })
       );
     }

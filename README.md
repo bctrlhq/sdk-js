@@ -35,6 +35,40 @@ await bctrl.runtimes.targets.create(started.runtimeId, {
 await bctrl.runtimes.stop(started.runtimeId);
 ```
 
+Ephemeral runtimes start on create by default. Pass `start: false` when you need
+to mint a view or finish setup before the session begins. Profile-backed
+runtimes are durable machines and remain stopped until started by default.
+
+## Human-facing Views
+
+Views are the supported way to share live progress, recordings, activity, and
+human actions. The bearer URL is returned only when the view is created:
+
+```ts
+const view = await bctrl.views.create({
+  scope: { runtimeId: '<runtime-id>' },
+  components: {
+    live: { control: 'none' },
+    recordings: {},
+    activity: {},
+  },
+  expiresInSeconds: 60 * 60,
+});
+
+console.log(view.url);
+
+const embedUrl = new URL(view.url);
+embedUrl.searchParams.set('chrome', 'none');
+```
+
+Use `embedUrl` when embedding the complete white-label view inside your own
+application. Views can be listed and revoked through `bctrl.views`.
+
+Organization branding is available through `bctrl.account.get()` and
+`bctrl.account.update()`. Signed event delivery is available through
+`bctrl.webhooks`, including secret rotation, delivery inspection, and
+redelivery.
+
 ## Hosted Invocations
 
 Use invocations when you want BCTRL to drive the browser for you.

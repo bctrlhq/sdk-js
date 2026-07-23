@@ -142,8 +142,8 @@ export type V1SpaceAiMountUpdate = NonNullable<
 
 export type V1SpaceEnvironmentUpdateRequest = OpenApiSchemas['SpaceEnvironmentUpdateRequest'];
 
-export type V1RuntimeType = OpenApiSchemas['Runtime']['type'];
-export type V1RuntimeStatus = OpenApiSchemas['Runtime']['status'];
+export type V1RuntimeType = OpenApiSchemas['RuntimeSummary']['type'];
+export type V1RuntimeStatus = OpenApiSchemas['RuntimeSummary']['status'];
 export type V1BrowserStealth = NonNullable<OpenApiSchemas['BrowserRuntimeCreateConfig']['stealth']>;
 export type V1ProxyInput = OpenApiSchemas['RuntimeProxyInput'];
 export type V1RuntimeFingerprintCreateConfig = NonNullable<
@@ -204,7 +204,8 @@ export type V1RuntimeFingerprint = OpenApiSchemas['RuntimeFingerprint'];
  */
 export type V1BrowserRuntimeConfig = OpenApiSchemas['BrowserRuntimeConfig'];
 
-export type V1Runtime = OpenApiSchemas['Runtime'];
+export type V1Runtime = OpenApiSchemas['RuntimeDetail'];
+export type V1RuntimeCreateResponse = OpenApiSchemas['RuntimeCreateResponse'];
 
 export interface V1RuntimeStartRuntime {
   id: string;
@@ -294,14 +295,6 @@ export type V1RunActivityStreamFrame =
   | { event: 'heartbeat'; data: V1RunStreamHeartbeat }
   | { event: 'run.ended'; data: V1RunStreamEnded };
 
-export type V1RunLiveRequest = OpenApiSchemas['RunLiveRequest'];
-
-export type V1RunLiveResponse = OpenApiSchemas['RunLiveResponse'];
-
-export type V1RunRecordingRequest = OpenApiSchemas['RunRecordingRequest'];
-
-export type V1RunRecordingResponse = OpenApiSchemas['RunRecordingResponse'];
-
 export type V1InvocationAction = OpenApiSchemas['Invocation']['action'];
 export type V1RuntimeTargetSelector = OpenApiSchemas['RuntimeTargetSelector'];
 
@@ -361,7 +354,7 @@ export interface V1FileUploadRequest {
   metadata?: JsonObject;
 }
 
-export type V1RunFilesListQuery = OpenApiQuery<'runs.files.list'>;
+export type V1RunFilesListQuery = Omit<V1FilesListQuery, 'runId'>;
 
 export type V1RuntimeFilesListQuery = OpenApiQuery<'runtimes.files.list'>;
 
@@ -383,6 +376,26 @@ export interface V1RuntimeFileUploadRequest {
 export type V1RuntimeFileCollectRequest = OpenApiSchemas['RuntimeFileCollectRequest'];
 
 export type V1HumanAction = OpenApiSchemas['HumanAction'];
+
+export type V1Account = OpenApiSchemas['Account'];
+export type V1AccountPatchRequest = OpenApiSchemas['AccountPatchRequest'];
+export type V1AccountUpdateQuery = OpenApiQuery<'account.update'>;
+
+export type V1View = OpenApiSchemas['View'];
+export type V1ViewCreateRequest = OpenApiSchemas['ViewCreateRequest'];
+export type V1ViewCreateResponse = OpenApiSchemas['ViewCreateResponse'];
+export type V1ViewDeleteResponse = OpenApiSchemas['ViewDeleteResponse'];
+export type V1ViewsListQuery = OpenApiQuery<'views.list'>;
+
+export type V1Webhook = OpenApiSchemas['Webhook'];
+export type V1WebhookCreateRequest = OpenApiSchemas['WebhookCreateRequest'];
+export type V1WebhookCreateResponse = OpenApiSchemas['WebhookCreateResponse'];
+export type V1WebhookUpdateRequest = OpenApiSchemas['WebhookUpdateRequest'];
+export type V1WebhookDeleteResponse = OpenApiSchemas['WebhookDeleteResponse'];
+export type V1WebhookDelivery = OpenApiSchemas['WebhookDelivery'];
+export type V1WebhookRotateSecretResponse = OpenApiSchemas['WebhookRotateSecretResponse'];
+export type V1WebhooksListQuery = OpenApiQuery<'webhooks.list'>;
+export type V1WebhookDeliveriesListQuery = OpenApiQuery<'webhooks.deliveries.list'>;
 
 export type V1HumanActionCreateRequest = OpenApiSchemas['HumanActionCreateRequest'];
 

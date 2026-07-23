@@ -9,10 +9,6 @@ import type {
   V1RunEvent,
   V1RunEventsListQuery,
   V1RunListQuery,
-  V1RunLiveRequest,
-  V1RunLiveResponse,
-  V1RunRecordingRequest,
-  V1RunRecordingResponse,
   V1RunActivityItem,
   V1RunActivityListQuery,
   V1RunFilesExportRequest,
@@ -118,22 +114,6 @@ export class V1RunsClient {
     return this.http.request<V1RunUsage>(`/runs/${encodeURIComponent(id)}/usage`);
   }
 
-  live(id: string, request?: V1RunLiveRequest): Promise<V1RunLiveResponse> {
-    return this.http.request<V1RunLiveResponse>(`/runs/${encodeURIComponent(id)}/live`, {
-      method: 'POST',
-      body: request ?? {},
-    });
-  }
-
-  recording(id: string, request?: V1RunRecordingRequest): Promise<V1RunRecordingResponse> {
-    return this.http.request<V1RunRecordingResponse>(
-      `/runs/${encodeURIComponent(id)}/recording`,
-      {
-        method: 'POST',
-        body: request ?? {},
-      }
-    );
-  }
 }
 
 export class V1RunEventsNamespaceClient {
@@ -184,10 +164,9 @@ export class V1RunFilesNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
   list(runId: string, query: V1RunFilesListQuery = {}) {
-    return this.http.request<V1ListEnvelope<V1File>>(
-      `/runs/${encodeURIComponent(runId)}/files`,
-      { query }
-    );
+    return this.http.request<V1ListEnvelope<V1File>>('/files', {
+      query: { ...query, runId },
+    });
   }
 
   iter(runId: string, query: V1RunFilesListQuery = {}) {

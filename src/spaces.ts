@@ -4,6 +4,7 @@ import { V1RuntimesClient } from './runtimes.js';
 import type {
   V1ListEnvelope,
   V1Runtime,
+  V1RuntimeCreateResponse,
   V1RuntimeListQuery,
   V1Space,
   V1SpaceCreateRequest,
@@ -52,7 +53,7 @@ class V1SpaceRuntimesClient {
     return new V1RuntimesClient(this.http).iter({ ...query, spaceId: this.spaceId });
   }
 
-  create(request: V1SpaceRuntimeCreateRequest): Promise<V1Runtime> {
+  create(request: V1SpaceRuntimeCreateRequest): Promise<V1RuntimeCreateResponse> {
     return new V1RuntimesClient(this.http).createInSpace(this.spaceId, request);
   }
 
@@ -140,7 +141,10 @@ export class V1SpaceRuntimesNamespaceClient {
     return new V1RuntimesClient(this.http).iter({ ...query, spaceId });
   }
 
-  create(spaceId: string, request: V1SpaceRuntimeCreateRequest): Promise<V1Runtime> {
+  create(
+    spaceId: string,
+    request: V1SpaceRuntimeCreateRequest
+  ): Promise<V1RuntimeCreateResponse> {
     return new V1RuntimesClient(this.http).createInSpace(spaceId, request);
   }
 }

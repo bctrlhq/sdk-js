@@ -43,7 +43,7 @@ export function bodyField(body: unknown, key: string): unknown {
   return (body as Record<string, unknown>)[key];
 }
 
-export function runtimeFixture(overrides: Partial<ReturnType<typeof runtimeFixtureBase>> = {}) {
+export function runtimeFixture(overrides: Record<string, unknown> = {}) {
   return {
     ...runtimeFixtureBase(),
     ...overrides,

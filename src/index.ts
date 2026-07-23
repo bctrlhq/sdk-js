@@ -71,6 +71,12 @@ export { V1ToolCallsClient } from './toolCalls.js';
 export { passthroughJsonSchema, V1ToolsClient } from './tools.js';
 export { V1ToolsetsClient } from './toolsets.js';
 export { V1VaultClient } from './vault.js';
+export { V1ViewsClient } from './views.js';
+export {
+  V1WebhookDeliveriesClient,
+  V1WebhookDeliveriesNamespaceClient,
+  V1WebhooksClient,
+} from './webhooks.js';
 
 export type * from './types.js';
 export type * from './browserExtensionTypes.js';

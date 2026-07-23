@@ -20,6 +20,8 @@ import { V1ToolCallsClient } from './toolCalls.js';
 import { V1ToolsClient } from './tools.js';
 import { V1ToolsetsClient } from './toolsets.js';
 import { V1VaultClient } from './vault.js';
+import { V1ViewsClient } from './views.js';
+import { V1WebhooksClient } from './webhooks.js';
 
 export type BctrlV1Options = V1ClientOptions;
 
@@ -44,6 +46,8 @@ export class BctrlV1 {
   private _subaccounts: V1SubaccountsClient | null = null;
   private _usage: V1UsageClient | null = null;
   private _notificationRecipients: V1NotificationRecipientsClient | null = null;
+  private _views: V1ViewsClient | null = null;
+  private _webhooks: V1WebhooksClient | null = null;
 
   static isControllerBusy(error: unknown): boolean {
     return isControllerBusy(error);
@@ -146,6 +150,16 @@ export class BctrlV1 {
   get notificationRecipients(): V1NotificationRecipientsClient {
     this._notificationRecipients ??= new V1NotificationRecipientsClient(this.http);
     return this._notificationRecipients;
+  }
+
+  get views(): V1ViewsClient {
+    this._views ??= new V1ViewsClient(this.http);
+    return this._views;
+  }
+
+  get webhooks(): V1WebhooksClient {
+    this._webhooks ??= new V1WebhooksClient(this.http);
+    return this._webhooks;
   }
 }
 

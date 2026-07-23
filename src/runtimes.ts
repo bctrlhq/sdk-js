@@ -9,6 +9,7 @@ import type {
   V1HumanActionWaitRequest,
   V1HumanActionWaitResponse,
   V1Runtime,
+  V1RuntimeCreateResponse,
   V1RuntimeCreateRequest,
   V1RuntimeDeleteResponse,
   V1RuntimeFileCollectRequest,
@@ -17,6 +18,7 @@ import type {
   V1RuntimeFileUploadRequest,
   V1RuntimeStagedFile,
   V1RuntimeListQuery,
+  V1RuntimeSummary,
   V1RuntimeRunListQuery,
   V1RuntimeStartResponse,
   V1RuntimeStopResponse,
@@ -215,23 +217,26 @@ export class V1RuntimesClient {
     this.humanActions = this.humanAction;
   }
 
-  list(query: V1RuntimeListQuery = {}): Promise<V1ListEnvelope<V1Runtime>> {
-    return this.http.request<V1ListEnvelope<V1Runtime>>('/runtimes', { query });
+  list(query: V1RuntimeListQuery = {}): Promise<V1ListEnvelope<V1RuntimeSummary>> {
+    return this.http.request<V1ListEnvelope<V1RuntimeSummary>>('/runtimes', { query });
   }
 
-  iter(query: V1RuntimeListQuery = {}): AsyncGenerator<V1Runtime, void, undefined> {
+  iter(query: V1RuntimeListQuery = {}): AsyncGenerator<V1RuntimeSummary, void, undefined> {
     return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
   }
 
-  async create(request: V1RuntimeCreateRequest): Promise<V1Runtime> {
-    return this.http.request<V1Runtime>('/runtimes', {
+  async create(request: V1RuntimeCreateRequest): Promise<V1RuntimeCreateResponse> {
+    return this.http.request<V1RuntimeCreateResponse>('/runtimes', {
       method: 'POST',
       body: request,
     });
   }
 
-  async createInSpace(spaceId: string, request: V1SpaceRuntimeCreateRequest): Promise<V1Runtime> {
-    return this.http.request<V1Runtime>('/runtimes', {
+  async createInSpace(
+    spaceId: string,
+    request: V1SpaceRuntimeCreateRequest
+  ): Promise<V1RuntimeCreateResponse> {
+    return this.http.request<V1RuntimeCreateResponse>('/runtimes', {
       method: 'POST',
       body: { ...request, spaceId },
     });

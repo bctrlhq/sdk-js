@@ -2,6 +2,9 @@ import type { V1HttpClient } from './http.js';
 import { V1NotificationRecipientsClient } from './notificationRecipients.js';
 import { iterateV1Pages } from './pagination.js';
 import type {
+  V1Account,
+  V1AccountPatchRequest,
+  V1AccountUpdateQuery,
   V1AccountUsage,
   V1ApiKey,
   V1ApiKeyCreateRequest,
@@ -124,10 +127,25 @@ export class V1AccountClient {
   readonly subaccounts: V1SubaccountsClient;
   readonly usage: V1UsageClient;
 
-  constructor(http: V1HttpClient) {
+  constructor(private readonly http: V1HttpClient) {
     this.apiKeys = new V1ApiKeysClient(http);
     this.notificationRecipients = new V1NotificationRecipientsClient(http);
     this.subaccounts = new V1SubaccountsClient(http);
     this.usage = new V1UsageClient(http);
+  }
+
+  get(): Promise<V1Account> {
+    return this.http.request<V1Account>('/account');
+  }
+
+  update(
+    request: V1AccountPatchRequest,
+    query: V1AccountUpdateQuery = {}
+  ): Promise<V1Account> {
+    return this.http.request<V1Account>('/account', {
+      method: 'PATCH',
+      query,
+      body: request,
+    });
   }
 }
