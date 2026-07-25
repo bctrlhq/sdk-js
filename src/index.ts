@@ -28,6 +28,7 @@ export {
 export { V1FilesClient } from './files.js';
 export { V1HelpClient } from './help.js';
 export {
+  V1InvocationsClient,
   V1RuntimeBrowserUseInvocationsNamespaceClient,
   V1RuntimeInvocationsNamespaceClient,
   V1RuntimeStagehandInvocationsNamespaceClient,

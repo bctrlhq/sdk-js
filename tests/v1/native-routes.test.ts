@@ -252,10 +252,8 @@ test("runtime helpers use native v1 invocations and files routes", async () => {
   const createdRuntime = await client.spaces.runtimes.create(space.id, {
     type: "browser",
     name: "route-check",
+    profile: false,
     metadata: { test: true },
-    config: {
-      profile: false,
-    },
   });
   const start = await client.runtimes.start(createdRuntime.id);
   const runtime = await client.runtimes.get(start.runtimeId);
@@ -264,7 +262,7 @@ test("runtime helpers use native v1 invocations and files routes", async () => {
     instruction: "click the button",
   });
   const run = await client.runs.get(start.runId);
-  await client.runs.files.list(run.id);
+  await client.files.list({ runId: run.id });
   await client.files.list({ spaceId: space.id });
   await client.runtimes.files.upload(runtime.id, {
     file: new Blob(["hello"], { type: "text/plain" }),
@@ -479,38 +477,41 @@ test("notification recipient helpers use public notification routes", async () =
   });
 });
 
-test("runtime human action helpers use runtime-scoped public routes", async () => {
+test("runtime human action helpers use current and id-addressed routes", async () => {
   assert(server);
   const client = new Bctrl({ apiKey: "test_key", baseUrl: server.baseUrl });
 
-  const created = await client.runtimes.humanAction.create("runtime_1", {
+  const created = await client.runtimes.humanActions.create("runtime_1", {
     message: "Please review checkout before purchase.",
     timeoutSeconds: 3600,
   });
-  const fetched = await client.runtimes.humanAction.get("runtime_1");
-  const waited = await client.runtimes.humanAction.wait("runtime_1", {
+  const current = await client.runtimes.humanActions.current("runtime_1");
+  const fetched = await client.runtimes.humanActions.get("runtime_1", created.id);
+  const waited = await client.runtimes.humanActions.wait("runtime_1", created.id, {
     timeoutSeconds: 30,
   });
-  const completed = await client.runtimes.humanAction.complete("runtime_1");
-  const cancelled = await client.runtimes.humanAction.cancel("runtime_1");
+  const completed = await client.runtimes.humanActions.complete("runtime_1", created.id);
+  const cancelled = await client.runtimes.humanActions.cancel("runtime_1", created.id);
 
   assert.equal(created.id, "human_action_1");
+  assert.equal(current.id, created.id);
   assert.equal(fetched.status, "pending");
   assert.equal(waited.waitStatus, "timeout");
   assert.equal(completed.status, "completed");
   assert.equal(cancelled.status, "cancelled");
   assert.deepEqual(paths(server.requests), [
     "POST /v1/runtimes/runtime_1/human-actions",
-    "GET /v1/runtimes/runtime_1/human-actions",
-    "POST /v1/runtimes/runtime_1/human-actions/wait",
-    "POST /v1/runtimes/runtime_1/human-actions/complete",
-    "POST /v1/runtimes/runtime_1/human-actions/cancel",
+    "GET /v1/runtimes/runtime_1/human-actions/current",
+    "GET /v1/runtimes/runtime_1/human-actions/human_action_1",
+    "POST /v1/runtimes/runtime_1/human-actions/human_action_1/wait",
+    "POST /v1/runtimes/runtime_1/human-actions/human_action_1/complete",
+    "POST /v1/runtimes/runtime_1/human-actions/human_action_1/cancel",
   ]);
   assert.deepEqual(server.requests[0]?.body, {
     message: "Please review checkout before purchase.",
     timeoutSeconds: 3600,
   });
-  assert.deepEqual(server.requests[2]?.body, { timeoutSeconds: 30 });
+  assert.deepEqual(server.requests[3]?.body, { timeoutSeconds: 30 });
 });
 
 test("proxy helpers use flattened v1 proxy routes and nested pool catalog", async () => {
@@ -720,7 +721,7 @@ test("runtime invocations accept Zod schemas and createAndWait loops until compl
   });
 });
 
-test("invocation live control is runtime-scoped; observability reads are run-scoped", async () => {
+test("invocation control is runtime-scoped and direct reads use the stable id", async () => {
   assert(server);
   const client = new Bctrl({ apiKey: "test_key", baseUrl: server.baseUrl });
 
@@ -746,12 +747,12 @@ test("invocation live control is runtime-scoped; observability reads are run-sco
   );
   assert.equal(cancelled.status, "cancelling");
 
-  // Observability: list/get are read under the run that produced them.
+  // Observability: history is run-scoped; direct lookup needs only the stable id.
   const run = await client.runs.get("run_1");
   const list = await client.runs.invocations.list(run.id);
   assert.equal(list.data[0]?.id, "invocation_1");
   assert.equal(list.data[0]?.status, "succeeded");
-  const fetched = await client.runs.invocations.get(run.id, "invocation_1");
+  const fetched = await client.invocations.get("invocation_1");
   assert.equal(fetched.id, "invocation_1");
 
   assert.deepEqual(paths(server.requests), [
@@ -760,7 +761,7 @@ test("invocation live control is runtime-scoped; observability reads are run-sco
     "POST /v1/runtimes/runtime_1/invocations/invocation_1/cancel",
     "GET /v1/runs/run_1",
     "GET /v1/runs/run_1/invocations",
-    "GET /v1/runs/run_1/invocations/invocation_1",
+    "GET /v1/invocations/invocation_1",
   ]);
 });
 
@@ -1289,14 +1290,23 @@ async function createMockServer(): Promise<MockServer> {
 
     if (
       method === "GET" &&
-      url.pathname === "/v1/runtimes/runtime_1/human-actions"
+      url.pathname === "/v1/runtimes/runtime_1/human-actions/current"
+    ) {
+      return json(res, 200, humanActionFixture());
+    }
+
+    if (
+      method === "GET" &&
+      url.pathname ===
+        "/v1/runtimes/runtime_1/human-actions/human_action_1"
     ) {
       return json(res, 200, humanActionFixture());
     }
 
     if (
       method === "POST" &&
-      url.pathname === "/v1/runtimes/runtime_1/human-actions/wait"
+      url.pathname ===
+        "/v1/runtimes/runtime_1/human-actions/human_action_1/wait"
     ) {
       return json(res, 200, {
         ...humanActionFixture(),
@@ -1307,7 +1317,8 @@ async function createMockServer(): Promise<MockServer> {
 
     if (
       method === "POST" &&
-      url.pathname === "/v1/runtimes/runtime_1/human-actions/complete"
+      url.pathname ===
+        "/v1/runtimes/runtime_1/human-actions/human_action_1/complete"
     ) {
       return json(
         res,
@@ -1318,7 +1329,8 @@ async function createMockServer(): Promise<MockServer> {
 
     if (
       method === "POST" &&
-      url.pathname === "/v1/runtimes/runtime_1/human-actions/cancel"
+      url.pathname ===
+        "/v1/runtimes/runtime_1/human-actions/human_action_1/cancel"
     ) {
       return json(
         res,
@@ -1539,7 +1551,7 @@ async function createMockServer(): Promise<MockServer> {
 
     if (
       method === "GET" &&
-      url.pathname === "/v1/runs/run_1/invocations/invocation_1"
+      url.pathname === "/v1/invocations/invocation_1"
     ) {
       return json(res, 200, invocationFixture({ status: "succeeded" }));
     }

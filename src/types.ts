@@ -354,10 +354,6 @@ export interface V1FileUploadRequest {
   metadata?: JsonObject;
 }
 
-export type V1RunFilesListQuery = Omit<V1FilesListQuery, 'runId'>;
-
-export type V1RuntimeFilesListQuery = OpenApiQuery<'runtimes.files.list'>;
-
 export type V1RunFilesExportRequest = OpenApiSchemas['RunsFilesExportRequest'];
 
 export type V1RuntimeFileStageRequest = OpenApiSchemas['RuntimeFileStageRequest'];

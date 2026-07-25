@@ -11,6 +11,7 @@ import { isControllerBusy } from './errors.js';
 import { V1FilesClient } from './files.js';
 import { V1HelpClient } from './help.js';
 import { V1HttpClient, type V1ClientOptions } from './http.js';
+import { V1InvocationsClient } from './invocations.js';
 import { V1NotificationRecipientsClient } from './notificationRecipients.js';
 import { V1ProxiesClient } from './proxies.js';
 import { V1RunsClient } from './runs.js';
@@ -31,6 +32,7 @@ export class BctrlV1 {
   private _spaces: V1SpacesClient | null = null;
   private _runtimes: V1RuntimesClient | null = null;
   private _runs: V1RunsClient | null = null;
+  private _invocations: V1InvocationsClient | null = null;
   private _files: V1FilesClient | null = null;
   private _help: V1HelpClient | null = null;
   private _tools: V1ToolsClient | null = null;
@@ -75,6 +77,11 @@ export class BctrlV1 {
   get runs(): V1RunsClient {
     this._runs ??= new V1RunsClient(this.http);
     return this._runs;
+  }
+
+  get invocations(): V1InvocationsClient {
+    this._invocations ??= new V1InvocationsClient(this.http);
+    return this._invocations;
   }
 
   get files(): V1FilesClient {

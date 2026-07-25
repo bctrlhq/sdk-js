@@ -3,7 +3,6 @@ import { iterateV1Pages } from './pagination.js';
 import type {
   V1ListEnvelope,
   V1File,
-  V1InvocationResponse,
   V1InvocationSummary,
   V1Run,
   V1RunEvent,
@@ -12,7 +11,6 @@ import type {
   V1RunActivityItem,
   V1RunActivityListQuery,
   V1RunFilesExportRequest,
-  V1RunFilesListQuery,
   V1RunInvocationsListQuery,
   V1RunUsage,
 } from './types.js';
@@ -163,16 +161,6 @@ export class V1RunActivityNamespaceClient {
 export class V1RunFilesNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
-  list(runId: string, query: V1RunFilesListQuery = {}) {
-    return this.http.request<V1ListEnvelope<V1File>>('/files', {
-      query: { ...query, runId },
-    });
-  }
-
-  iter(runId: string, query: V1RunFilesListQuery = {}) {
-    return iterateV1Pages(query, (pageQuery) => this.list(runId, pageQuery));
-  }
-
   export(
     runId: string,
     request: V1RunFilesExportRequest = {},
@@ -200,9 +188,4 @@ export class V1RunInvocationsNamespaceClient {
     return iterateV1Pages(query, (pageQuery) => this.list(runId, pageQuery));
   }
 
-  get(runId: string, invocationId: string) {
-    return this.http.request<V1InvocationResponse>(
-      `/runs/${encodeURIComponent(runId)}/invocations/${encodeURIComponent(invocationId)}`
-    );
-  }
 }

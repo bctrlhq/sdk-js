@@ -13,7 +13,6 @@ import type {
   V1RuntimeCreateRequest,
   V1RuntimeDeleteResponse,
   V1RuntimeFileCollectRequest,
-  V1RuntimeFilesListQuery,
   V1RuntimeFileStageRequest,
   V1RuntimeFileUploadRequest,
   V1RuntimeStagedFile,
@@ -54,17 +53,6 @@ class V1RuntimeFilesClient {
     private readonly http: V1HttpClient,
     private readonly runtimeId: string
   ) {}
-
-  list(query: V1RuntimeFilesListQuery = {}): Promise<V1ListEnvelope<V1File>> {
-    return this.http.request<V1ListEnvelope<V1File>>(
-      `/runtimes/${encodeURIComponent(this.runtimeId)}/files`,
-      { query }
-    );
-  }
-
-  iter(query: V1RuntimeFilesListQuery = {}): AsyncGenerator<V1File, void, undefined> {
-    return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
-  }
 
   async upload(request: V1RuntimeFileUploadRequest): Promise<V1RuntimeStagedFile> {
     const form = new FormData();
@@ -169,29 +157,46 @@ class V1RuntimeHumanActionsClient {
     );
   }
 
-  get(): Promise<V1HumanAction> {
+  current(): Promise<V1HumanAction> {
     return this.http.request<V1HumanAction>(
-      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions`
+      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/current`
     );
   }
 
-  complete(): Promise<V1HumanAction> {
+  get(humanActionId: string): Promise<V1HumanAction> {
     return this.http.request<V1HumanAction>(
-      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/complete`,
+      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/${encodeURIComponent(
+        humanActionId
+      )}`
+    );
+  }
+
+  complete(humanActionId: string): Promise<V1HumanAction> {
+    return this.http.request<V1HumanAction>(
+      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/${encodeURIComponent(
+        humanActionId
+      )}/complete`,
       { method: 'POST' }
     );
   }
 
-  cancel(): Promise<V1HumanAction> {
+  cancel(humanActionId: string): Promise<V1HumanAction> {
     return this.http.request<V1HumanAction>(
-      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/cancel`,
+      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/${encodeURIComponent(
+        humanActionId
+      )}/cancel`,
       { method: 'POST' }
     );
   }
 
-  wait(request: V1HumanActionWaitRequest = {}): Promise<V1HumanActionWaitResponse> {
+  wait(
+    humanActionId: string,
+    request: V1HumanActionWaitRequest = {}
+  ): Promise<V1HumanActionWaitResponse> {
     return this.http.request<V1HumanActionWaitResponse>(
-      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/wait`,
+      `/runtimes/${encodeURIComponent(this.runtimeId)}/human-actions/${encodeURIComponent(
+        humanActionId
+      )}/wait`,
       {
         method: 'POST',
         body: request,
@@ -205,7 +210,6 @@ export class V1RuntimesClient {
   readonly runs: V1RuntimeRunsNamespaceClient;
   readonly invocations: V1RuntimeInvocationsNamespaceClient;
   readonly targets: V1RuntimeTargetsNamespaceClient;
-  readonly humanAction: V1RuntimeHumanActionsNamespaceClient;
   readonly humanActions: V1RuntimeHumanActionsNamespaceClient;
 
   constructor(private readonly http: V1HttpClient) {
@@ -213,8 +217,7 @@ export class V1RuntimesClient {
     this.runs = new V1RuntimeRunsNamespaceClient(http);
     this.invocations = new V1RuntimeInvocationsNamespaceClient(http);
     this.targets = new V1RuntimeTargetsNamespaceClient(http);
-    this.humanAction = new V1RuntimeHumanActionsNamespaceClient(http);
-    this.humanActions = this.humanAction;
+    this.humanActions = new V1RuntimeHumanActionsNamespaceClient(http);
   }
 
   list(query: V1RuntimeListQuery = {}): Promise<V1ListEnvelope<V1RuntimeSummary>> {
@@ -295,17 +298,6 @@ export class V1RuntimeRunsNamespaceClient {
 export class V1RuntimeFilesNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
-  list(runtimeId: string, query: V1RuntimeFilesListQuery = {}): Promise<V1ListEnvelope<V1File>> {
-    return new V1RuntimeFilesClient(this.http, runtimeId).list(query);
-  }
-
-  iter(
-    runtimeId: string,
-    query: V1RuntimeFilesListQuery = {}
-  ): AsyncGenerator<V1File, void, undefined> {
-    return new V1RuntimeFilesClient(this.http, runtimeId).iter(query);
-  }
-
   upload(runtimeId: string, request: V1RuntimeFileUploadRequest): Promise<V1RuntimeStagedFile> {
     return new V1RuntimeFilesClient(this.http, runtimeId).upload(request);
   }
@@ -326,23 +318,28 @@ export class V1RuntimeHumanActionsNamespaceClient {
     return new V1RuntimeHumanActionsClient(this.http, runtimeId).create(request);
   }
 
-  get(runtimeId: string): Promise<V1HumanAction> {
-    return new V1RuntimeHumanActionsClient(this.http, runtimeId).get();
+  current(runtimeId: string): Promise<V1HumanAction> {
+    return new V1RuntimeHumanActionsClient(this.http, runtimeId).current();
   }
 
-  complete(runtimeId: string): Promise<V1HumanAction> {
-    return new V1RuntimeHumanActionsClient(this.http, runtimeId).complete();
+  get(runtimeId: string, humanActionId: string): Promise<V1HumanAction> {
+    return new V1RuntimeHumanActionsClient(this.http, runtimeId).get(humanActionId);
   }
 
-  cancel(runtimeId: string): Promise<V1HumanAction> {
-    return new V1RuntimeHumanActionsClient(this.http, runtimeId).cancel();
+  complete(runtimeId: string, humanActionId: string): Promise<V1HumanAction> {
+    return new V1RuntimeHumanActionsClient(this.http, runtimeId).complete(humanActionId);
+  }
+
+  cancel(runtimeId: string, humanActionId: string): Promise<V1HumanAction> {
+    return new V1RuntimeHumanActionsClient(this.http, runtimeId).cancel(humanActionId);
   }
 
   wait(
     runtimeId: string,
+    humanActionId: string,
     request: V1HumanActionWaitRequest = {}
   ): Promise<V1HumanActionWaitResponse> {
-    return new V1RuntimeHumanActionsClient(this.http, runtimeId).wait(request);
+    return new V1RuntimeHumanActionsClient(this.http, runtimeId).wait(humanActionId, request);
   }
 }
 

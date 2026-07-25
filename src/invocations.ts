@@ -149,6 +149,17 @@ export interface V1InvocationCreateAndWaitOptions extends V1IdempotencyOptions {
   signal?: AbortSignal;
 }
 
+/** Direct invocation lookup when only the stable invocation id is available. */
+export class V1InvocationsClient {
+  constructor(private readonly http: V1HttpClient) {}
+
+  get(invocationId: string): Promise<V1InvocationResponse> {
+    return this.http.request<V1InvocationResponse>(
+      `/invocations/${encodeURIComponent(invocationId)}`
+    );
+  }
+}
+
 // Live control is runtime-scoped; observability reads are run-scoped.
 function runtimeInvocationActionPath(
   runtimeId: string,
