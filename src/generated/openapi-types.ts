@@ -3749,6 +3749,9 @@ export interface components {
             failure: components["schemas"]["RunFailure"] | null;
             finishedAt: string | null;
             id: string;
+            recording: {
+                enabled: boolean;
+            };
             runtimeId: string;
             /** @enum {string} */
             runtimeType: "browser" | "desktop" | "spreadsheet";
@@ -3848,6 +3851,9 @@ export interface components {
             failure: components["schemas"]["RunFailure"] | null;
             finishedAt: string | null;
             id: string;
+            recording: {
+                enabled: boolean;
+            };
             runtimeId: string;
             /** @enum {string} */
             runtimeType: "browser" | "desktop" | "spreadsheet";
@@ -3865,6 +3871,9 @@ export interface components {
             connectUrl: string;
             /** @enum {string} */
             protocol: "cdp";
+            recording: {
+                enabled: boolean;
+            };
             runId: string;
             /** Format: uri */
             webdriverUrl?: string;
@@ -3874,6 +3883,7 @@ export interface components {
             metadata?: components["schemas"]["RuntimeMetadata"];
             name?: string;
             profile?: boolean;
+            recording?: boolean;
             spaceId?: string | "default";
             start?: boolean;
             /** @constant */
@@ -4174,6 +4184,10 @@ export interface components {
             /** @enum {string} */
             udpMode?: "disabled" | "auto" | "required";
         };
+        /** @default {} */
+        RuntimeStartRequest: {
+            recording?: boolean;
+        };
         RuntimeStartResponse: {
             /**
              * Format: uri
@@ -4182,6 +4196,9 @@ export interface components {
             connectUrl: string;
             /** @enum {string} */
             protocol: "cdp";
+            recording: {
+                enabled: boolean;
+            };
             runId: string;
             runtimeId: string;
             started: boolean;
@@ -4512,9 +4529,25 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             expiresAt: string;
-            /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
-            presentation: components["schemas"]["ViewPresentationOutput"];
+            presentation: {
+                /** @constant */
+                mode: "hosted";
+            };
+            scope: components["schemas"]["ViewScope"];
+        } | {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponentsOutput"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            id: string;
+            presentation: {
+                allowedOrigins: unknown[];
+                /** @constant */
+                mode: "embedded";
+            };
             scope: components["schemas"]["ViewScope"];
         };
         ViewBootstrap: {
@@ -4524,9 +4557,26 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             expiresAt: string;
-            /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
-            presentation: components["schemas"]["ViewPresentationOutput"];
+            presentation: {
+                /** @constant */
+                mode: "hosted";
+            };
+            scope: components["schemas"]["ViewScope"];
+            spaceName: string;
+        } | {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponentsOutput"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            id: string;
+            presentation: {
+                allowedOrigins: unknown[];
+                /** @constant */
+                mode: "embedded";
+            };
             scope: components["schemas"]["ViewScope"];
             spaceName: string;
         };
@@ -4575,9 +4625,29 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             expiresAt: string;
-            /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
-            presentation: components["schemas"]["ViewPresentationOutput"];
+            presentation: {
+                /** @constant */
+                mode: "hosted";
+            };
+            scope: components["schemas"]["ViewScope"];
+            /** @description Short-lived bearer token returned once when a view is created. */
+            token: string;
+            /** Format: uri */
+            url: string;
+        } | {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponentsOutput"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            id: string;
+            presentation: {
+                allowedOrigins: unknown[];
+                /** @constant */
+                mode: "embedded";
+            };
             scope: components["schemas"]["ViewScope"];
             /** @description Short-lived bearer token returned once when a view is created. */
             token: string;
@@ -4595,14 +4665,6 @@ export interface components {
             mode: "hosted";
         } | {
             allowedOrigins: string[];
-            /** @constant */
-            mode: "embedded";
-        };
-        ViewPresentationOutput: {
-            /** @constant */
-            mode: "hosted";
-        } | {
-            allowedOrigins: unknown[];
             /** @constant */
             mode: "embedded";
         };
@@ -4630,6 +4692,8 @@ export interface components {
             status?: "available" | "processing" | "unavailable" | "failed";
             /** @enum {string} */
             surface: "live" | "recording";
+            /** @constant */
+            unavailableReason?: "recording_disabled";
             /** Format: uri */
             url: string;
         };
@@ -10403,7 +10467,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RuntimeStartRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
