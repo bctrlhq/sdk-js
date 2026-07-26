@@ -25,11 +25,5 @@ export type V1AiCredentialDeleteResponse = OpenApiSchemas['AiCredentialDeleteRes
 
 export type V1AiCredentialTestResponse = OpenApiSchemas['AiCredentialTestResponse'];
 
-export type V1AiModelSelectionAuth = OpenApiSchemas['AiModelSelectionAuth'];
-
-export type V1AiModelSelectionObject = OpenApiSchemas['AiModelSelection'];
-
-export type V1AiModelSelection = string | V1AiModelSelectionObject;
-
 export type V1AiStoredModelSelectionAuth = OpenApiSchemas['AiStoredModelSelectionAuth'];
 export type V1AiStoredModelSelection = string | OpenApiSchemas['AiStoredModelSelection'];

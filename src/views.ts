@@ -6,6 +6,8 @@ import type {
   V1ViewCreateRequest,
   V1ViewCreateResponse,
   V1ViewDeleteResponse,
+  V1ViewSession,
+  V1ViewSessionCreateRequest,
   V1ViewsListQuery,
 } from './types.js';
 
@@ -35,5 +37,20 @@ export class V1ViewsClient {
     return this.http.request<V1ViewDeleteResponse>(`/views/${encodeURIComponent(viewId)}`, {
       method: 'DELETE',
     });
+  }
+
+  createSession(
+    viewId: string,
+    request: V1ViewSessionCreateRequest,
+    viewToken: string
+  ): Promise<V1ViewSession> {
+    return this.http.request<V1ViewSession>(
+      `/views/${encodeURIComponent(viewId)}/sessions`,
+      {
+        method: 'POST',
+        body: request,
+        headers: { Authorization: `Bearer ${viewToken}` },
+      }
+    );
   }
 }

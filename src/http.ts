@@ -238,6 +238,51 @@ export class V1HttpClient {
 
     return response;
   }
+
+  async *streamSse<T>(
+    path: string,
+    options: Omit<V1RequestOptions, 'method' | 'body'> = {}
+  ): AsyncGenerator<T, void, undefined> {
+    const response = await this.raw(path, {
+      ...options,
+      headers: { Accept: 'text/event-stream', ...options.headers },
+    });
+    if (!response.body) {
+      throw new BctrlNetworkError('SSE response did not include a body');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        buffer += decoder.decode(value, { stream: !done });
+        const normalized = buffer.replaceAll('\r\n', '\n');
+        const blocks = normalized.split('\n\n');
+        buffer = blocks.pop() ?? '';
+        for (const block of blocks) {
+          const data = block
+            .split('\n')
+            .filter((line) => line.startsWith('data:'))
+            .map((line) => line.slice(5).trimStart())
+            .join('\n');
+          if (!data || data === '[DONE]') continue;
+          yield JSON.parse(data) as T;
+        }
+        if (done) break;
+      }
+      const data = buffer
+        .replaceAll('\r\n', '\n')
+        .split('\n')
+        .filter((line) => line.startsWith('data:'))
+        .map((line) => line.slice(5).trimStart())
+        .join('\n');
+      if (data && data !== '[DONE]') yield JSON.parse(data) as T;
+    } finally {
+      reader.releaseLock();
+    }
+  }
 }
 
 function isRetryableStatus(status: number): boolean {

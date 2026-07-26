@@ -5,7 +5,7 @@ export type V1BrowserExtensionSource = 'upload' | 'url';
 
 export type V1BrowserExtension = OpenApiSchemas['BrowserExtension'];
 
-export type V1BrowserExtensionListQuery = OpenApiQuery<'browser-extensions.list'>;
+export type V1BrowserExtensionListQuery = OpenApiQuery<'browser.extensions.list'>;
 
 export interface V1BrowserExtensionUploadRequest {
   /** Packed Chromium extension package. Only .crx is supported today. */
@@ -14,8 +14,7 @@ export interface V1BrowserExtensionUploadRequest {
   name?: string;
 }
 
-export type V1BrowserExtensionImportRequest =
-  OpenApiSchemas['BrowserExtensionImportRequest'];
+export type V1BrowserExtensionImportRequest = OpenApiSchemas['BrowserExtensionCreateRequest'];
 
 export type V1BrowserExtensionUpdateRequest = OpenApiSchemas['BrowserExtensionUpdateRequest'];
 

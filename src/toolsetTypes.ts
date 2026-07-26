@@ -1,6 +1,6 @@
 import type { OpenApiQuery, OpenApiSchemas } from './openapi.js';
 
-export type V1ToolsetBuiltinName = OpenApiSchemas['Toolset']['builtins'][number];
+export type V1ToolsetToolName = OpenApiSchemas['Toolset']['tools'][number];
 
 export type V1Toolset = OpenApiSchemas['Toolset'];
 

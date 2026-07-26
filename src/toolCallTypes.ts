@@ -1,9 +1,8 @@
 import type { OpenApiQuery, OpenApiSchemas } from './openapi.js';
 
-export type V1ToolCallActor = OpenApiSchemas['ToolCall']['actor'];
+export type V1ToolCallCallerType = OpenApiSchemas['ToolCall']['callerType'];
 export type V1ToolCallStatus = OpenApiSchemas['ToolCall']['status'];
-
-export type V1ToolCallTool = OpenApiSchemas['ToolCallTool'];
+export type V1ToolName = OpenApiSchemas['ToolCall']['tool'];
 
 export type V1ToolCall = OpenApiSchemas['ToolCall'];
 

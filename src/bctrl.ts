@@ -6,12 +6,13 @@ import {
   V1UsageClient,
 } from './account.js';
 import { V1AiClient } from './ai.js';
+import { V1AgentsClient } from './agents.js';
 import { V1BrowserExtensionsClient } from './browserExtensions.js';
+import { V1ConversationsClient } from './conversations.js';
 import { isControllerBusy } from './errors.js';
 import { V1FilesClient } from './files.js';
 import { V1HelpClient } from './help.js';
 import { V1HttpClient, type V1ClientOptions } from './http.js';
-import { V1InvocationsClient } from './invocations.js';
 import { V1NotificationRecipientsClient } from './notificationRecipients.js';
 import { V1ProxiesClient } from './proxies.js';
 import { V1RunsClient } from './runs.js';
@@ -20,7 +21,6 @@ import { V1SpacesClient } from './spaces.js';
 import { V1ToolCallsClient } from './toolCalls.js';
 import { V1ToolsClient } from './tools.js';
 import { V1ToolsetsClient } from './toolsets.js';
-import { V1VaultClient } from './vault.js';
 import { V1ViewsClient } from './views.js';
 import { V1WebhooksClient } from './webhooks.js';
 
@@ -32,13 +32,13 @@ export class BctrlV1 {
   private _spaces: V1SpacesClient | null = null;
   private _runtimes: V1RuntimesClient | null = null;
   private _runs: V1RunsClient | null = null;
-  private _invocations: V1InvocationsClient | null = null;
+  private _agents: V1AgentsClient | null = null;
+  private _conversations: V1ConversationsClient | null = null;
   private _files: V1FilesClient | null = null;
   private _help: V1HelpClient | null = null;
   private _tools: V1ToolsClient | null = null;
   private _toolsets: V1ToolsetsClient | null = null;
   private _toolCalls: V1ToolCallsClient | null = null;
-  private _vault: V1VaultClient | null = null;
   private _proxies: V1ProxiesClient | null = null;
   private _browserExtensions: V1BrowserExtensionsClient | null = null;
   private _ai: V1AiClient | null = null;
@@ -79,9 +79,14 @@ export class BctrlV1 {
     return this._runs;
   }
 
-  get invocations(): V1InvocationsClient {
-    this._invocations ??= new V1InvocationsClient(this.http);
-    return this._invocations;
+  get agents(): V1AgentsClient {
+    this._agents ??= new V1AgentsClient(this.http);
+    return this._agents;
+  }
+
+  get conversations(): V1ConversationsClient {
+    this._conversations ??= new V1ConversationsClient(this.http);
+    return this._conversations;
   }
 
   get files(): V1FilesClient {
@@ -107,11 +112,6 @@ export class BctrlV1 {
   get toolCalls(): V1ToolCallsClient {
     this._toolCalls ??= new V1ToolCallsClient(this.http);
     return this._toolCalls;
-  }
-
-  get vault(): V1VaultClient {
-    this._vault ??= new V1VaultClient(this.http);
-    return this._vault;
   }
 
   get proxies(): V1ProxiesClient {

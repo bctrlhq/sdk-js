@@ -19,7 +19,7 @@ export class V1BrowserExtensionsClient {
   constructor(private readonly http: V1HttpClient) {}
 
   list(query: V1BrowserExtensionListQuery = {}): Promise<V1ListEnvelope<V1BrowserExtension>> {
-    return this.http.request<V1ListEnvelope<V1BrowserExtension>>('/browser-extensions', {
+    return this.http.request<V1ListEnvelope<V1BrowserExtension>>('/browser/extensions', {
       query,
     });
   }
@@ -32,7 +32,7 @@ export class V1BrowserExtensionsClient {
 
   get(extensionId: string): Promise<V1BrowserExtension> {
     return this.http.request<V1BrowserExtension>(
-      `/browser-extensions/${encodeURIComponent(extensionId)}`
+      `/browser/extensions/${encodeURIComponent(extensionId)}`
     );
   }
 
@@ -43,14 +43,14 @@ export class V1BrowserExtensionsClient {
       form.set('name', request.name);
     }
 
-    return this.http.request<V1BrowserExtension>('/browser-extensions/upload', {
+    return this.http.request<V1BrowserExtension>('/browser/extensions', {
       method: 'POST',
       body: form,
     });
   }
 
   import(request: V1BrowserExtensionImportRequest): Promise<V1BrowserExtension> {
-    return this.http.request<V1BrowserExtension>('/browser-extensions/import', {
+    return this.http.request<V1BrowserExtension>('/browser/extensions', {
       method: 'POST',
       body: request,
     });
@@ -61,7 +61,7 @@ export class V1BrowserExtensionsClient {
     request: V1BrowserExtensionUpdateRequest
   ): Promise<V1BrowserExtension> {
     return this.http.request<V1BrowserExtension>(
-      `/browser-extensions/${encodeURIComponent(extensionId)}`,
+      `/browser/extensions/${encodeURIComponent(extensionId)}`,
       {
         method: 'PATCH',
         body: request,
@@ -71,7 +71,7 @@ export class V1BrowserExtensionsClient {
 
   delete(extensionId: string): Promise<V1BrowserExtensionDeleteResponse> {
     return this.http.request<V1BrowserExtensionDeleteResponse>(
-      `/browser-extensions/${encodeURIComponent(extensionId)}`,
+      `/browser/extensions/${encodeURIComponent(extensionId)}`,
       {
         method: 'DELETE',
       }

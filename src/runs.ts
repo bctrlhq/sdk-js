@@ -1,191 +1,99 @@
-import { v1IdempotencyHeaders, type V1HttpClient, type V1IdempotencyOptions } from './http.js';
+import type { V1HttpClient } from './http.js';
 import { iterateV1Pages } from './pagination.js';
 import type {
   V1ListEnvelope,
-  V1File,
-  V1InvocationSummary,
   V1Run,
   V1RunEvent,
   V1RunEventsListQuery,
+  V1RunFile,
   V1RunListQuery,
-  V1RunActivityItem,
-  V1RunActivityListQuery,
-  V1RunFilesExportRequest,
-  V1RunInvocationsListQuery,
-  V1RunUsage,
+  V1RunStreamEvent,
+  V1RunStreamQuery,
+  V1TraceSpan,
+  V1RunTraceListQuery,
 } from './types.js';
 
-class V1RunEventsClient {
-  constructor(
-    private readonly http: V1HttpClient,
-    private readonly runId: string
-  ) {}
-
-  list(query: V1RunEventsListQuery = {}): Promise<V1ListEnvelope<V1RunEvent>> {
-    return this.http.request<V1ListEnvelope<V1RunEvent>>(
-      `/runs/${encodeURIComponent(this.runId)}/events`,
-      { query }
-    );
+function streamUrl(http: V1HttpClient, runId: string, query: V1RunStreamQuery): string {
+  const url = new URL(`${http.baseUrl}/runs/${encodeURIComponent(runId)}/stream`);
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined) url.searchParams.set(key, String(value));
   }
-
-  iter(query: V1RunEventsListQuery = {}): AsyncGenerator<V1RunEvent, void, undefined> {
-    return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
-  }
-
-  streamUrl(
-    query: Pick<V1RunEventsListQuery, 'type' | 'status' | 'pageId' | 'contextId'> = {}
-  ): string {
-    const url = new URL(
-      `${this.http.baseUrl}/runs/${encodeURIComponent(this.runId)}/events/stream`
-    );
-    for (const [key, value] of Object.entries(query)) {
-      if (value === undefined) continue;
-      if (Array.isArray(value)) {
-        for (const item of value) url.searchParams.append(key, item);
-      } else {
-        url.searchParams.set(key, value);
-      }
-    }
-    return url.toString();
-  }
-}
-
-class V1RunActivityClient {
-  constructor(
-    private readonly http: V1HttpClient,
-    private readonly runId: string
-  ) {}
-
-  list(query: V1RunActivityListQuery = {}): Promise<V1ListEnvelope<V1RunActivityItem>> {
-    return this.http.request<V1ListEnvelope<V1RunActivityItem>>(
-      `/runs/${encodeURIComponent(this.runId)}/activity`,
-      { query }
-    );
-  }
-
-  iter(query: V1RunActivityListQuery = {}): AsyncGenerator<V1RunActivityItem, void, undefined> {
-    return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
-  }
-
-  streamUrl(query: V1RunActivityListQuery = {}): string {
-    const url = new URL(
-      `${this.http.baseUrl}/runs/${encodeURIComponent(this.runId)}/activity/stream`
-    );
-    for (const [key, value] of Object.entries(query)) {
-      if (value === undefined) continue;
-      if (Array.isArray(value)) {
-        for (const item of value) url.searchParams.append(key, String(item));
-      } else {
-        url.searchParams.set(key, String(value));
-      }
-    }
-    return url.toString();
-  }
+  return url.toString();
 }
 
 export class V1RunsClient {
   readonly events: V1RunEventsNamespaceClient;
-  readonly activity: V1RunActivityNamespaceClient;
+  readonly trace: V1RunTraceNamespaceClient;
   readonly files: V1RunFilesNamespaceClient;
-  readonly invocations: V1RunInvocationsNamespaceClient;
 
   constructor(private readonly http: V1HttpClient) {
     this.events = new V1RunEventsNamespaceClient(http);
-    this.activity = new V1RunActivityNamespaceClient(http);
+    this.trace = new V1RunTraceNamespaceClient(http);
     this.files = new V1RunFilesNamespaceClient(http);
-    this.invocations = new V1RunInvocationsNamespaceClient(http);
   }
 
   list(query: V1RunListQuery = {}): Promise<V1ListEnvelope<V1Run>> {
-    return this.http.request<V1ListEnvelope<V1Run>>('/runs', { query });
+    return this.http.request('/runs', { query });
   }
 
   iter(query: V1RunListQuery = {}): AsyncGenerator<V1Run, void, undefined> {
     return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
   }
 
-  get(id: string): Promise<V1Run> {
-    return this.http.request<V1Run>(`/runs/${encodeURIComponent(id)}`);
+  get(runId: string): Promise<V1Run> {
+    return this.http.request(`/runs/${encodeURIComponent(runId)}`);
   }
 
-  usage(id: string): Promise<V1RunUsage> {
-    return this.http.request<V1RunUsage>(`/runs/${encodeURIComponent(id)}/usage`);
+  streamUrl(runId: string, query: V1RunStreamQuery = {}): string {
+    return streamUrl(this.http, runId, query);
   }
 
+  stream(
+    runId: string,
+    query: V1RunStreamQuery = {},
+    options: { signal?: AbortSignal } = {}
+  ): AsyncGenerator<V1RunStreamEvent, void, undefined> {
+    return this.http.streamSse<V1RunStreamEvent>(
+      `/runs/${encodeURIComponent(runId)}/stream`,
+      { query, signal: options.signal }
+    );
+  }
 }
 
 export class V1RunEventsNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
   list(runId: string, query: V1RunEventsListQuery = {}): Promise<V1ListEnvelope<V1RunEvent>> {
-    return new V1RunEventsClient(this.http, runId).list(query);
+    return this.http.request(`/runs/${encodeURIComponent(runId)}/events`, { query });
   }
 
   iter(
     runId: string,
     query: V1RunEventsListQuery = {}
   ): AsyncGenerator<V1RunEvent, void, undefined> {
-    return new V1RunEventsClient(this.http, runId).iter(query);
-  }
-
-  streamUrl(
-    runId: string,
-    query: Pick<V1RunEventsListQuery, 'type' | 'status' | 'pageId' | 'contextId'> = {}
-  ): string {
-    return new V1RunEventsClient(this.http, runId).streamUrl(query);
+    return iterateV1Pages(query, (pageQuery) => this.list(runId, pageQuery));
   }
 }
 
-export class V1RunActivityNamespaceClient {
+export class V1RunTraceNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
-  list(
-    runId: string,
-    query: V1RunActivityListQuery = {}
-  ): Promise<V1ListEnvelope<V1RunActivityItem>> {
-    return new V1RunActivityClient(this.http, runId).list(query);
+  list(runId: string, query: V1RunTraceListQuery = {}): Promise<V1ListEnvelope<V1TraceSpan>> {
+    return this.http.request(`/runs/${encodeURIComponent(runId)}/trace`, { query });
   }
 
   iter(
     runId: string,
-    query: V1RunActivityListQuery = {}
-  ): AsyncGenerator<V1RunActivityItem, void, undefined> {
-    return new V1RunActivityClient(this.http, runId).iter(query);
-  }
-
-  streamUrl(runId: string, query: V1RunActivityListQuery = {}): string {
-    return new V1RunActivityClient(this.http, runId).streamUrl(query);
+    query: V1RunTraceListQuery = {}
+  ): AsyncGenerator<V1TraceSpan, void, undefined> {
+    return iterateV1Pages(query, (pageQuery) => this.list(runId, pageQuery));
   }
 }
 
 export class V1RunFilesNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
-  export(
-    runId: string,
-    request: V1RunFilesExportRequest = {},
-    options?: V1IdempotencyOptions
-  ): Promise<V1File> {
-    return this.http.request<V1File>(`/runs/${encodeURIComponent(runId)}/files/export`, {
-      method: 'POST',
-      body: request,
-      headers: v1IdempotencyHeaders(options),
-    });
+  list(runId: string): Promise<{ data: V1RunFile[] }> {
+    return this.http.request(`/runs/${encodeURIComponent(runId)}/files`);
   }
-}
-
-export class V1RunInvocationsNamespaceClient {
-  constructor(private readonly http: V1HttpClient) {}
-
-  list(runId: string, query: V1RunInvocationsListQuery = {}) {
-    return this.http.request<V1ListEnvelope<V1InvocationSummary>>(
-      `/runs/${encodeURIComponent(runId)}/invocations`,
-      { query }
-    );
-  }
-
-  iter(runId: string, query: V1RunInvocationsListQuery = {}) {
-    return iterateV1Pages(query, (pageQuery) => this.list(runId, pageQuery));
-  }
-
 }

@@ -1,27 +1,27 @@
-import type { V1HttpClient } from './http.js';
+import { v1IdempotencyHeaders, type V1HttpClient, type V1IdempotencyOptions } from './http.js';
 import { iterateV1Pages } from './pagination.js';
 import type {
+  AsyncBuiltinToolName,
+  BuiltinToolInputMap,
+  BuiltinToolOutputMap,
+  SyncBuiltinToolName,
+} from './generated/tool-types.js';
+import type {
   JsonObject,
+  JsonValue,
   V1ListEnvelope,
-  V1PageQuery,
   V1Tool,
+  V1ToolCall,
   V1ToolCreateRequest,
+  V1ToolListQuery,
   V1ToolUpdateRequest,
-  V1ToolVersion,
-  V1ToolVersionCreateRequest,
 } from './types.js';
-
-export interface V1ToolListQuery extends V1PageQuery {
-  spaceId?: string;
-}
-
-export type V1ToolVersionListQuery = V1PageQuery;
 
 export class V1ToolsClient {
   constructor(private readonly http: V1HttpClient) {}
 
   list(query: V1ToolListQuery = {}): Promise<V1ListEnvelope<V1Tool>> {
-    return this.http.request<V1ListEnvelope<V1Tool>>('/tools', { query });
+    return this.http.request('/tools', { query });
   }
 
   iter(query: V1ToolListQuery = {}): AsyncGenerator<V1Tool, void, undefined> {
@@ -29,55 +29,66 @@ export class V1ToolsClient {
   }
 
   create(request: V1ToolCreateRequest): Promise<V1Tool> {
-    return this.http.request<V1Tool>('/tools', { method: 'POST', body: request });
+    return this.http.request('/tools', { method: 'POST', body: request });
   }
 
-  get(id: string): Promise<V1Tool> {
-    return this.http.request<V1Tool>(`/tools/${encodeURIComponent(id)}`);
+  get(toolRef: string): Promise<V1Tool> {
+    return this.http.request(`/tools/${encodeURIComponent(toolRef)}`);
   }
 
-  update(id: string, request: V1ToolUpdateRequest): Promise<V1Tool> {
-    return this.http.request<V1Tool>(`/tools/${encodeURIComponent(id)}`, {
+  update(toolRef: string, request: V1ToolUpdateRequest): Promise<V1Tool> {
+    return this.http.request(`/tools/${encodeURIComponent(toolRef)}`, {
       method: 'PATCH',
       body: request,
     });
   }
 
-  test(id: string, request: { input?: unknown } = {}): Promise<unknown> {
-    return this.http.request(`/tools/${encodeURIComponent(id)}/test`, {
+  delete(toolRef: string): Promise<{ id: string; deleted: true }> {
+    return this.http.request(`/tools/${encodeURIComponent(toolRef)}`, { method: 'DELETE' });
+  }
+
+  call<Name extends SyncBuiltinToolName>(
+    toolRef: Name,
+    input: BuiltinToolInputMap[Name],
+    options?: V1IdempotencyOptions
+  ): Promise<BuiltinToolOutputMap[Name]>;
+  call(
+    toolRef: `tool_${string}`,
+    input: JsonObject,
+    options?: V1IdempotencyOptions
+  ): Promise<JsonValue>;
+  call(
+    toolRef: string,
+    input: unknown,
+    options?: V1IdempotencyOptions
+  ): Promise<JsonValue> {
+    return this.http.request(`/tools/${encodeURIComponent(toolRef)}/call`, {
       method: 'POST',
-      body: request,
+      body: input,
+      headers: v1IdempotencyHeaders(options),
     });
   }
 
-  listVersions(
-    id: string,
-    query: V1ToolVersionListQuery = {}
-  ): Promise<V1ListEnvelope<V1ToolVersion>> {
-    return this.http.request<V1ListEnvelope<V1ToolVersion>>(
-      `/tools/${encodeURIComponent(id)}/versions`,
-      { query }
-    );
-  }
-
-  createVersion(id: string, request: V1ToolVersionCreateRequest): Promise<V1ToolVersion> {
-    return this.http.request<V1ToolVersion>(`/tools/${encodeURIComponent(id)}/versions`, {
+  start<Name extends AsyncBuiltinToolName>(
+    toolRef: Name,
+    input: BuiltinToolInputMap[Name],
+    options?: V1IdempotencyOptions
+  ): Promise<V1ToolCall>;
+  start(
+    toolRef: `tool_${string}`,
+    input: JsonObject,
+    options?: V1IdempotencyOptions
+  ): Promise<V1ToolCall>;
+  start(
+    toolRef: string,
+    input: unknown,
+    options?: V1IdempotencyOptions
+  ): Promise<V1ToolCall> {
+    return this.http.request(`/tools/${encodeURIComponent(toolRef)}/calls`, {
       method: 'POST',
-      body: request,
+      body: input,
+      headers: v1IdempotencyHeaders(options),
     });
-  }
-
-  getVersion(id: string, versionId: string): Promise<V1ToolVersion> {
-    return this.http.request<V1ToolVersion>(
-      `/tools/${encodeURIComponent(id)}/versions/${encodeURIComponent(versionId)}`
-    );
-  }
-
-  promoteVersion(id: string, versionId: string): Promise<V1ToolVersion> {
-    return this.http.request<V1ToolVersion>(
-      `/tools/${encodeURIComponent(id)}/versions/${encodeURIComponent(versionId)}/promote`,
-      { method: 'POST' }
-    );
   }
 }
 
