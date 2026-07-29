@@ -9,6 +9,7 @@ import type {
   V1ConversationMessageCreateRequest,
   V1ConversationStreamQuery,
   V1ConversationStreamEvent,
+  V1ConversationUpdateRequest,
   V1ConversationTurn,
   V1ListEnvelope,
 } from './types.js';
@@ -38,6 +39,16 @@ export class V1ConversationsClient {
 
   get(conversationId: string): Promise<V1ConversationDetail> {
     return this.http.request(`/conversations/${encodeURIComponent(conversationId)}`);
+  }
+
+  update(
+    conversationId: string,
+    request: V1ConversationUpdateRequest
+  ): Promise<V1Conversation> {
+    return this.http.request(`/conversations/${encodeURIComponent(conversationId)}`, {
+      method: 'PATCH',
+      body: request,
+    });
   }
 
   cancel(conversationId: string): Promise<V1ConversationCancelResponse> {

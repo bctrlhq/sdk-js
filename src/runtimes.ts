@@ -11,7 +11,6 @@ import type {
   V1RuntimeStopResponse,
   V1RuntimeSummary,
   V1RuntimeUpdateRequest,
-  V1SpaceRuntimeCreateRequest,
 } from './types.js';
 
 export type V1RuntimeStartResult = V1RuntimeStartResponse;
@@ -29,13 +28,6 @@ export class V1RuntimesClient {
 
   create(request: V1RuntimeCreateRequest): Promise<V1RuntimeCreateResponse> {
     return this.http.request('/runtimes', { method: 'POST', body: request });
-  }
-
-  createInSpace(
-    spaceId: string,
-    request: V1SpaceRuntimeCreateRequest
-  ): Promise<V1RuntimeCreateResponse> {
-    return this.create({ ...request, spaceId } as V1RuntimeCreateRequest);
   }
 
   get(runtimeId: string): Promise<V1Runtime> {

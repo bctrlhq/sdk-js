@@ -43,34 +43,8 @@ second product model.
 - Explicit wait helpers such as `createAndWait`, where the method name says it
   performs more than one HTTP request.
 
-## Schema Authoring
+## Tool schemas
 
-The wire API stays language-neutral and receives JSON Schema:
-
-```ts
-outputSchema: { type: "object", properties: { total: { type: "number" } } }
-```
-
-The TypeScript SDK happy path may accept Zod:
-
-```ts
-schema: z.object({ total: z.number() });
-```
-
-The SDK converts `schema` to `outputSchema` and rejects bodies that provide both.
-Public TypeScript invocation helpers should not expose `outputSchema`; that is
-the wire field produced by the SDK.
-
-Python uses Pydantic instead of raw JSON Schema on the public helper surface:
-
-```py
-class Invoice(BaseModel):
-    invoice_number: str
-
-invocation = bctrl.runtimes.invocations.create_and_wait(
-    runtime_id,
-    action="extract",
-    instruction="Extract the invoice number.",
-    output_model=Invoice,
-)
-```
+Built-in Tool input and output types are generated from the canonical Tool
+registry. Custom Tools use language-neutral JSON Schema at the API boundary.
+Do not add SDK-only schema dialects or duplicate built-in Tool definitions.

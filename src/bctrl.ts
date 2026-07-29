@@ -6,7 +6,6 @@ import {
   V1UsageClient,
 } from './account.js';
 import { V1AiClient } from './ai.js';
-import { V1AgentsClient } from './agents.js';
 import { V1BrowserExtensionsClient } from './browserExtensions.js';
 import { V1ConversationsClient } from './conversations.js';
 import { isControllerBusy } from './errors.js';
@@ -32,7 +31,6 @@ export class BctrlV1 {
   private _spaces: V1SpacesClient | null = null;
   private _runtimes: V1RuntimesClient | null = null;
   private _runs: V1RunsClient | null = null;
-  private _agents: V1AgentsClient | null = null;
   private _conversations: V1ConversationsClient | null = null;
   private _files: V1FilesClient | null = null;
   private _help: V1HelpClient | null = null;
@@ -77,11 +75,6 @@ export class BctrlV1 {
   get runs(): V1RunsClient {
     this._runs ??= new V1RunsClient(this.http);
     return this._runs;
-  }
-
-  get agents(): V1AgentsClient {
-    this._agents ??= new V1AgentsClient(this.http);
-    return this._agents;
   }
 
   get conversations(): V1ConversationsClient {

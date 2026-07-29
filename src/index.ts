@@ -8,7 +8,6 @@ export {
   V1UsageClient,
 } from './account.js';
 export { V1AiClient, V1AiCredentialsClient, V1AiModelsClient } from './ai.js';
-export { V1AgentsClient } from './agents.js';
 export { V1BrowserExtensionsClient } from './browserExtensions.js';
 export {
   V1ConversationEventsClient,
@@ -43,11 +42,7 @@ export {
   V1RunsClient,
 } from './runs.js';
 export { toOutputSchema, type JsonSchemaLike, type JsonSchemaObject } from './schemas.js';
-export {
-  V1SpaceEnvironmentNamespaceClient,
-  V1SpaceRuntimesNamespaceClient,
-  V1SpacesClient,
-} from './spaces.js';
+export { V1SpacesClient } from './spaces.js';
 export { V1ToolCallsClient } from './toolCalls.js';
 export { passthroughJsonSchema, V1ToolsClient } from './tools.js';
 export type {

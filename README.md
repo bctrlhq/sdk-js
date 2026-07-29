@@ -8,10 +8,10 @@ pnpm add @bctrl/sdk
 import { Bctrl } from '@bctrl/sdk';
 
 const bctrl = new Bctrl({ apiKey: process.env.BCTRL_API_KEY });
-const { runtime, run } = await bctrl.runtimes.start('rt_...');
+const started = await bctrl.runtimes.start('rt_...');
 
 const result = await bctrl.tools.call('stagehand.extract', {
-  runtimeId: runtime.id,
+  runtimeId: started.runtimeId,
   instruction: 'Extract the products',
   schema: {
     type: 'object',
@@ -19,7 +19,7 @@ const result = await bctrl.tools.call('stagehand.extract', {
   },
 });
 
-const call = await bctrl.tools.start('captcha.solve', { runtimeId: runtime.id });
+const call = await bctrl.tools.start('captcha.solve', { runtimeId: started.runtimeId });
 const solved = await bctrl.toolCalls.result(call.id, { waitSeconds: 60 });
 ```
 
@@ -28,7 +28,7 @@ Agents are persistent conversations attached to an active runtime:
 ```ts
 const conversation = await bctrl.conversations.create({
   agent: 'browser-use',
-  runtimeId: runtime.id,
+  runtimeId: started.runtimeId,
 });
 
 await bctrl.conversations.messages.create(conversation.id, {

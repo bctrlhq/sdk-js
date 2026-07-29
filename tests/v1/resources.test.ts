@@ -22,10 +22,10 @@ test('the SDK exposes only the canonical automation resources and routes', async
               ? method === 'POST'
                 ? { id: 'conv_1', status: 'idle' }
                 : { data: [], nextCursor: null }
-              : url.pathname === '/v1/conversations/conv_1/messages'
-                ? { conversationId: 'conv_1', turnId: 'turn_1' }
-                : url.pathname === '/v1/agents'
-                  ? { data: [], nextCursor: null }
+                : url.pathname === '/v1/conversations/conv_1'
+                  ? { id: 'conv_1', agent: 'stagehand', status: 'idle' }
+                  : url.pathname === '/v1/conversations/conv_1/messages'
+                    ? { conversationId: 'conv_1', turnId: 'turn_1' }
                   : url.pathname === '/v1/runs/run_1/trace'
                     ? { data: [], nextCursor: null }
                     : url.pathname === '/v1/runs/run_1/events'
@@ -58,8 +58,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
     await client.tools.start('runtime.files.list', { runtimeId: 'rt_1' });
   }
   await client.toolCalls.result('call_1', { waitSeconds: 30 });
-  await client.agents.list();
   await client.conversations.create({ agent: 'browser-use', runtimeId: 'rt_1' });
+  await client.conversations.update('conv_1', { agent: 'stagehand' });
   await client.conversations.messages.create('conv_1', { text: 'Complete checkout' });
   await client.runs.trace.list('run_1');
   await client.runs.events.list('run_1');
@@ -71,8 +71,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'POST /v1/tools/stagehand.act/call',
       'POST /v1/tools/captcha.solve/calls',
       'GET /v1/tool-calls/call_1/result?waitSeconds=30',
-      'GET /v1/agents',
       'POST /v1/conversations',
+      'PATCH /v1/conversations/conv_1',
       'POST /v1/conversations/conv_1/messages',
       'GET /v1/runs/run_1/trace',
       'GET /v1/runs/run_1/events',

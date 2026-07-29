@@ -106,10 +106,7 @@ export type V1SpaceStorageMount = OpenApiSchemas['EnvironmentStorageMountOutput'
 export type V1SpaceVaultMount = NonNullable<OpenApiSchemas['EnvironmentMountsOutput']['vault']>;
 export type V1SpaceAiMount = NonNullable<OpenApiSchemas['EnvironmentMountsOutput']['ai']>;
 export type V1SpaceEnvironment = OpenApiSchemas['EnvironmentMountsOutput'];
-export type V1SpaceAiMountUpdate = NonNullable<
-  OpenApiSchemas['SpaceEnvironmentUpdateRequest']['ai']
->;
-export type V1SpaceEnvironmentUpdateRequest = OpenApiSchemas['SpaceEnvironmentUpdateRequest'];
+export type V1SpaceEnvironmentPatch = OpenApiSchemas['SpaceEnvironmentPatch'];
 
 export type V1RuntimeType = OpenApiSchemas['RuntimeSummary']['type'];
 export type V1RuntimeStatus = OpenApiSchemas['RuntimeSummary']['status'];
@@ -129,7 +126,6 @@ export type V1BrowserRuntimeCreateConfig = OpenApiSchemas['BrowserRuntimeCreateC
 export type V1BrowserRuntimeConfig = OpenApiSchemas['BrowserRuntimeConfig'];
 export type V1RuntimeFingerprint = OpenApiSchemas['RuntimeFingerprint'];
 export type V1RuntimeCreateRequest = OpenApiSchemas['RuntimeCreateRequest'];
-export type V1SpaceRuntimeCreateRequest = Omit<V1RuntimeCreateRequest, 'spaceId'>;
 export type V1RuntimeUpdateRequest = OpenApiSchemas['RuntimeUpdateRequest'];
 export type V1RuntimeDeleteResponse = OpenApiSchemas['RuntimeDeleteResponse'];
 export type V1RuntimeListQuery = OpenApiQuery<'runtimes.list'>;
@@ -169,11 +165,11 @@ export type V1Account = OpenApiSchemas['Account'];
 export type V1AccountPatchRequest = OpenApiSchemas['AccountPatchRequest'];
 export type V1AccountUpdateQuery = OpenApiQuery<'account.update'>;
 
-export type V1Agent = OpenApiSchemas['Agent'];
-export type V1AgentListQuery = V1PageQuery;
+export type V1AgentId = OpenApiSchemas['Conversation']['agent'];
 export type V1Conversation = OpenApiSchemas['Conversation'];
 export type V1ConversationDetail = OpenApiSchemas['ConversationDetail'];
 export type V1ConversationCreateRequest = OpenApiSchemas['ConversationCreateRequest'];
+export type V1ConversationUpdateRequest = OpenApiSchemas['ConversationUpdateRequest'];
 export type V1ConversationMessageCreateRequest =
   OpenApiSchemas['ConversationMessageCreateRequest'];
 export type V1ConversationTurn = OpenApiSchemas['AgentTurnAccepted'];
