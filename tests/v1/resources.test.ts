@@ -63,6 +63,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.conversations.messages.create('conv_1', { text: 'Complete checkout' });
   await client.runs.trace.list('run_1');
   await client.runs.events.list('run_1');
+  await client.runs.get('run_1', { include: 'connection' });
+  await client.runtimes.get('rt_1', { include: 'connection' });
   await client.browserExtensions.list();
 
   assert.deepEqual(
@@ -76,6 +78,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'POST /v1/conversations/conv_1/messages',
       'GET /v1/runs/run_1/trace',
       'GET /v1/runs/run_1/events',
+      'GET /v1/runs/run_1?include=connection',
+      'GET /v1/runtimes/rt_1?include=connection',
       'GET /v1/browser/extensions',
     ]
   );

@@ -6,6 +6,7 @@ import type {
   V1RuntimeCreateRequest,
   V1RuntimeCreateResponse,
   V1RuntimeDeleteResponse,
+  V1RuntimeGetQuery,
   V1RuntimeListQuery,
   V1RuntimeStartResponse,
   V1RuntimeStopResponse,
@@ -26,12 +27,19 @@ export class V1RuntimesClient {
     return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
   }
 
-  create(request: V1RuntimeCreateRequest): Promise<V1RuntimeCreateResponse> {
-    return this.http.request('/runtimes', { method: 'POST', body: request });
+  create(
+    request: V1RuntimeCreateRequest,
+    options?: V1IdempotencyOptions
+  ): Promise<V1RuntimeCreateResponse> {
+    return this.http.request('/runtimes', {
+      method: 'POST',
+      body: request,
+      headers: v1IdempotencyHeaders(options),
+    });
   }
 
-  get(runtimeId: string): Promise<V1Runtime> {
-    return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}`);
+  get(runtimeId: string, query: V1RuntimeGetQuery = {}): Promise<V1Runtime> {
+    return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}`, { query });
   }
 
   update(runtimeId: string, request: V1RuntimeUpdateRequest): Promise<V1Runtime> {
@@ -48,10 +56,15 @@ export class V1RuntimesClient {
     });
   }
 
-  start(runtimeId: string, options?: V1IdempotencyOptions): Promise<V1RuntimeStartResponse> {
+  start(
+    runtimeId: string,
+    options: V1IdempotencyOptions & { recording?: boolean } = {}
+  ): Promise<V1RuntimeStartResponse> {
+    const { recording, ...idempotency } = options;
     return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}/start`, {
       method: 'POST',
-      headers: v1IdempotencyHeaders(options),
+      ...(recording === undefined ? {} : { body: { recording } }),
+      headers: v1IdempotencyHeaders(idempotency),
     });
   }
 

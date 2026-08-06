@@ -3,10 +3,12 @@ import { iterateV1Pages } from './pagination.js';
 import type {
   V1ListEnvelope,
   V1Run,
+  V1RunDetail,
   V1RunEvent,
   V1RunEventsListQuery,
   V1RunFile,
   V1RunListQuery,
+  V1RunGetQuery,
   V1RunStreamEvent,
   V1RunStreamQuery,
   V1TraceSpan,
@@ -40,8 +42,8 @@ export class V1RunsClient {
     return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
   }
 
-  get(runId: string): Promise<V1Run> {
-    return this.http.request(`/runs/${encodeURIComponent(runId)}`);
+  get(runId: string, query: V1RunGetQuery = {}): Promise<V1RunDetail> {
+    return this.http.request(`/runs/${encodeURIComponent(runId)}`, { query });
   }
 
   streamUrl(runId: string, query: V1RunStreamQuery = {}): string {
