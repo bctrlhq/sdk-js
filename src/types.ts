@@ -233,13 +233,7 @@ export type V1Tool = OpenApiSchemas['Tool'];
 export type V1ToolCreateRequest = OpenApiSchemas['ToolCreateRequest'];
 export type V1ToolUpdateRequest = OpenApiSchemas['ToolUpdateRequest'];
 export type V1ToolListQuery = OpenApiQuery<'tools.list'>;
-export type V1ToolCallRequest = {
-  input?: unknown;
-  runtimeId?: string;
-  runId?: string;
-  parentId?: string;
-  executionMode?: 'sync' | 'async';
-};
+export type V1ToolCallRequest = JsonObject;
 export type V1ToolCallResult = JsonValue;
 export type V1ToolCallResponseRequest = { response: unknown };
 export type V1ToolCallResultQuery = OpenApiQuery<'tool-calls.result'>;

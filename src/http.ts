@@ -32,6 +32,11 @@ export interface V1IdempotencyOptions {
   idempotencyKey?: string;
 }
 
+export interface V1ToolInvocationOptions extends V1IdempotencyOptions {
+  /** Direct Runtime-bound Tools resolve their active Run server-side. */
+  runtimeId?: string;
+}
+
 interface V1ErrorBody {
   error: string;
   code?: string;

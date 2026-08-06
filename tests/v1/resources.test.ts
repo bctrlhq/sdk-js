@@ -3,13 +3,18 @@ import test from 'node:test';
 import { Bctrl } from '../../src/index.js';
 
 test('the SDK exposes only the canonical automation resources and routes', async () => {
-  const requests: Array<{ method: string; path: string; body: unknown }> = [];
+  const requests: Array<{ method: string; path: string; body: unknown; headers: Headers }> = [];
   const fetchMock: typeof fetch = async (input, init) => {
     const url = new URL(String(input));
     const method = init?.method ?? 'GET';
     const body =
       typeof init?.body === 'string' ? (JSON.parse(init.body) as unknown) : init?.body ?? null;
-    requests.push({ method, path: `${url.pathname}${url.search}`, body });
+    requests.push({
+      method,
+      path: `${url.pathname}${url.search}`,
+      body,
+      headers: new Headers(init?.headers),
+    });
 
     const response =
       url.pathname === '/v1/tools/stagehand.act/call'
@@ -46,14 +51,13 @@ test('the SDK exposes only the canonical automation resources and routes', async
   });
 
   const actResult = await client.tools.call('stagehand.act', {
-    runtimeId: 'rt_1',
     instruction: 'Continue',
-  });
+  }, { runtimeId: 'rt_1' });
   void actResult.success;
-  await client.tools.start('captcha.solve', { runtimeId: 'rt_1' });
+  await client.tools.start('captcha.solve', {}, { runtimeId: 'rt_1' });
   if (false) {
     // @ts-expect-error stagehand.act requires an instruction
-    await client.tools.call('stagehand.act', { runtimeId: 'rt_1' });
+    await client.tools.call('stagehand.act', {}, { runtimeId: 'rt_1' });
     // @ts-expect-error runtime.files.list does not advertise asynchronous execution
     await client.tools.start('runtime.files.list', { runtimeId: 'rt_1' });
   }
@@ -83,6 +87,9 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'GET /v1/browser/extensions',
     ]
   );
+  assert.equal(requests[0]?.headers.get('bctrl-runtime-id'), 'rt_1');
+  assert.equal(requests[1]?.headers.get('bctrl-runtime-id'), 'rt_1');
+  assert.equal((requests[0]?.body as Record<string, unknown>)?.runtimeId, undefined);
 
   assert.equal('invocations' in client, false);
   assert.equal('vault' in client, false);

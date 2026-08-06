@@ -1,4 +1,8 @@
-import { v1IdempotencyHeaders, type V1HttpClient, type V1IdempotencyOptions } from './http.js';
+import {
+  v1IdempotencyHeaders,
+  type V1HttpClient,
+  type V1ToolInvocationOptions,
+} from './http.js';
 import { iterateV1Pages } from './pagination.js';
 import type {
   AsyncBuiltinToolName,
@@ -50,44 +54,52 @@ export class V1ToolsClient {
   call<Name extends SyncBuiltinToolName>(
     toolRef: Name,
     input: BuiltinToolInputMap[Name],
-    options?: V1IdempotencyOptions
+    options?: V1ToolInvocationOptions
   ): Promise<BuiltinToolOutputMap[Name]>;
   call(
     toolRef: `tool_${string}`,
     input: JsonObject,
-    options?: V1IdempotencyOptions
+    options?: V1ToolInvocationOptions
   ): Promise<JsonValue>;
   call(
     toolRef: string,
     input: unknown,
-    options?: V1IdempotencyOptions
+    options?: V1ToolInvocationOptions
   ): Promise<JsonValue> {
+    const headers = {
+      ...v1IdempotencyHeaders(options),
+      ...(options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {}),
+    };
     return this.http.request(`/tools/${encodeURIComponent(toolRef)}/call`, {
       method: 'POST',
       body: input,
-      headers: v1IdempotencyHeaders(options),
+      headers,
     });
   }
 
   start<Name extends AsyncBuiltinToolName>(
     toolRef: Name,
     input: BuiltinToolInputMap[Name],
-    options?: V1IdempotencyOptions
+    options?: V1ToolInvocationOptions
   ): Promise<V1ToolCall>;
   start(
     toolRef: `tool_${string}`,
     input: JsonObject,
-    options?: V1IdempotencyOptions
+    options?: V1ToolInvocationOptions
   ): Promise<V1ToolCall>;
   start(
     toolRef: string,
     input: unknown,
-    options?: V1IdempotencyOptions
+    options?: V1ToolInvocationOptions
   ): Promise<V1ToolCall> {
+    const headers = {
+      ...v1IdempotencyHeaders(options),
+      ...(options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {}),
+    };
     return this.http.request(`/tools/${encodeURIComponent(toolRef)}/calls`, {
       method: 'POST',
       body: input,
-      headers: v1IdempotencyHeaders(options),
+      headers,
     });
   }
 }
