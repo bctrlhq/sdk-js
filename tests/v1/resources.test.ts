@@ -55,6 +55,15 @@ test('the SDK exposes only the canonical automation resources and routes', async
   }, { runtimeId: 'rt_1' });
   void actResult.success;
   await client.tools.start('captcha.solve', {}, { runtimeId: 'rt_1' });
+  await client.tools.start(
+    'code.execute',
+    {
+      source: 'export default async () => ({ ok: true });',
+      input: { value: 1 },
+      timeoutMs: 1_000,
+    },
+    { runtimeId: 'rt_1', idempotencyKey: 'code-execute-1' }
+  );
   if (false) {
     // @ts-expect-error stagehand.act requires an instruction
     await client.tools.call('stagehand.act', {}, { runtimeId: 'rt_1' });
@@ -76,6 +85,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
     [
       'POST /v1/tools/stagehand.act/call',
       'POST /v1/tools/captcha.solve/calls',
+      'POST /v1/tools/code.execute/calls',
       'GET /v1/tool-calls/call_1/result?waitSeconds=30',
       'POST /v1/conversations',
       'PATCH /v1/conversations/conv_1',
@@ -89,6 +99,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
   );
   assert.equal(requests[0]?.headers.get('bctrl-runtime-id'), 'rt_1');
   assert.equal(requests[1]?.headers.get('bctrl-runtime-id'), 'rt_1');
+  assert.equal(requests[2]?.headers.get('bctrl-runtime-id'), 'rt_1');
+  assert.equal(requests[2]?.headers.get('idempotency-key'), 'code-execute-1');
   assert.equal((requests[0]?.body as Record<string, unknown>)?.runtimeId, undefined);
 
   assert.equal('invocations' in client, false);
