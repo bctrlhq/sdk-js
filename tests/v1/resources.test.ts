@@ -60,6 +60,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
     {
       source: 'export default async () => ({ ok: true });',
       input: { value: 1 },
+      language: 'typescript',
+      maxLogBytes: 500_000,
       timeoutMs: 1_000,
     },
     { runtimeId: 'rt_1', idempotencyKey: 'code-execute-1' }
