@@ -13,6 +13,7 @@ export interface BuiltinToolInputMap {
   "browser.pages.list": components['schemas']["BuiltinToolBrowserPagesListInput"];
   "browser.pages.open": components['schemas']["BuiltinToolBrowserPagesOpenInput"];
   "captcha.solve": components['schemas']["BuiltinToolCaptchaSolveInput"];
+  "code.execute": components['schemas']["BuiltinToolCodeExecuteInput"];
   "files.list": components['schemas']["BuiltinToolFilesListInput"];
   "files.read_text": components['schemas']["BuiltinToolFilesReadTextInput"];
   "human.request": components['schemas']["BuiltinToolHumanRequestInput"];
@@ -59,5 +60,5 @@ export interface BuiltinToolOutputMap {
 
 export type BuiltinToolName = keyof BuiltinToolInputMap;
 export type SyncBuiltinToolName = keyof BuiltinToolOutputMap;
-export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "captcha.solve" | "human.request" | "run.files.export" | "runtime.files.collect" | "runtime.files.stage" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
+export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "captcha.solve" | "code.execute" | "human.request" | "run.files.export" | "runtime.files.collect" | "runtime.files.stage" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
 
