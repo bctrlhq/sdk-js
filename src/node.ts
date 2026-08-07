@@ -7,7 +7,7 @@ type V1CodeToolCreateRequest = Extract<
   { implementation: { type: 'code' } }
 >;
 
-export async function createHostedToolFromFile(
+export async function createCodeToolFromFile(
   client: BctrlV1,
   request: Omit<V1CodeToolCreateRequest, 'implementation'> & {
     implementation: Omit<V1CodeToolCreateRequest['implementation'], 'source'>;
