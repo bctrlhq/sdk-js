@@ -51,3 +51,11 @@ export type V1ProxyTestResponse = OpenApiSchemas['ProxyTestResponse'];
 export type V1ProxyPool = OpenApiSchemas['ProxyPool'];
 
 export type V1ProxyPoolListQuery = OpenApiQuery<'proxies.pools.list'>;
+
+export type V1ProxyLocation = OpenApiSchemas['ProxyLocation'];
+
+export type V1ProxyLocationListResponse = OpenApiSchemas['ProxyLocationListResponse'];
+
+export type V1ProxyGeoListQuery = OpenApiQuery<'proxies.geo.list'>;
+
+export type V1ProxyLocationsListQuery = OpenApiQuery<'proxies.locations.list'>;

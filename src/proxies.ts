@@ -5,12 +5,40 @@ import type {
   V1Proxy,
   V1ProxyCreateRequest,
   V1ProxyDeleteResponse,
+  V1ProxyGeoListQuery,
   V1ProxyListQuery,
+  V1ProxyLocation,
+  V1ProxyLocationListResponse,
+  V1ProxyLocationsListQuery,
   V1ProxyPool,
   V1ProxyPoolListQuery,
   V1ProxyTestResponse,
   V1ProxyUpdateRequest,
 } from './types.js';
+
+export class V1ProxyGeoClient {
+  constructor(private readonly http: V1HttpClient) {}
+
+  list(query: V1ProxyGeoListQuery = {}): Promise<V1ProxyLocationListResponse> {
+    return this.http.request<V1ProxyLocationListResponse>('/proxies/geo', { query });
+  }
+
+  iter(query: V1ProxyGeoListQuery = {}): AsyncGenerator<V1ProxyLocation, void, undefined> {
+    return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
+  }
+}
+
+export class V1ProxyLocationsClient {
+  constructor(private readonly http: V1HttpClient) {}
+
+  list(query: V1ProxyLocationsListQuery = {}): Promise<V1ProxyLocationListResponse> {
+    return this.http.request<V1ProxyLocationListResponse>('/proxies/locations', { query });
+  }
+
+  iter(query: V1ProxyLocationsListQuery = {}): AsyncGenerator<V1ProxyLocation, void, undefined> {
+    return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
+  }
+}
 
 export class V1ProxyPoolsClient {
   constructor(private readonly http: V1HttpClient) {}
@@ -29,9 +57,13 @@ export class V1ProxyPoolsClient {
 }
 
 export class V1ProxiesClient {
+  readonly geo: V1ProxyGeoClient;
+  readonly locations: V1ProxyLocationsClient;
   readonly pools: V1ProxyPoolsClient;
 
   constructor(private readonly http: V1HttpClient) {
+    this.geo = new V1ProxyGeoClient(http);
+    this.locations = new V1ProxyLocationsClient(http);
     this.pools = new V1ProxyPoolsClient(http);
   }
 

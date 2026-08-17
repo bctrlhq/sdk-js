@@ -34,7 +34,12 @@ export { V1FilesClient } from './files.js';
 export { V1HelpClient } from './help.js';
 export { V1RuntimesClient } from './runtimes.js';
 export { V1NotificationRecipientsClient } from './notificationRecipients.js';
-export { V1ProxiesClient, V1ProxyPoolsClient } from './proxies.js';
+export {
+  V1ProxiesClient,
+  V1ProxyGeoClient,
+  V1ProxyLocationsClient,
+  V1ProxyPoolsClient,
+} from './proxies.js';
 export {
   V1RunEventsNamespaceClient,
   V1RunFilesNamespaceClient,

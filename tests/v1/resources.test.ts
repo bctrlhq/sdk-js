@@ -81,6 +81,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.runs.get('run_1', { include: 'connection' });
   await client.runtimes.get('rt_1', { include: 'connection' });
   await client.browserExtensions.list();
+  await client.proxies.geo.list({ country: 'us', type: 'city' });
+  await client.proxies.locations.list({ pool: 'pool1', limit: 10 });
 
   assert.deepEqual(
     requests.map(({ method, path }) => `${method} ${path}`),
@@ -97,6 +99,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'GET /v1/runs/run_1?include=connection',
       'GET /v1/runtimes/rt_1?include=connection',
       'GET /v1/browser/extensions',
+      'GET /v1/proxies/geo?country=us&type=city',
+      'GET /v1/proxies/locations?pool=pool1&limit=10',
     ]
   );
   assert.equal(requests[0]?.headers.get('bctrl-runtime-id'), 'rt_1');
