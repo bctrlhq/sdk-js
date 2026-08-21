@@ -28,7 +28,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
                 ? { id: 'conv_1', status: 'idle' }
                 : { data: [], nextCursor: null }
                 : url.pathname === '/v1/conversations/conv_1'
-                  ? { id: 'conv_1', agent: 'stagehand', status: 'idle' }
+                  ? { id: 'conv_1', status: 'idle' }
                   : url.pathname === '/v1/conversations/conv_1/messages'
                     ? { conversationId: 'conv_1', turnId: 'turn_1' }
                   : url.pathname === '/v1/runs/run_1/trace'
@@ -73,9 +73,10 @@ test('the SDK exposes only the canonical automation resources and routes', async
     await client.tools.start('runtime.files.list', { runtimeId: 'rt_1' });
   }
   await client.toolCalls.result('call_1', { waitSeconds: 30 });
-  await client.conversations.create({ agent: 'browser-use', runtimeId: 'rt_1' });
-  await client.conversations.update('conv_1', { agent: 'stagehand' });
+  await client.conversations.create({ runtimeId: 'rt_1' });
+  await client.conversations.update('conv_1', {});
   await client.conversations.messages.create('conv_1', { text: 'Complete checkout' });
+  await client.runtimes.start('rt_1');
   await client.runs.trace.list('run_1');
   await client.runs.events.list('run_1');
   await client.runs.get('run_1', { include: 'connection' });
@@ -94,6 +95,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'POST /v1/conversations',
       'PATCH /v1/conversations/conv_1',
       'POST /v1/conversations/conv_1/messages',
+      'POST /v1/runtimes/rt_1/start',
       'GET /v1/runs/run_1/trace',
       'GET /v1/runs/run_1/events',
       'GET /v1/runs/run_1?include=connection',
@@ -108,6 +110,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
   assert.equal(requests[2]?.headers.get('bctrl-runtime-id'), 'rt_1');
   assert.equal(requests[2]?.headers.get('idempotency-key'), 'code-execute-1');
   assert.equal((requests[0]?.body as Record<string, unknown>)?.runtimeId, undefined);
+  assert.deepEqual(requests[7]?.body, {});
 
   assert.equal('invocations' in client, false);
   assert.equal('vault' in client, false);

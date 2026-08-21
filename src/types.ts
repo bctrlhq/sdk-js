@@ -46,7 +46,6 @@ export type {
   V1AiCredentialTestResponse,
   V1AiCredentialUpdateRequest,
   V1AiModel,
-  V1AiModelEngine,
   V1AiModelListQuery,
   V1AiModelListResponse,
   V1AiModelStatus,
@@ -168,7 +167,6 @@ export type V1Account = OpenApiSchemas['Account'];
 export type V1AccountPatchRequest = OpenApiSchemas['AccountPatchRequest'];
 export type V1AccountUpdateQuery = OpenApiQuery<'account.update'>;
 
-export type V1AgentId = OpenApiSchemas['Conversation']['agent'];
 export type V1Conversation = OpenApiSchemas['Conversation'];
 export type V1ConversationDetail = OpenApiSchemas['ConversationDetail'];
 export type V1ConversationCreateRequest = OpenApiSchemas['ConversationCreateRequest'];

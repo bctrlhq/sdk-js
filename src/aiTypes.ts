@@ -3,7 +3,6 @@ import type { OpenApiQuery, OpenApiSchemas } from './openapi.js';
 export type V1AiCredentialProvider = OpenApiSchemas['AiCredential']['provider'];
 
 export type V1AiModelStatus = OpenApiSchemas['AiModel']['status'];
-export type V1AiModelEngine = OpenApiSchemas['AiModel']['engines'][number];
 
 export type V1AiModel = OpenApiSchemas['AiModel'];
 

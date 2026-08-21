@@ -63,7 +63,9 @@ export class V1RuntimesClient {
     const { recording, ...idempotency } = options;
     return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}/start`, {
       method: 'POST',
-      ...(recording === undefined ? {} : { body: { recording } }),
+      // The gateway contract is a defaulted JSON object. Sending `{}` keeps
+      // the no-options form valid as well as the explicit recording form.
+      body: recording === undefined ? {} : { recording },
       headers: v1IdempotencyHeaders(idempotency),
     });
   }

@@ -1,6 +1,6 @@
 {
   "name": "@bctrl/sdk",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "BCTRL SDK - Remote browser automation",
   "repository": {
     "type": "git",

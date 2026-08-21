@@ -27,7 +27,6 @@ Agents are persistent conversations attached to an active runtime:
 
 ```ts
 const conversation = await bctrl.conversations.create({
-  agent: 'browser-use',
   runtimeId: started.runtimeId,
 });
 
