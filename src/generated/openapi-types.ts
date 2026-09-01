@@ -2292,18 +2292,26 @@ export interface components {
             textMuted: string;
         };
         BrowserExtension: {
+            admissionPolicyVersion?: number;
+            chromeExtensionId?: string;
             contentHash?: components["schemas"]["Sha256Digest"];
             createdAt: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             format: "crx";
+            hostPermissions: string[];
             id: components["schemas"]["ExtensionId"];
+            /** @constant */
+            manifestVersion?: 3;
             name: components["schemas"]["ResourceName"];
+            permissions: string[];
             profileCount: components["schemas"]["NonNegativeCount"];
             sizeBytes?: components["schemas"]["ByteCount"];
             /** Format: uri */
             sourceUrl?: string;
             subaccountId?: components["schemas"]["SubaccountId"];
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            /** @enum {string} */
+            verificationStatus: "ready" | "verification_required";
             version: string;
         };
         BrowserExtensionCreateRequest: {
@@ -2343,13 +2351,17 @@ export interface components {
         };
         BrowserRuntimeConfig: {
             autoUpgrade?: boolean;
-            extensionIds?: string[];
+            extensionIds?: components["schemas"]["ExtensionId"][];
             fingerprint?: components["schemas"]["RuntimeFingerprint"];
             forceOpenShadowRoots?: boolean;
             headless: boolean;
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
             proxy?: components["schemas"]["RuntimeProxyConfig"] | null;
+            /** @enum {string} */
+            proxyGeoMode?: "supplied" | "automatic";
+            /** @enum {string} */
+            proxyVerificationMode?: "fast" | "verified";
             /** @enum {string} */
             stealth?: "normal" | "best" | "experimental";
             webRtcProxyOnly?: boolean;
@@ -2370,6 +2382,10 @@ export interface components {
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
             proxy?: components["schemas"]["RuntimeProxyInput"];
+            /** @enum {string} */
+            proxyGeoMode?: "supplied" | "automatic";
+            /** @enum {string} */
+            proxyVerificationMode?: "fast" | "verified";
             /** @enum {string} */
             stealth?: "normal" | "best" | "experimental";
             webRtcProxyOnly?: boolean;
@@ -2650,6 +2666,40 @@ export interface components {
             expiresInSeconds: number;
             prompt: string;
             responseSchema?: components["schemas"]["JsonObject"];
+            /** @description Optional secure View appended to configured outbound notifications. Response access and the action center are enabled automatically; scope is inferred from the current Run, omitted settings use the platform View defaults, and its lifetime is bounded by this request. */
+            view?: {
+                /** @description Optional content surfaces for the human-action View. */
+                components?: {
+                    /**
+                     * @description Include durable Agent conversations.
+                     * @default false
+                     */
+                    conversations: boolean;
+                    /**
+                     * @description Include runtime event history.
+                     * @default false
+                     */
+                    events: boolean;
+                    /**
+                     * @description Include runtime recordings.
+                     * @default true
+                     */
+                    recordings: boolean;
+                    /**
+                     * @description Include runtime traces.
+                     * @default true
+                     */
+                    trace: boolean;
+                };
+                presentation?: {
+                    /** @constant */
+                    mode: "hosted";
+                } | {
+                    allowedOrigins: string[];
+                    /** @constant */
+                    mode: "embedded";
+                };
+            };
         };
         BuiltinToolHumanRequestOutput: string | number | boolean | null | components["schemas"]["JsonValue"][] | {
             [key: string]: components["schemas"]["JsonValue"];
@@ -4325,7 +4375,7 @@ export interface components {
              */
             runId: string;
             /** @enum {string} */
-            source: "control-plane" | "browser-host" | "runtime-agent" | "gateway" | "cdp" | "webdriver";
+            source: "browser" | "network" | "runtime" | "agent" | "tool" | "system";
             spanId: string | null;
             timestamp: components["schemas"]["Rfc3339Timestamp"];
             type: string;
@@ -4479,6 +4529,12 @@ export interface components {
             type: "browser";
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
+        RuntimeBenchmarkProvenance: {
+            engineArtifactSha256: string;
+            engineName: string;
+            engineVersion: string;
+            hostRelease: string;
+        };
         RuntimeCreateRequest: {
             config?: components["schemas"]["BrowserRuntimeCreateConfig"];
             metadata?: components["schemas"]["RuntimeMetadata"];
@@ -4493,6 +4549,7 @@ export interface components {
         RuntimeCreateResponse: {
             activeRunId: string | null;
             archivedAt?: components["schemas"]["Rfc3339Timestamp"];
+            benchmarkProvenance?: components["schemas"]["RuntimeBenchmarkProvenance"];
             config?: components["schemas"]["BrowserRuntimeConfig"];
             connection?: components["schemas"]["RunConnection"];
             createdAt: components["schemas"]["Rfc3339Timestamp"];
@@ -4800,6 +4857,7 @@ export interface components {
             recording?: boolean;
         };
         RuntimeStartResponse: {
+            benchmarkProvenance?: components["schemas"]["RuntimeBenchmarkProvenance"];
             connection: components["schemas"]["RunConnection"];
             /**
              * RunId
@@ -5388,6 +5446,7 @@ export interface components {
         ViewBootstrap: components["schemas"]["HostedViewBootstrap"] | components["schemas"]["EmbeddedViewBootstrap"];
         ViewComponents: {
             bell: boolean;
+            conversations?: boolean;
             events: boolean;
             recordings: boolean;
             trace: boolean;
@@ -5398,6 +5457,11 @@ export interface components {
              * @default true
              */
             bell: boolean;
+            /**
+             * @description Include durable Agent conversations.
+             * @default false
+             */
+            conversations: boolean;
             /**
              * @description Include runtime event history.
              * @default false
@@ -10512,7 +10576,7 @@ export interface operations {
                 /** @description Filter by one or more namespaced event types. Repeat the query parameter for multiple values. */
                 type?: string[];
                 /** @description Filter by one or more event sources. Repeat the query parameter for multiple values. */
-                source?: ("control-plane" | "browser-host" | "runtime-agent" | "gateway" | "cdp" | "webdriver")[];
+                source?: ("browser" | "network" | "runtime" | "agent" | "tool" | "system")[];
                 spanId?: string;
                 pageId?: string;
                 cursor?: string;
