@@ -8,6 +8,7 @@ import type {
   V1RuntimeDeleteResponse,
   V1RuntimeGetQuery,
   V1RuntimeListQuery,
+  V1RuntimeStartRequest,
   V1RuntimeStartResponse,
   V1RuntimeStopResponse,
   V1RuntimeSummary,
@@ -56,17 +57,20 @@ export class V1RuntimesClient {
     });
   }
 
+  /**
+   * Start a Runtime. `files` are Space Files bound to the Run this start
+   * opens; they are in its browser once their binding is ready.
+   */
   start(
     runtimeId: string,
-    options: V1IdempotencyOptions & { recording?: boolean } = {}
+    options: V1IdempotencyOptions & V1RuntimeStartRequest = {}
   ): Promise<V1RuntimeStartResponse> {
-    const { recording, ...idempotency } = options;
+    const { idempotencyKey, ...body } = options;
     return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}/start`, {
       method: 'POST',
-      // The gateway contract is a defaulted JSON object. Sending `{}` keeps
-      // the no-options form valid as well as the explicit recording form.
-      body: recording === undefined ? {} : { recording },
-      headers: v1IdempotencyHeaders(idempotency),
+      // The gateway contract is a defaulted JSON object, so `{}` is valid.
+      body,
+      headers: v1IdempotencyHeaders({ idempotencyKey }),
     });
   }
 

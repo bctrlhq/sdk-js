@@ -80,6 +80,17 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.runs.trace.list('run_1');
   await client.runs.events.list('run_1');
   await client.runs.get('run_1', { include: 'connection' });
+  await client.runs.files.list('run_1', { role: 'input' });
+  await client.runs.files.add('run_1', 'file_1');
+  await client.runs.files.upload(
+    'run_1',
+    { file: new Blob(['x']), name: 'a.txt' },
+    { idempotencyKey: 'upload-1' }
+  );
+  await client.runs.files.retry('run_1', 'file_1');
+  await client.runs.files.remove('run_1', 'file_1');
+  await client.runs.files.collect('run_1', { runtimePath: 'downloads/r.pdf' });
+  await client.runtimes.start('rt_1', { files: [{ fileId: 'file_1' }] });
   await client.runtimes.get('rt_1', { include: 'connection' });
   await client.browserExtensions.list();
   await client.proxies.geo.list({ country: 'us', type: 'city' });
@@ -99,6 +110,13 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'GET /v1/runs/run_1/trace',
       'GET /v1/runs/run_1/events',
       'GET /v1/runs/run_1?include=connection',
+      'GET /v1/runs/run_1/files?role=input',
+      'POST /v1/runs/run_1/files',
+      'POST /v1/runs/run_1/files/upload',
+      'POST /v1/runs/run_1/files/file_1/retry',
+      'DELETE /v1/runs/run_1/files/file_1',
+      'POST /v1/runs/run_1/files/collect',
+      'POST /v1/runtimes/rt_1/start',
       'GET /v1/runtimes/rt_1?include=connection',
       'GET /v1/browser/extensions',
       'GET /v1/proxies/geo?country=us&type=city',
@@ -111,6 +129,9 @@ test('the SDK exposes only the canonical automation resources and routes', async
   assert.equal(requests[2]?.headers.get('idempotency-key'), 'code-execute-1');
   assert.equal((requests[0]?.body as Record<string, unknown>)?.runtimeId, undefined);
   assert.deepEqual(requests[7]?.body, {});
+  assert.deepEqual(requests[12]?.body, { fileId: 'file_1' });
+  assert.equal(requests[13]?.headers.get('idempotency-key'), 'upload-1');
+  assert.deepEqual(requests[17]?.body, { files: [{ fileId: 'file_1' }] });
 
   assert.equal('invocations' in client, false);
   assert.equal('vault' in client, false);

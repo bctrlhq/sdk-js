@@ -1,4 +1,4 @@
-import type { V1HttpClient } from './http.js';
+import { v1IdempotencyHeaders, type V1HttpClient, type V1IdempotencyOptions } from './http.js';
 import { iterateV1Pages } from './pagination.js';
 import type {
   V1ListEnvelope,
@@ -7,6 +7,9 @@ import type {
   V1RunEvent,
   V1RunEventsListQuery,
   V1RunFile,
+  V1RunFileCollectRequest,
+  V1RunFilesListQuery,
+  V1RunFileUploadRequest,
   V1RunListQuery,
   V1RunGetQuery,
   V1RunStreamEvent,
@@ -92,10 +95,74 @@ export class V1RunTraceNamespaceClient {
   }
 }
 
+/**
+ * A Run's files: inputs (Space Files bound to the Run, which its browser has
+ * at `runtimePath` once `binding.state` is `ready`) and outputs the Run
+ * produced.
+ */
 export class V1RunFilesNamespaceClient {
   constructor(private readonly http: V1HttpClient) {}
 
-  list(runId: string): Promise<{ data: V1RunFile[] }> {
-    return this.http.request(`/runs/${encodeURIComponent(runId)}/files`);
+  private path(runId: string, suffix = ''): string {
+    return `/runs/${encodeURIComponent(runId)}/files${suffix}`;
+  }
+
+  list(runId: string, query: V1RunFilesListQuery = {}): Promise<V1ListEnvelope<V1RunFile>> {
+    return this.http.request(this.path(runId), { query });
+  }
+
+  iter(runId: string, query: V1RunFilesListQuery = {}): AsyncGenerator<V1RunFile, void, undefined> {
+    return iterateV1Pages(query, (pageQuery) => this.list(runId, pageQuery));
+  }
+
+  get(runId: string, fileId: string): Promise<V1RunFile> {
+    return this.http.request(this.path(runId, `/${encodeURIComponent(fileId)}`));
+  }
+
+  /** Bind an existing Space File to the Run. It keeps its Space path. */
+  add(runId: string, fileId: string): Promise<V1RunFile> {
+    return this.http.request(this.path(runId), { method: 'POST', body: { fileId } });
+  }
+
+  /**
+   * Upload a Space File and bind it to the Run in one request. The route
+   * requires an idempotency key; one is generated when none is given.
+   */
+  upload(
+    runId: string,
+    request: V1RunFileUploadRequest,
+    options: V1IdempotencyOptions = {}
+  ): Promise<V1RunFile> {
+    const form = new FormData();
+    if (request.name) form.set('file', request.file, request.name);
+    else form.set('file', request.file);
+    if (request.name) form.set('name', request.name);
+    if (request.path) form.set('path', request.path);
+    return this.http.request(this.path(runId, '/upload'), {
+      method: 'POST',
+      body: form,
+      headers: v1IdempotencyHeaders({
+        idempotencyKey: options.idempotencyKey ?? globalThis.crypto.randomUUID(),
+      }),
+    });
+  }
+
+  /** Copy a failed input into the Run's browser again. */
+  retry(runId: string, fileId: string): Promise<V1RunFile> {
+    return this.http.request(this.path(runId, `/${encodeURIComponent(fileId)}/retry`), {
+      method: 'POST',
+    });
+  }
+
+  /** Remove an input from the Run's browser. The Space File is kept. */
+  remove(runId: string, fileId: string): Promise<V1RunFile> {
+    return this.http.request(this.path(runId, `/${encodeURIComponent(fileId)}`), {
+      method: 'DELETE',
+    });
+  }
+
+  /** Save a file from the Run's workspace (for example `downloads/report.pdf`) as an output. */
+  collect(runId: string, request: V1RunFileCollectRequest): Promise<V1RunFile> {
+    return this.http.request(this.path(runId, '/collect'), { method: 'POST', body: request });
   }
 }

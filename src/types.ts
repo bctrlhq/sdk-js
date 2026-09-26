@@ -148,6 +148,18 @@ export type V1RunTraceListQuery = OpenApiQuery<'runs.trace.list'>;
 export type V1RunStreamEvent = OpenApiSchemas['RunStreamEvent'];
 export type V1RunStreamQuery = OpenApiQuery<'runs.stream'>;
 export type V1RunFile = OpenApiSchemas['RunFile'];
+export type V1RunFileRole = OpenApiSchemas['RunFileRole'];
+export type V1RunFileBinding = OpenApiSchemas['RunFileBinding'];
+export type V1RunFileBindingState = OpenApiSchemas['RunFileBindingState'];
+export type V1RunFilesListQuery = OpenApiQuery<'runs.files.list'>;
+export type V1RunFileCollectRequest = OpenApiSchemas['RunFileCollectRequest'];
+export type V1RuntimeStartRequest = OpenApiSchemas['RuntimeStartRequest'];
+/** Upload straight into a Run: a Space File at `path` (default `uploads/<name>`), bound to it. */
+export interface V1RunFileUploadRequest {
+  file: Blob;
+  name?: string;
+  path?: string;
+}
 
 export type V1File = OpenApiSchemas['File'];
 export type V1FilesListQuery = OpenApiQuery<'files.list'>;
