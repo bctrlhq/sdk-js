@@ -2710,6 +2710,8 @@ export interface components {
             turnId: string;
         };
         AiCredential: {
+            /** @description The `secret:` reference the key is read from, or null when a literal key is stored. */
+            apiKeyReference: string | null;
             /** Format: uri */
             baseUrl?: string;
             createdAt: components["schemas"]["Rfc3339Timestamp"];
@@ -2725,6 +2727,7 @@ export interface components {
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         AiCredentialCreateRequest: {
+            /** @description The provider API key, or a secret reference such as `secret:ai/openai#value`. */
             apiKey?: string;
             /** Format: uri */
             baseUrl?: string;
@@ -5483,6 +5486,8 @@ export interface components {
             host: string;
             id: string;
             name: string;
+            /** @description The `secret:` reference the password is read from, or null when a literal is stored. */
+            passwordReference: string | null;
             port: number;
             /** @enum {string} */
             protocol: "http" | "socks5";
@@ -5499,6 +5504,7 @@ export interface components {
             dnsResolution?: "local" | "proxy";
             host?: string;
             name?: string;
+            /** @description The proxy password, or a secret reference such as `secret:proxies/office#password`. */
             password?: string;
             port?: number;
             /** @enum {string} */
