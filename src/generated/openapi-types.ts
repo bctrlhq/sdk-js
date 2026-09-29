@@ -4547,7 +4547,7 @@ export interface components {
                 /** @constant */
                 type: "code";
             } | {
-                authSecretName: string | null;
+                authSecret: string | null;
                 timeoutMs: number;
                 /** @constant */
                 type: "webhook";
@@ -6748,7 +6748,8 @@ export interface components {
             /** @default  */
             description: string;
             implementation: {
-                authSecretName?: string;
+                /** @description HMAC signing key as a secret reference, for example `secret:webhooks/crm#value`. Resolved when the Tool runs. */
+                authSecret?: string;
                 /** @default 30000 */
                 timeoutMs: number;
                 /** @constant */
@@ -6898,7 +6899,7 @@ export interface components {
                 /** @constant */
                 type: "code";
             } | {
-                authSecretName?: string | null;
+                authSecret?: string | null;
                 /** @default 30000 */
                 timeoutMs: number;
                 /** @constant */
