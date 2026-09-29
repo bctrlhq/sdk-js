@@ -220,6 +220,14 @@ export type V1NotificationRecipientDeleteResponse =
   OpenApiSchemas['NotificationRecipientDeleteResponse'];
 export type V1NotificationRecipientListQuery = OpenApiQuery<'notification-recipients.list'>;
 
+export type V1Secret = OpenApiSchemas['Secret'];
+export type V1SecretList = OpenApiSchemas['SecretList'];
+export type V1SecretPutRequest = OpenApiSchemas['SecretPutRequest'];
+export type V1SecretPatchRequest = OpenApiSchemas['SecretPatchRequest'];
+export type V1SecretDeleteResponse = OpenApiSchemas['SecretDeleteResponse'];
+export type V1SecretRevealResponse = OpenApiSchemas['SecretRevealResponse'];
+export type V1SecretListQuery = OpenApiQuery<'secrets.list'>;
+
 export type {
   V1ManagedRotatingDevice,
   V1ManagedRotatingPreference,

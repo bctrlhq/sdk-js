@@ -34,6 +34,7 @@ export { V1FilesClient } from './files.js';
 export { V1HelpClient } from './help.js';
 export { V1RuntimesClient } from './runtimes.js';
 export { V1NotificationRecipientsClient } from './notificationRecipients.js';
+export { V1SecretsClient, type V1SecretWriteOptions } from './secrets.js';
 export {
   V1ProxiesClient,
   V1ProxyGeoClient,

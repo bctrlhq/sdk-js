@@ -13,6 +13,7 @@ import { V1FilesClient } from './files.js';
 import { V1HelpClient } from './help.js';
 import { V1HttpClient, type V1ClientOptions } from './http.js';
 import { V1NotificationRecipientsClient } from './notificationRecipients.js';
+import { V1SecretsClient } from './secrets.js';
 import { V1ProxiesClient } from './proxies.js';
 import { V1RunsClient } from './runs.js';
 import { V1RuntimesClient } from './runtimes.js';
@@ -46,6 +47,7 @@ export class BctrlV1 {
   private _subaccounts: V1SubaccountsClient | null = null;
   private _usage: V1UsageClient | null = null;
   private _notificationRecipients: V1NotificationRecipientsClient | null = null;
+  private _secrets: V1SecretsClient | null = null;
   private _views: V1ViewsClient | null = null;
   private _webhooks: V1WebhooksClient | null = null;
 
@@ -150,6 +152,12 @@ export class BctrlV1 {
   get notificationRecipients(): V1NotificationRecipientsClient {
     this._notificationRecipients ??= new V1NotificationRecipientsClient(this.http);
     return this._notificationRecipients;
+  }
+
+  /** Secrets: path-keyed, versioned, write-only values (`/v1/secrets`). */
+  get secrets(): V1SecretsClient {
+    this._secrets ??= new V1SecretsClient(this.http);
+    return this._secrets;
   }
 
   get views(): V1ViewsClient {
