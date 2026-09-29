@@ -38,7 +38,7 @@ export interface V1ToolInvocationOptions extends V1IdempotencyOptions {
 }
 
 interface V1ErrorBody {
-  error: string;
+  message: string;
   code?: string;
   requestId?: string;
 }
@@ -98,17 +98,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function parseV1ErrorBody(parsed: unknown, fallbackText: string): V1ErrorBody {
-  if (isRecord(parsed) && typeof parsed.error === 'string') {
+  if (isRecord(parsed) && typeof parsed.message === 'string') {
     return {
-      error: parsed.error,
+      message: parsed.message,
       ...(typeof parsed.code === 'string' ? { code: parsed.code } : {}),
       ...(typeof parsed.requestId === 'string' ? { requestId: parsed.requestId } : {}),
     };
   }
   if (typeof parsed === 'string' && parsed.trim()) {
-    return { error: parsed.trim() };
+    return { message: parsed.trim() };
   }
-  return { error: fallbackText.trim() || 'Unknown error' };
+  return { message: fallbackText.trim() || 'Unknown error' };
 }
 
 function isBodyInit(value: unknown): value is BodyInit {
@@ -234,7 +234,7 @@ export class V1HttpClient {
       const errorBody = parseV1ErrorBody(parsed, text);
       throw createV1HttpError({
         status: response.status,
-        message: errorBody.error,
+        message: errorBody.message,
         code: errorBody.code,
         requestId: errorBody.requestId ?? responseRequestId(response),
         body: parsed,

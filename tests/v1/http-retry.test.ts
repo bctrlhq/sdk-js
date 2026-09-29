@@ -23,7 +23,7 @@ test('http retries only safe requests or idempotent unsafe requests', async () =
     baseUrl: 'https://api.example.test',
     fetch: async () => {
       unsafeAttempts += 1;
-      return jsonResponse(503, { error: 'temporarily unavailable' });
+      return jsonResponse(503, { message: 'temporarily unavailable' });
     },
   });
   await assert.rejects(
