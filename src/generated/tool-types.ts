@@ -25,6 +25,7 @@ export interface BuiltinToolInputMap {
   "run.files.export": components['schemas']["BuiltinToolRunFilesExportInput"];
   "run.files.list": components['schemas']["BuiltinToolRunFilesListInput"];
   "runtime.files.list": components['schemas']["BuiltinToolRuntimeFilesListInput"];
+  "secrets.fill": components['schemas']["BuiltinToolSecretsFillInput"];
   "secrets.list": components['schemas']["BuiltinToolSecretsListInput"];
   "stagehand.act": components['schemas']["BuiltinToolStagehandActInput"];
   "stagehand.extract": components['schemas']["BuiltinToolStagehandExtractInput"];
@@ -48,6 +49,7 @@ export interface BuiltinToolOutputMap {
   "run.files.export": components['schemas']["BuiltinToolRunFilesExportOutput"];
   "run.files.list": components['schemas']["BuiltinToolRunFilesListOutput"];
   "runtime.files.list": components['schemas']["BuiltinToolRuntimeFilesListOutput"];
+  "secrets.fill": components['schemas']["BuiltinToolSecretsFillOutput"];
   "secrets.list": components['schemas']["BuiltinToolSecretsListOutput"];
   "stagehand.act": components['schemas']["BuiltinToolStagehandActOutput"];
   "stagehand.extract": components['schemas']["BuiltinToolStagehandExtractOutput"];
