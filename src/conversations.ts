@@ -1,6 +1,8 @@
 import { v1IdempotencyHeaders, type V1HttpClient, type V1IdempotencyOptions } from './http.js';
 import { iterateV1Pages } from './pagination.js';
 import type {
+  V1AgentTurn,
+  V1AgentTurnGetQuery,
   V1Conversation,
   V1ConversationCancelResponse,
   V1ConversationCreateRequest,
@@ -15,10 +17,12 @@ import type {
 } from './types.js';
 
 export class V1ConversationsClient {
+  readonly turns: V1ConversationTurnsClient;
   readonly messages: V1ConversationMessagesClient;
   readonly events: V1ConversationEventsClient;
 
   constructor(private readonly http: V1HttpClient) {
+    this.turns = new V1ConversationTurnsClient(http);
     this.messages = new V1ConversationMessagesClient(http);
     this.events = new V1ConversationEventsClient(http);
   }
@@ -55,6 +59,24 @@ export class V1ConversationsClient {
     return this.http.request(`/conversations/${encodeURIComponent(conversationId)}/cancel`, {
       method: 'POST',
     });
+  }
+}
+
+export class V1ConversationTurnsClient {
+  constructor(private readonly http: V1HttpClient) {}
+
+  get(conversationId: string, turnId: string, query: V1AgentTurnGetQuery = {}): Promise<V1AgentTurn> {
+    return this.http.request(
+      `/conversations/${encodeURIComponent(conversationId)}/turns/${encodeURIComponent(turnId)}`,
+      { query }
+    );
+  }
+
+  cancel(conversationId: string, turnId: string): Promise<V1AgentTurn> {
+    return this.http.request(
+      `/conversations/${encodeURIComponent(conversationId)}/turns/${encodeURIComponent(turnId)}/cancel`,
+      { method: 'POST' }
+    );
   }
 }
 

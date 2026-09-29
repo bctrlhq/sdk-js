@@ -7,6 +7,8 @@ import type {
   V1RuntimeCreateResponse,
   V1RuntimeDeleteResponse,
   V1RuntimeGetQuery,
+  V1RuntimeGetResponse,
+  V1RuntimeStartQuery,
   V1RuntimeListQuery,
   V1RuntimeStartRequest,
   V1RuntimeStartResponse,
@@ -39,7 +41,7 @@ export class V1RuntimesClient {
     });
   }
 
-  get(runtimeId: string, query: V1RuntimeGetQuery = {}): Promise<V1Runtime> {
+  get(runtimeId: string, query: V1RuntimeGetQuery = {}): Promise<V1RuntimeGetResponse> {
     return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}`, { query });
   }
 
@@ -63,13 +65,14 @@ export class V1RuntimesClient {
    */
   start(
     runtimeId: string,
-    options: V1IdempotencyOptions & V1RuntimeStartRequest = {}
+    options: V1IdempotencyOptions & V1RuntimeStartRequest & V1RuntimeStartQuery = {}
   ): Promise<V1RuntimeStartResponse> {
-    const { idempotencyKey, ...body } = options;
+    const { idempotencyKey, wait, ...body } = options;
     return this.http.request(`/runtimes/${encodeURIComponent(runtimeId)}/start`, {
       method: 'POST',
       // The gateway contract is a defaulted JSON object, so `{}` is valid.
       body,
+      query: { wait },
       headers: v1IdempotencyHeaders({ idempotencyKey }),
     });
   }

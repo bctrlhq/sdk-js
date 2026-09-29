@@ -12,6 +12,7 @@ export { V1BrowserExtensionsClient } from './browserExtensions.js';
 export {
   V1ConversationEventsClient,
   V1ConversationMessagesClient,
+  V1ConversationTurnsClient,
   V1ConversationsClient,
 } from './conversations.js';
 

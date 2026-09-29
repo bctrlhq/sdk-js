@@ -132,7 +132,11 @@ export type V1RuntimeGetQuery = OpenApiQuery<'runtimes.get'>;
 export type V1RuntimeSummary = OpenApiSchemas['RuntimeSummary'];
 export type V1Runtime = OpenApiSchemas['RuntimeDetail'];
 export type V1RuntimeCreateResponse = OpenApiSchemas['RuntimeCreateResponse'];
-export type V1RuntimeStartResponse = OpenApiSchemas['RuntimeStartResponse'];
+export type V1RuntimeStartAccepted = OpenApiSchemas['RuntimeStartAccepted'];
+export type V1RuntimeStartedResponse = OpenApiSchemas['RuntimeStartResponse'];
+export type V1RuntimeStartResponse = V1RuntimeStartedResponse | V1RuntimeStartAccepted;
+export type V1RuntimeGetResponse = V1Runtime | V1RuntimeStartAccepted;
+export type V1RuntimeStartQuery = OpenApiQuery<'runtimes.start'>;
 export type V1RuntimeStopResponse = OpenApiSchemas['RuntimeStopResponse'];
 
 export type V1RunListQuery = OpenApiQuery<'runs.list'>;
@@ -186,6 +190,8 @@ export type V1ConversationUpdateRequest = OpenApiSchemas['ConversationUpdateRequ
 export type V1ConversationMessageCreateRequest =
   OpenApiSchemas['ConversationMessageCreateRequest'];
 export type V1ConversationTurn = OpenApiSchemas['AgentTurnAccepted'];
+export type V1AgentTurn = OpenApiSchemas['AgentTurn'];
+export type V1AgentTurnGetQuery = OpenApiQuery<'conversations.turns.get'>;
 export type V1ConversationCancelResponse = OpenApiSchemas['ConversationCancelResponse'];
 export type V1ConversationEvent = OpenApiSchemas['ConversationEvent'];
 export type V1ConversationStreamEvent = OpenApiSchemas['ConversationEvent'];
