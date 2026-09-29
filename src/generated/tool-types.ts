@@ -27,6 +27,7 @@ export interface BuiltinToolInputMap {
   "runtime.files.list": components['schemas']["BuiltinToolRuntimeFilesListInput"];
   "secrets.fill": components['schemas']["BuiltinToolSecretsFillInput"];
   "secrets.list": components['schemas']["BuiltinToolSecretsListInput"];
+  "secrets.request": components['schemas']["BuiltinToolSecretsRequestInput"];
   "stagehand.act": components['schemas']["BuiltinToolStagehandActInput"];
   "stagehand.extract": components['schemas']["BuiltinToolStagehandExtractInput"];
   "stagehand.observe": components['schemas']["BuiltinToolStagehandObserveInput"];
@@ -58,5 +59,5 @@ export interface BuiltinToolOutputMap {
 
 export type BuiltinToolName = keyof BuiltinToolInputMap;
 export type SyncBuiltinToolName = keyof BuiltinToolOutputMap;
-export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "browser.setInputFiles" | "captcha.solve" | "code.execute" | "human.request" | "run.files.add" | "run.files.collect" | "run.files.export" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
+export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "browser.setInputFiles" | "captcha.solve" | "code.execute" | "human.request" | "run.files.add" | "run.files.collect" | "run.files.export" | "secrets.request" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
 
