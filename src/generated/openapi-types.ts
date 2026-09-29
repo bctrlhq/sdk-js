@@ -2134,6 +2134,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/tools/secrets.list/call": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** List Secret metadata by path prefix, with / folders. Values are never returned; use a secret: reference or secrets.fill to use one. */
+        post: operations["builtinTools.secrets.list.call"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tools/stagehand.act/call": {
         parameters: {
             query?: never;
@@ -2230,125 +2247,6 @@ export interface paths {
         put?: never;
         /** Start stagehand.observe */
         post: operations["builtinTools.stagehand.observe.start"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.secrets.delete/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Delete one caller-owned Vault secret. */
-        post: operations["builtinTools.vault.secrets.delete.call"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.secrets.get/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get safe metadata for one Vault secret. */
-        post: operations["builtinTools.vault.secrets.get.call"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.secrets.list/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** List safe Vault secret metadata. */
-        post: operations["builtinTools.vault.secrets.list.call"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.secrets.set/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create or replace one caller-owned Vault secret. */
-        post: operations["builtinTools.vault.secrets.set.call"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.secrets.update/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Partially update one Vault secret without reading its value. */
-        post: operations["builtinTools.vault.secrets.update.call"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.secrets.value/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Read one authorized Vault secret value. */
-        post: operations["builtinTools.vault.secrets.value.call"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tools/vault.totp.generate/call": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Generate the current TOTP for one authorized Vault login. */
-        post: operations["builtinTools.vault.totp.generate.call"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3157,17 +3055,17 @@ export interface components {
             currentRevisionId: null;
             description: string;
             /** @enum {string} */
-            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute";
+            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute";
             implementation: {
                 /** @enum {string} */
-                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute";
+                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute";
                 /** @constant */
                 type: "builtin";
             };
             inputSchema: components["schemas"]["JsonObject"];
             modes: ("sync" | "async")[];
             /** @enum {string} */
-            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute";
+            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute";
             outputSchema: components["schemas"]["JsonObject"];
             runtimeTypes: ("browser" | "desktop")[];
             spaceId: null;
@@ -3740,6 +3638,61 @@ export interface components {
             }[];
             nextCursor: string | null;
         };
+        BuiltinToolSecretsListInput: {
+            cursor?: string;
+            /** @constant */
+            delimiter?: "/";
+            /** @default 50 */
+            limit: number;
+            prefix?: string;
+            /**
+             * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+             * @enum {string}
+             */
+            type?: "login" | "value";
+        };
+        BuiltinToolSecretsListOutput: {
+            data: {
+                /**
+                 * Rfc3339Timestamp
+                 * Format: date-time
+                 * @description RFC 3339 timestamp with a UTC offset.
+                 * @example 2026-07-26T12:00:00Z
+                 */
+                createdAt: string;
+                hasNotes: boolean;
+                hasPassword: boolean;
+                hasTotp: boolean;
+                hasValue: boolean;
+                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+                id: string;
+                label: string | null;
+                lastUsedAt: string | null;
+                /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
+                origins: string[];
+                /** @description The owning subaccount, or null for an organization-wide secret. */
+                subaccountId: string | null;
+                /**
+                 * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+                 * @enum {string}
+                 */
+                type: "login" | "value";
+                /**
+                 * Rfc3339Timestamp
+                 * Format: date-time
+                 * @description RFC 3339 timestamp with a UTC offset.
+                 * @example 2026-07-26T12:00:00Z
+                 */
+                updatedAt: string;
+                /** @description Not secret; readable. */
+                username: string | null;
+                /** @description Current version; the ETag of the secret. */
+                version: number;
+            }[];
+            /** @description With `delimiter`: common prefixes, each ending in `/`. They count toward `limit`. */
+            folders: string[];
+            nextCursor: string | null;
+        };
         BuiltinToolStagehandActInput: {
             instruction: string;
             /**
@@ -3795,203 +3748,6 @@ export interface components {
             }[];
             /** @enum {string} */
             cacheStatus?: "HIT" | "MISS";
-        };
-        BuiltinToolVaultSecretsDeleteInput: {
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-        };
-        BuiltinToolVaultSecretsDeleteOutput: {
-            /** @constant */
-            deleted: true;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-        };
-        BuiltinToolVaultSecretsGetInput: {
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-        };
-        BuiltinToolVaultSecretsGetOutput: {
-            /** Format: date-time */
-            createdAt?: string;
-            hasTotp: boolean;
-            label?: string;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            originPatterns?: string[];
-            origins?: string[];
-            /** @enum {string} */
-            type: "login" | "value";
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        BuiltinToolVaultSecretsListInput: {
-            cursor?: string;
-            hasTotp?: boolean;
-            /** @default 50 */
-            limit: number;
-            origin?: string;
-            prefix?: string;
-        };
-        BuiltinToolVaultSecretsListOutput: {
-            nextCursor: string | null;
-            secrets: {
-                /** Format: date-time */
-                createdAt?: string;
-                hasTotp: boolean;
-                label?: string;
-                /**
-                 * VaultSecretName
-                 * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-                 * @example production/github/api-token
-                 */
-                name: string;
-                originPatterns?: string[];
-                origins?: string[];
-                /** @enum {string} */
-                type: "login" | "value";
-                /** Format: date-time */
-                updatedAt?: string;
-            }[];
-        };
-        BuiltinToolVaultSecretsSetInput: {
-            label?: string;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            notes?: string;
-            originPatterns?: string[];
-            origins?: string[];
-            password: string;
-            totpSecret?: string;
-            /** @constant */
-            type: "login";
-            username: string;
-        } | {
-            label?: string;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            notes?: string;
-            originPatterns?: string[];
-            origins?: string[];
-            /** @constant */
-            type: "value";
-            value: string;
-        };
-        BuiltinToolVaultSecretsSetOutput: {
-            /** Format: date-time */
-            createdAt?: string;
-            hasTotp: boolean;
-            label?: string;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            originPatterns?: string[];
-            origins?: string[];
-            /** @enum {string} */
-            type: "login" | "value";
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        BuiltinToolVaultSecretsUpdateInput: {
-            label?: string | null;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            notes?: string | null;
-            originPatterns?: string[] | null;
-            origins?: string[] | null;
-            password?: string;
-            totpSecret?: string | null;
-            username?: string;
-            value?: string;
-        };
-        BuiltinToolVaultSecretsUpdateOutput: {
-            /** Format: date-time */
-            createdAt?: string;
-            hasTotp: boolean;
-            label?: string;
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            originPatterns?: string[];
-            origins?: string[];
-            /** @enum {string} */
-            type: "login" | "value";
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        BuiltinToolVaultSecretsValueInput: {
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-        };
-        BuiltinToolVaultSecretsValueOutput: {
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            password: string;
-            /** @constant */
-            type: "login";
-            username: string;
-        } | {
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-            /** @constant */
-            type: "value";
-            value: string;
-        };
-        BuiltinToolVaultTotpGenerateInput: {
-            /**
-             * VaultSecretName
-             * @description Hierarchical Vault secret name made from slash-separated RFC 3986 unreserved path segments.
-             * @example production/github/api-token
-             */
-            name: string;
-        };
-        BuiltinToolVaultTotpGenerateOutput: {
-            code: string;
         };
         /**
          * ByteCount
@@ -4213,7 +3969,7 @@ export interface components {
             conversationId: string;
             id: string;
             timestamp: components["schemas"]["Rfc3339Timestamp"];
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             /**
              * ToolCallId
              * @description Unique toolCall identifier generated by BCTRL.
@@ -4973,21 +4729,13 @@ export interface components {
         };
         EnvironmentMounts: {
             ai?: components["schemas"]["EnvironmentAiMount"];
+            secrets?: components["schemas"]["SpaceSecretsMount"];
             storage?: components["schemas"]["EnvironmentStorageMount"];
-            vault?: {
-                allow?: string[];
-                allowRawReads?: boolean;
-                deny?: string[];
-            };
         };
         EnvironmentMountsOutput: {
             ai?: components["schemas"]["EnvironmentAiMount"];
+            secrets?: components["schemas"]["SpaceSecretsMount"];
             storage?: components["schemas"]["EnvironmentStorageMountOutput"];
-            vault?: {
-                allow?: string[];
-                allowRawReads?: boolean;
-                deny?: string[];
-            };
         };
         EnvironmentRuntimeAttachRequest: {
             /**
@@ -6474,16 +6222,16 @@ export interface components {
                 credentialIds?: string[] | null;
                 default?: (string | components["schemas"]["AiStoredModelSelection"]) | null;
             } | null;
+            secrets?: components["schemas"]["SpaceSecretsMount"] | null;
             storage?: components["schemas"]["EnvironmentStorageMount"] | null;
-            vault?: {
-                allow?: string[];
-                allowRawReads?: boolean;
-                deny?: string[];
-            } | null;
         };
         SpaceListResponse: {
             data: components["schemas"]["Space"][];
             nextCursor: string | null;
+        };
+        SpaceSecretsMount: {
+            allow?: string[];
+            deny?: string[];
         };
         SpaceUpdateRequest: {
             environment?: components["schemas"]["SpaceEnvironmentPatch"];
@@ -6588,7 +6336,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "queued";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6612,7 +6360,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "running";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6636,7 +6384,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "requires_input";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6659,7 +6407,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "succeeded";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6683,7 +6431,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "failed";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6707,7 +6455,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "cancelled";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6731,7 +6479,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "timed_out";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "code.execute") | string;
             turnId: string | null;
         };
         ToolCallError: {
@@ -6858,14 +6606,14 @@ export interface components {
              * @example sp_AAAAAAAAAAAAAAAAAAAAAA
              */
             spaceId: string;
-            tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string)[];
+            tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list") | string)[];
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         ToolsetCreateRequest: {
             description?: string | null;
             name: string;
             spaceId?: string | "default";
-            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string)[];
+            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list") | string)[];
         };
         ToolsetDeleteResponse: {
             /** @constant */
@@ -6884,7 +6632,7 @@ export interface components {
         ToolsetUpdateRequest: {
             description?: string | null;
             name?: string;
-            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string)[];
+            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list") | string)[];
         };
         ToolUpdateRequest: {
             /**
@@ -20545,6 +20293,39 @@ export interface operations {
             };
         };
     };
+    "builtinTools.secrets.list.call": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
+                "BCTRL-Runtime-Id"?: string;
+                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                toolRef: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BuiltinToolSecretsListInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Tool output */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuiltinToolSecretsListOutput"];
+                };
+            };
+        };
+    };
     "builtinTools.stagehand.act.call": {
         parameters: {
             query?: never;
@@ -20739,237 +20520,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ToolCall"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.secrets.delete.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultSecretsDeleteInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultSecretsDeleteOutput"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.secrets.get.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultSecretsGetInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultSecretsGetOutput"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.secrets.list.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultSecretsListInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultSecretsListOutput"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.secrets.set.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultSecretsSetInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultSecretsSetOutput"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.secrets.update.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultSecretsUpdateInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultSecretsUpdateOutput"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.secrets.value.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultSecretsValueInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultSecretsValueOutput"];
-                };
-            };
-        };
-    };
-    "builtinTools.vault.totp.generate.call": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
-                "BCTRL-Runtime-Id"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                toolRef: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BuiltinToolVaultTotpGenerateInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Tool output */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BuiltinToolVaultTotpGenerateOutput"];
                 };
             };
         };

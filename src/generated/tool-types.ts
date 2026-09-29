@@ -25,16 +25,10 @@ export interface BuiltinToolInputMap {
   "run.files.export": components['schemas']["BuiltinToolRunFilesExportInput"];
   "run.files.list": components['schemas']["BuiltinToolRunFilesListInput"];
   "runtime.files.list": components['schemas']["BuiltinToolRuntimeFilesListInput"];
+  "secrets.list": components['schemas']["BuiltinToolSecretsListInput"];
   "stagehand.act": components['schemas']["BuiltinToolStagehandActInput"];
   "stagehand.extract": components['schemas']["BuiltinToolStagehandExtractInput"];
   "stagehand.observe": components['schemas']["BuiltinToolStagehandObserveInput"];
-  "vault.secrets.delete": components['schemas']["BuiltinToolVaultSecretsDeleteInput"];
-  "vault.secrets.get": components['schemas']["BuiltinToolVaultSecretsGetInput"];
-  "vault.secrets.list": components['schemas']["BuiltinToolVaultSecretsListInput"];
-  "vault.secrets.set": components['schemas']["BuiltinToolVaultSecretsSetInput"];
-  "vault.secrets.update": components['schemas']["BuiltinToolVaultSecretsUpdateInput"];
-  "vault.secrets.value": components['schemas']["BuiltinToolVaultSecretsValueInput"];
-  "vault.totp.generate": components['schemas']["BuiltinToolVaultTotpGenerateInput"];
 }
 
 export interface BuiltinToolOutputMap {
@@ -54,16 +48,10 @@ export interface BuiltinToolOutputMap {
   "run.files.export": components['schemas']["BuiltinToolRunFilesExportOutput"];
   "run.files.list": components['schemas']["BuiltinToolRunFilesListOutput"];
   "runtime.files.list": components['schemas']["BuiltinToolRuntimeFilesListOutput"];
+  "secrets.list": components['schemas']["BuiltinToolSecretsListOutput"];
   "stagehand.act": components['schemas']["BuiltinToolStagehandActOutput"];
   "stagehand.extract": components['schemas']["BuiltinToolStagehandExtractOutput"];
   "stagehand.observe": components['schemas']["BuiltinToolStagehandObserveOutput"];
-  "vault.secrets.delete": components['schemas']["BuiltinToolVaultSecretsDeleteOutput"];
-  "vault.secrets.get": components['schemas']["BuiltinToolVaultSecretsGetOutput"];
-  "vault.secrets.list": components['schemas']["BuiltinToolVaultSecretsListOutput"];
-  "vault.secrets.set": components['schemas']["BuiltinToolVaultSecretsSetOutput"];
-  "vault.secrets.update": components['schemas']["BuiltinToolVaultSecretsUpdateOutput"];
-  "vault.secrets.value": components['schemas']["BuiltinToolVaultSecretsValueOutput"];
-  "vault.totp.generate": components['schemas']["BuiltinToolVaultTotpGenerateOutput"];
 }
 
 export type BuiltinToolName = keyof BuiltinToolInputMap;
