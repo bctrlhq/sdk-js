@@ -72,7 +72,9 @@ export class V1ToolsClient {
     input: unknown,
     options?: V1ToolCallOptions
   ): Promise<JsonValue> {
-    const headers = options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {};
+    const headers: Record<string, string> = options?.runtimeId
+      ? { 'BCTRL-Runtime-Id': options.runtimeId }
+      : {};
     return this.http.request(`/tools/${encodeURIComponent(toolRef)}/call`, {
       method: 'POST',
       body: input,
