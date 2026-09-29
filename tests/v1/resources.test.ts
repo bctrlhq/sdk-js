@@ -67,6 +67,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
     { runtimeId: 'rt_1', idempotencyKey: 'code-execute-1' }
   );
   if (false) {
+    // @ts-expect-error tools.call takes no idempotency key: its output is never replayed
+    await client.tools.call('stagehand.act', { instruction: 'Continue' }, { idempotencyKey: 'k' });
     // @ts-expect-error stagehand.act requires an instruction
     await client.tools.call('stagehand.act', {}, { runtimeId: 'rt_1' });
     // @ts-expect-error runtime.files.list does not advertise asynchronous execution

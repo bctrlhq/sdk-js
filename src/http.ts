@@ -32,6 +32,12 @@ export interface V1IdempotencyOptions {
   idempotencyKey?: string;
 }
 
+/** Options for a synchronous `tools.call`: no idempotency key (its output is never replayed). */
+export interface V1ToolCallOptions {
+  /** Direct Runtime-bound Tools resolve their active Run server-side. */
+  runtimeId?: string;
+}
+
 export interface V1ToolInvocationOptions extends V1IdempotencyOptions {
   /** Direct Runtime-bound Tools resolve their active Run server-side. */
   runtimeId?: string;

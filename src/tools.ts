@@ -1,6 +1,7 @@
 import {
   v1IdempotencyHeaders,
   type V1HttpClient,
+  type V1ToolCallOptions,
   type V1ToolInvocationOptions,
 } from './http.js';
 import { iterateV1Pages } from './pagination.js';
@@ -51,25 +52,27 @@ export class V1ToolsClient {
     return this.http.request(`/tools/${encodeURIComponent(toolRef)}`, { method: 'DELETE' });
   }
 
+  /**
+   * Call a synchronous Tool and wait for its output. It takes no idempotency
+   * key: the output may hold secret or one-time values and is never stored for
+   * a replay. Use `start` for a retry-safe call.
+   */
   call<Name extends SyncBuiltinToolName>(
     toolRef: Name,
     input: BuiltinToolInputMap[Name],
-    options?: V1ToolInvocationOptions
+    options?: V1ToolCallOptions
   ): Promise<BuiltinToolOutputMap[Name]>;
   call(
     toolRef: `tool_${string}`,
     input: JsonObject,
-    options?: V1ToolInvocationOptions
+    options?: V1ToolCallOptions
   ): Promise<JsonValue>;
   call(
     toolRef: string,
     input: unknown,
-    options?: V1ToolInvocationOptions
+    options?: V1ToolCallOptions
   ): Promise<JsonValue> {
-    const headers = {
-      ...v1IdempotencyHeaders(options),
-      ...(options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {}),
-    };
+    const headers = options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {};
     return this.http.request(`/tools/${encodeURIComponent(toolRef)}/call`, {
       method: 'POST',
       body: input,
