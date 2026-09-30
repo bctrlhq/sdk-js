@@ -1947,6 +1947,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/tools/computer.use/call": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Capture and operate the headed desktop of an active browser Runtime. Coordinates use screenshot pixels. Automation is refused while a human holds control. */
+        post: operations["builtinTools.computer.use.call"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tools/computer.use/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start computer.use */
+        post: operations["builtinTools.computer.use.start"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tools/files.list/call": {
         parameters: {
             query?: never;
@@ -3133,17 +3167,17 @@ export interface components {
             currentRevisionId: null;
             description: string;
             /** @enum {string} */
-            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute";
+            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use";
             implementation: {
                 /** @enum {string} */
-                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute";
+                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use";
                 /** @constant */
                 type: "builtin";
             };
             inputSchema: components["schemas"]["JsonObject"];
             modes: ("sync" | "async")[];
             /** @enum {string} */
-            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute";
+            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use";
             outputSchema: components["schemas"]["JsonObject"];
             runtimeTypes: ("browser" | "desktop")[];
             spaceId: null;
@@ -3419,6 +3453,116 @@ export interface components {
             timeoutMs: number;
         };
         BuiltinToolCodeExecuteOutput: components["schemas"]["JsonValue"];
+        BuiltinToolComputerUseInput: {
+            /** @constant */
+            action: "screenshot";
+        } | {
+            /** @constant */
+            action: "left_click";
+            coordinate?: [
+                number,
+                number
+            ];
+            text?: string;
+        } | {
+            /** @constant */
+            action: "right_click";
+            coordinate?: [
+                number,
+                number
+            ];
+            text?: string;
+        } | {
+            /** @constant */
+            action: "middle_click";
+            coordinate?: [
+                number,
+                number
+            ];
+            text?: string;
+        } | {
+            /** @constant */
+            action: "double_click";
+            coordinate?: [
+                number,
+                number
+            ];
+            text?: string;
+        } | {
+            /** @constant */
+            action: "triple_click";
+            coordinate?: [
+                number,
+                number
+            ];
+            text?: string;
+        } | {
+            /** @constant */
+            action: "type";
+            text: string;
+        } | {
+            /** @constant */
+            action: "key";
+            repeat?: number;
+            text: string;
+        } | {
+            /** @constant */
+            action: "mouse_move";
+            coordinate: [
+                number,
+                number
+            ];
+        } | {
+            /** @constant */
+            action: "scroll";
+            coordinate?: [
+                number,
+                number
+            ];
+            scroll_amount: number;
+            /** @enum {string} */
+            scroll_direction: "up" | "down" | "left" | "right";
+            text?: string;
+        } | {
+            /** @constant */
+            action: "left_click_drag";
+            coordinate: [
+                number,
+                number
+            ];
+            path?: [
+                number,
+                number
+            ][];
+            start_coordinate?: [
+                number,
+                number
+            ];
+            text?: string;
+        } | {
+            /** @constant */
+            action: "wait";
+            /** @default 1 */
+            duration: number;
+        } | {
+            /** @constant */
+            action: "cursor_position";
+        };
+        BuiltinToolComputerUseOutput: {
+            /** @enum {string} */
+            action: "screenshot" | "left_click" | "right_click" | "middle_click" | "double_click" | "triple_click" | "type" | "key" | "mouse_move" | "scroll" | "left_click_drag" | "wait" | "cursor_position";
+            coordinate?: [
+                number,
+                number
+            ];
+            height: number;
+            image?: {
+                data: string;
+                /** @constant */
+                mimeType: "image/jpeg";
+            };
+            width: number;
+        };
         BuiltinToolFilesListInput: {
             cursor?: string;
             /** @default 50 */
@@ -4140,7 +4284,7 @@ export interface components {
             conversationId: string;
             id: string;
             timestamp: components["schemas"]["Rfc3339Timestamp"];
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             /**
              * ToolCallId
              * @description Unique toolCall identifier generated by BCTRL.
@@ -6552,7 +6696,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "queued";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6576,7 +6720,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "running";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6600,7 +6744,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "requires_input";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6623,7 +6767,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "succeeded";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6647,7 +6791,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "failed";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6671,7 +6815,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "cancelled";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -6695,7 +6839,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "timed_out";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         };
         ToolCallError: {
@@ -6822,14 +6966,14 @@ export interface components {
              * @example sp_AAAAAAAAAAAAAAAAAAAAAA
              */
             spaceId: string;
-            tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request") | string)[];
+            tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "computer.use") | string)[];
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         ToolsetCreateRequest: {
             description?: string | null;
             name: string;
             spaceId?: string | "default";
-            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request") | string)[];
+            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "computer.use") | string)[];
         };
         ToolsetDeleteResponse: {
             /** @constant */
@@ -6848,7 +6992,7 @@ export interface components {
         ToolsetUpdateRequest: {
             description?: string | null;
             name?: string;
-            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request") | string)[];
+            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "computer.use") | string)[];
         };
         ToolUpdateRequest: {
             /**
@@ -21548,6 +21692,70 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["BuiltinToolCodeExecuteInput"];
+            };
+        };
+        responses: {
+            /** @description ToolCall accepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ToolCall"];
+                };
+            };
+        };
+    };
+    "builtinTools.computer.use.call": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
+                "BCTRL-Runtime-Id"?: string;
+            };
+            path: {
+                toolRef: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BuiltinToolComputerUseInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Tool output */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuiltinToolComputerUseOutput"];
+                };
+            };
+        };
+    };
+    "builtinTools.computer.use.start": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
+                "BCTRL-Runtime-Id"?: string;
+                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                toolRef: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BuiltinToolComputerUseInput"];
             };
         };
         responses: {

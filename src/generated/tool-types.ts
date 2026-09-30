@@ -17,6 +17,7 @@ export interface BuiltinToolInputMap {
   "captcha.status": components['schemas']["BuiltinToolCaptchaStatusInput"];
   "captcha.wait": components['schemas']["BuiltinToolCaptchaWaitInput"];
   "code.execute": components['schemas']["BuiltinToolCodeExecuteInput"];
+  "computer.use": components['schemas']["BuiltinToolComputerUseInput"];
   "files.list": components['schemas']["BuiltinToolFilesListInput"];
   "files.read_text": components['schemas']["BuiltinToolFilesReadTextInput"];
   "human.request": components['schemas']["BuiltinToolHumanRequestInput"];
@@ -43,6 +44,7 @@ export interface BuiltinToolOutputMap {
   "captcha.solve": components['schemas']["BuiltinToolCaptchaSolveOutput"];
   "captcha.status": components['schemas']["BuiltinToolCaptchaStatusOutput"];
   "captcha.wait": components['schemas']["BuiltinToolCaptchaWaitOutput"];
+  "computer.use": components['schemas']["BuiltinToolComputerUseOutput"];
   "files.list": components['schemas']["BuiltinToolFilesListOutput"];
   "files.read_text": components['schemas']["BuiltinToolFilesReadTextOutput"];
   "run.files.add": components['schemas']["BuiltinToolRunFilesAddOutput"];
@@ -59,5 +61,5 @@ export interface BuiltinToolOutputMap {
 
 export type BuiltinToolName = keyof BuiltinToolInputMap;
 export type SyncBuiltinToolName = keyof BuiltinToolOutputMap;
-export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "browser.setInputFiles" | "captcha.solve" | "code.execute" | "human.request" | "run.files.add" | "run.files.collect" | "run.files.export" | "secrets.request" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
+export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "browser.setInputFiles" | "captcha.solve" | "code.execute" | "computer.use" | "human.request" | "run.files.add" | "run.files.collect" | "run.files.export" | "secrets.request" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
 

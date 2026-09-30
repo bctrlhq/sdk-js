@@ -2,6 +2,17 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { Bctrl, type V1RuntimeStartAccepted } from '../../src/index.js';
 
+test('computer.use preserves vendor action fields and returns a typed desktop result', async () => {
+  const requests: unknown[] = [];
+  const client = new Bctrl({ apiKey: 'test', baseUrl: 'https://api.example.test', fetch: async (_input, init) => {
+    requests.push(JSON.parse(String(init?.body)));
+    return new Response(JSON.stringify({ action: 'scroll', width: 800, height: 600 }), { status: 200, headers: { 'content-type': 'application/json' } });
+  } });
+  const input = { action: 'scroll', scroll_direction: 'down', scroll_amount: 2, coordinate: [20, 30] } as const;
+  const result = await client.tools.call('computer.use', { ...input, coordinate: [20, 30] }, { runtimeId: 'rt_test' });
+  assert.equal(result.width, 800); assert.deepEqual(requests, [input]);
+});
+
 test('the SDK exposes only the canonical automation resources and routes', async () => {
   const requests: Array<{ method: string; path: string; body: unknown; headers: Headers }> = [];
   const fetchMock: typeof fetch = async (input, init) => {
