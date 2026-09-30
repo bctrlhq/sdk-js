@@ -186,3 +186,24 @@ test('agent keys send the agent name and retain the person and usage metadata', 
   assert.equal(created.data.agent.name, 'Invoice bot');
   assert.equal(created.data.lastUsedAt, response.data.lastUsedAt);
 });
+
+test('Space Secret environment references survive create, PATCH and clearing', async () => {
+  const requests: Array<{ method: string; path: string; body: unknown }> = [];
+  const client = new Bctrl({ apiKey: 'test', baseUrl: 'https://api.example.test',
+    fetch: async (input, init) => {
+      requests.push({ method: init?.method ?? 'GET', path: new URL(String(input)).pathname,
+        body: JSON.parse(String(init?.body)) });
+      return new Response(JSON.stringify({ id: 'sp_test' }), {
+        status: 200, headers: { 'content-type': 'application/json' },
+      });
+    } });
+  const secrets = { allow: ['prod'], deny: ['prod/root'], env: { OPENAI_API_KEY: 'secret:prod/api#value@3' } };
+  await client.spaces.create({ name: 'Secret env', environment: { secrets } });
+  await client.spaces.update('sp_test', { environment: { secrets } });
+  await client.spaces.update('sp_test', { environment: { secrets: null } });
+  assert.deepEqual(requests, [
+    { method: 'POST', path: '/v1/spaces', body: { name: 'Secret env', environment: { secrets } } },
+    { method: 'PATCH', path: '/v1/spaces/sp_test', body: { environment: { secrets } } },
+    { method: 'PATCH', path: '/v1/spaces/sp_test', body: { environment: { secrets: null } } },
+  ]);
+});
