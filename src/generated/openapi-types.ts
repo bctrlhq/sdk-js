@@ -4907,13 +4907,12 @@ export interface components {
             protocol: "terminal";
         };
         ErrorResponse: {
-            /** @description Stable, dot-namespaced error code, e.g. "runtime.not_found" or "request.invalid". */
-            code: string;
+            code: components["schemas"]["PublicErrorCode"];
             /** @description Resource-specific structured context. Use `code` and `reasonClass` for branching. */
             details?: {
                 [key: string]: unknown;
             };
-            /** @description Optional next action for recoverable errors, e.g. "retry after 2s". */
+            /** @description Required actionable next step for 4xx errors; optional for server errors. */
             hint?: string;
             /** @description Human-readable description of the error. */
             message: string;
@@ -5584,6 +5583,8 @@ export interface components {
             url?: string;
             username?: string | null;
         };
+        /** @enum {string} */
+        PublicErrorCode: "agent.admission_failed" | "agent.gateway_unconfigured" | "agent.model_not_allowed" | "agent.model_not_supported" | "agent.not_found" | "agent.runtime_type_not_supported" | "agent.turn_not_active" | "agent.turn_not_running" | "agent.unavailable" | "agentTurn.not_found" | "ai.gateway_execution_denied" | "ai.gateway_misconfigured" | "ai.gateway_unavailable" | "ai.rate_limited" | "ai.saved_connections_denied" | "ai_connection.disabled" | "ai_connection.not_found" | "ai_connection.scope_mismatch" | "ai_connection.unsupported_provider" | "ai_credential.api_key_missing" | "ai_credential.base_url_required" | "ai_credential.disabled" | "ai_credential.not_found" | "ai_credential.provider_unsupported" | "ai_credential.test_unsupported" | "ai_credential.verification_failed" | "api_key.child_revoke_failed" | "api_key.error" | "api_key.not_found" | "api_key.scopes_unsupported" | "api_keys.org_access_denied" | "api_keys.subaccount_access_denied" | "artifact_export.failed" | "artifact_export.file_not_found" | "artifact_export.no_artifacts" | "artifact_export.path_exists" | "artifact_export.too_large" | "artifact_export.too_many_files" | "auth.admin_assertion_required" | "auth.admin_capability_required" | "auth.conflict" | "auth.customer_actor_required" | "auth.execution_delegation_rejected" | "auth.expired" | "auth.forbidden" | "auth.invalid" | "auth.invalid_signature" | "auth.legacy_identity_rejected" | "auth.principal_missing" | "auth.private_network_required" | "auth.rate_limited" | "auth.required" | "auth.runtime_invalid" | "auth.runtime_required" | "auth.service_unavailable" | "auth.subaccount_context_unsupported" | "auth.subaccount_invalid" | "auth.unauthorized" | "auth.view_invalid" | "auth.workload_invalid" | "auth.workload_issuer_invalid" | "auth.workload_required" | "billing.insufficient_credits" | "billing.insufficient_purchased_credits" | "branding.accent_contrast" | "branding.logo_invalid" | "branding.logo_too_large" | "branding.logo_unsafe" | "browser.concurrent_quota_exceeded" | "browser_extension.archive_limit_exceeded" | "browser_extension.duplicate_ids" | "browser_extension.file_empty" | "browser_extension.file_required" | "browser_extension.identity_mismatch" | "browser_extension.import_failed" | "browser_extension.import_url_invalid" | "browser_extension.in_use" | "browser_extension.invalid_ids" | "browser_extension.invalid_package" | "browser_extension.invalid_signature" | "browser_extension.not_found" | "browser_extension.permission_not_supported" | "browser_extension.protected_identity" | "browser_extension.scope_mismatch" | "browser_extension.storage_cleanup_failed" | "browser_extension.too_many" | "browser_extension.unsupported_format" | "browser_extension.verification_required" | "browser_extension.verification_unavailable" | "browser_profile.not_found" | "capabilities.invalid_override_value" | "capabilities.organization_not_found" | "capability.limit_exceeded" | "capacity_test.run_missing" | "connection.protocol_unsupported" | "control_plane.unavailable" | "conversation.cursor_invalid" | "conversation.message_cursor_invalid" | "conversation.not_found" | "conversation.template_invalid" | "conversation.turn_active" | "device_session.denied" | "device_session.expired" | "device_session.not_found" | "environment.bound" | "environment.busy" | "environment.changed" | "environment.connection_unavailable" | "environment.cursor_invalid" | "environment.environment_missing" | "environment.file_integrity" | "environment.file_too_large" | "environment.image_not_allowed" | "environment.not_a_file" | "environment.not_found" | "environment.not_ready" | "environment.path_exists" | "environment.path_invalid" | "environment.path_not_found" | "environment.provision_timeout" | "environment.provisioning" | "environment.runtime_bound" | "environment.stopping" | "environment.turn_active" | "environment.unavailable" | "environmentExec.not_found" | "environment_connection.not_found" | "environment_exec.finished" | "execution_delegation.invalid" | "file.not_found" | "file.required" | "files.invalid_cursor" | "gateway.misconfigured" | "gateway.timeout" | "help.not_found" | "human_request.view_requires_run" | "idempotency.finalization_uncertain" | "idempotency.reconciliation_required" | "idempotency_key.invalid" | "idempotency_key.required" | "idempotency_key_conflict" | "idempotency_key_in_progress" | "idempotency_key_uncertain" | "internal.error" | "internal.response_serialization_failed" | "knowledge.evaluation_empty" | "knowledge.evaluation_failed" | "knowledge.evaluation_not_found" | "knowledge.evaluation_stale" | "knowledge.item_not_found" | "knowledge.key_invalid" | "knowledge.not_candidate" | "knowledge.not_published" | "knowledge.review_required" | "knowledge.source_not_found" | "knowledge.source_required" | "knowledge.space_not_found" | "knowledge.version_not_found" | "knowledge.visibility_mismatch" | "notification_recipient.duplicate" | "notification_recipient.invalid_email" | "notification_recipient.invalid_phone" | "notification_recipient.not_found" | "notification_recipient.value_required" | "organization.default_region_invalid" | "organization.default_region_missing" | "organization.member_required" | "organization.not_found" | "pagination.cursor_invalid" | "plan_transition.error" | "playground_api_key.error" | "playground_execution.cancelled" | "playground_execution.not_startable" | "playground_principal.create_failed" | "profile.proxy_intent_invalid" | "proxies.access_denied" | "proxies.managed_rotating_denied" | "proxies.managed_static_denied" | "proxies.provider_misconfigured" | "proxies.provider_not_configured" | "proxies.provider_rate_limited" | "proxies.provider_rejected" | "proxies.provider_temporarily_unavailable" | "proxy.connection_required" | "proxy.device_unsupported" | "proxy.geo_country_mismatch" | "proxy.geo_fields_conflict" | "proxy.geo_not_found" | "proxy.geo_state_unsupported" | "proxy.geo_unavailable" | "proxy.kind_mismatch" | "proxy.lease_expired" | "proxy.managed_rotating.account_unavailable" | "proxy.managed_rotating.provider_unavailable" | "proxy.managed_static.invalid" | "proxy.managed_static.not_provisioned" | "proxy.name_conflict" | "proxy.not_found" | "proxy.overrides_unsupported" | "proxy.pool_not_found" | "proxy.pool_out_of_stock" | "proxy.pool_retired" | "proxy.protocol_invalid" | "proxy.protocol_unsupported" | "proxy.provider_response_invalid" | "proxy.renewal_in_progress" | "proxy.udp_protocol_unsupported" | "proxy.update_fields_invalid" | "proxy.url_invalid" | "proxy_pool.not_found" | "rate_limit.exceeded" | "rate_limited" | "recording.run_not_ready" | "request.failed" | "request.invalid" | "request.invalid_content_type" | "request.invalid_json" | "request.method_not_allowed" | "request.rate_limited" | "resource.conflict" | "resource.not_found" | "route.bad_gateway" | "route.error" | "route.not_found" | "route.timeout" | "route.unavailable" | "run.browser_host_unavailable" | "run.browser_host_unbound" | "run.browser_instance_inactive" | "run.evidence_invalid" | "run.failed" | "run.file_not_ready" | "run.file_path_conflict" | "run.file_removing" | "run.files.cursor_invalid" | "run.files_limit" | "run.live_host_unreachable" | "run.live_not_active" | "run.not_active" | "run.not_found" | "run.routing_unavailable" | "run.routing_unsupported" | "runtime.active_run_ambiguous" | "runtime.archived" | "runtime.attach_host_unreachable" | "runtime.attach_placement_changed" | "runtime.capacity_unavailable" | "runtime.connection_target_mismatch" | "runtime.connection_unavailable" | "runtime.control_conflict" | "runtime.control_invalid" | "runtime.control_unavailable" | "runtime.direct_network_disabled" | "runtime.engine_unavailable" | "runtime.event_not_stored" | "runtime.graphics_unavailable" | "runtime.host_operation_failed" | "runtime.host_timeout" | "runtime.host_unavailable" | "runtime.invalid" | "runtime.not_active" | "runtime.not_executable" | "runtime.not_found" | "runtime.not_stopped" | "runtime.profile_identity_immutable" | "runtime.profile_in_use" | "runtime.profile_missing" | "runtime.profile_provisioning" | "runtime.proxy_geo_invalid" | "runtime.proxy_intent_invalid" | "runtime.proxy_invalid" | "runtime.proxy_protocol_invalid" | "runtime.proxy_required" | "runtime.proxy_unavailable" | "runtime.proxy_url_invalid" | "runtime.recording_conflict" | "runtime.required" | "runtime.resource_not_found" | "runtime.run_missing" | "runtime.stale_generation" | "runtime.start_failed" | "runtime.start_in_progress" | "runtime.start_interrupted" | "runtime.start_superseded" | "runtime.stopping" | "runtime.type_unavailable" | "runtime.webdriver_unavailable" | "runtime_file.execution_changed" | "runtime_file.no_active_run" | "runtime_file.path_invalid" | "runtime_file.runtime_unsupported" | "runtime_file.storage_path_exists" | "runtime_file.storage_workspace_forbidden" | "secrets.conflict" | "secrets.cursor_invalid" | "secrets.field_empty" | "secrets.invalid" | "secrets.no_origins" | "secrets.not_found" | "secrets.origin_invalid" | "secrets.path_denied" | "secrets.path_invalid" | "secrets.prefix_invalid" | "secrets.reference_invalid" | "secrets.reveal_forbidden" | "secrets.version_mismatch" | "secrets.version_not_found" | "segment.not_found" | "server.error" | "space.ai_default_not_allowed" | "space.default_not_deletable" | "space.error" | "space.has_active_placements" | "space.has_active_runtimes" | "space.not_found" | "space.region_invalid" | "status.invalid" | "storage.not_configured" | "storage.unavailable" | "storage_file.cursor_invalid" | "storage_file.path_exists" | "storage_file.path_invalid" | "storage_file.referenced" | "storage_file.space_unresolved" | "storage_file.too_large" | "subaccount.archived" | "subaccount.conflict" | "subaccount.not_found" | "subaccount.space_limit_reached" | "subaccount_api_key.error" | "subaccounts.access_denied" | "subaccounts.active_run_limit_exceeded" | "subaccounts.monthly_budget_exceeded" | "subaccounts.workspace_scoping_denied" | "tool call.not_found" | "tool.builtin_immutable" | "tool.cancellation_not_supported" | "tool.catalog_changed" | "tool.context_input_forbidden" | "tool.context_invalid" | "tool.execution_mode_not_supported" | "tool.execution_unsupported" | "tool.host_failed" | "tool.host_unavailable" | "tool.implementation_change_unsupported" | "tool.implementation_unsupported" | "tool.input_invalid" | "tool.input_not_requested" | "tool.input_required" | "tool.name_conflict" | "tool.not_allowed" | "tool.not_found" | "tool.output_invalid" | "tool.result_expired" | "tool.result_not_persisted" | "tool.revision_conflict" | "tool.revision_invalid" | "tool.revision_unavailable" | "tool.run_not_active" | "tool.runtime_mismatch" | "tool.runtime_not_allowed" | "tool.runtime_type_unsupported" | "tool.runtime_unavailable" | "tool.timed_out" | "tool.version_unavailable" | "tool_call.context_invalid" | "tool_call.cursor_invalid" | "tool_call.input_already_responded" | "tool_call.input_expired" | "tool_call.input_request_failed" | "tool_call.response_invalid" | "tool_call.response_schema_invalid" | "tool_call.scope_invalid" | "tool_call.state_invalid" | "toolset.name_conflict" | "toolset.not_found" | "toolset.tool_not_allowed" | "toolset.tool_not_found" | "upstream.unavailable" | "view.component_denied" | "view.conversation_component_required" | "view.file_capability_required" | "view.not_found" | "view.surface_unsupported_runtime" | "viewer.control_forbidden" | "viewer.control_not_held" | "viewer.download_not_found" | "viewer.gateway_url_missing" | "viewer.handoff_not_pending" | "viewer.media_not_found" | "viewer.mint_failed" | "viewer.not_found" | "viewer.recording_not_found" | "viewer.tool_inputs_forbidden" | "viewer.uploads_forbidden" | "viewer.view_shell_url_missing" | "webhook delivery.not_found" | "webhook.not_found" | "webhook.url_invalid" | "webhook.url_private" | "webhook.url_unresolvable" | "workflow.not_found" | "workflow.replay_failed" | "workflow.schema_immutable";
         ResolvedBranding: {
             logo: string | null;
             productName: string;
@@ -7182,11 +7183,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7198,11 +7202,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7252,11 +7259,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -7268,11 +7278,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7284,11 +7297,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -7302,11 +7318,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7356,11 +7375,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7372,11 +7394,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7426,11 +7451,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -7442,11 +7470,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7458,11 +7489,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -7474,11 +7508,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -7492,11 +7529,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7542,11 +7582,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7558,11 +7601,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `ai_credential.not_found`. */
@@ -7574,11 +7620,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "ai_credential.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7626,11 +7675,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7642,11 +7694,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `ai_credential.not_found`. */
@@ -7658,11 +7713,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "ai_credential.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -7676,11 +7734,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7732,11 +7793,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -7748,11 +7812,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7764,11 +7831,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `ai_credential.not_found`. */
@@ -7780,11 +7850,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "ai_credential.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -7796,11 +7869,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -7814,11 +7890,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -7866,11 +7945,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -7882,11 +7964,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -7898,11 +7983,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `ai_credential.not_found`. */
@@ -7914,11 +8002,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "ai_credential.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -7932,11 +8023,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -7948,7 +8042,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -7964,7 +8058,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -8013,11 +8107,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8029,11 +8126,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8079,11 +8179,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8095,11 +8198,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8147,11 +8253,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -8163,11 +8272,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description A capability or usage limit was exceeded. Example code: `billing.insufficient_credits`. */
@@ -8179,11 +8291,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "billing.insufficient_credits",
-                     *       "error": "A capability or usage limit was exceeded.",
+                     *       "hint": "Add the required credits to this account, then retry.",
+                     *       "message": "A capability or usage limit was exceeded.",
                      *       "reasonClass": "capability_limit_exceeded"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8195,11 +8310,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -8213,11 +8331,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8263,11 +8384,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8279,11 +8403,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `api_key.not_found`. */
@@ -8295,11 +8422,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "api_key.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -8313,11 +8443,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8361,11 +8494,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8377,11 +8513,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8431,11 +8570,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8447,11 +8589,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8502,11 +8647,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser_extension.invalid_package",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -8518,11 +8666,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8534,11 +8685,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -8552,11 +8706,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -8568,7 +8725,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -8584,7 +8741,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -8635,11 +8792,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8651,11 +8811,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `browser_extension.not_found`. */
@@ -8667,11 +8830,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser_extension.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8720,11 +8886,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8736,11 +8905,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `browser_extension.not_found`. */
@@ -8752,11 +8924,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser_extension.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `browser_extension.in_use`. */
@@ -8768,11 +8943,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser_extension.in_use",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Remove the extension from profiles and Runtimes before deleting it.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -8786,11 +8964,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8843,11 +9024,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser_extension.invalid_package",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -8859,11 +9043,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8875,11 +9062,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `browser_extension.not_found`. */
@@ -8891,11 +9081,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser_extension.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -8909,11 +9102,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -8964,11 +9160,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -8980,11 +9179,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9034,11 +9236,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -9050,11 +9255,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9066,11 +9274,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -9082,11 +9293,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -9098,11 +9312,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -9116,11 +9333,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9170,11 +9390,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9186,11 +9409,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `conversation.not_found`. */
@@ -9202,11 +9428,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "conversation.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9259,11 +9488,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -9275,11 +9507,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9291,11 +9526,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `conversation.not_found`. */
@@ -9307,11 +9545,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "conversation.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -9323,11 +9564,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -9341,11 +9585,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9394,11 +9641,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9410,11 +9660,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `conversation.not_found`. */
@@ -9426,11 +9679,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "conversation.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -9442,11 +9698,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -9460,11 +9719,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9517,11 +9779,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -9533,11 +9798,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9549,11 +9817,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `conversation.not_found`. */
@@ -9565,11 +9836,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "conversation.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -9581,11 +9855,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -9599,11 +9876,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -9615,7 +9895,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -9631,7 +9911,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -9686,11 +9966,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9702,11 +9985,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Conversation not found or not visible to actor */
@@ -9727,11 +10013,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9782,11 +10071,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9798,11 +10090,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `conversation.not_found`. */
@@ -9814,11 +10109,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "conversation.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9869,11 +10167,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -9885,11 +10186,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `conversation.not_found`. */
@@ -9901,11 +10205,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "conversation.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -9917,11 +10224,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -9935,11 +10245,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -9989,11 +10302,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -10005,11 +10321,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10021,11 +10340,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10037,11 +10359,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -10053,11 +10378,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -10071,11 +10399,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -10087,7 +10418,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -10103,7 +10434,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -10154,11 +10485,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10170,11 +10504,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10186,11 +10523,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10239,11 +10579,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10255,11 +10598,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10271,11 +10617,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -10289,11 +10638,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10340,11 +10692,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10356,11 +10711,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10372,11 +10730,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10425,11 +10786,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10441,11 +10805,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10457,11 +10824,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -10473,11 +10843,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -10491,11 +10864,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10546,11 +10922,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10562,11 +10941,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Execution not found or not visible to actor */
@@ -10587,11 +10969,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10640,11 +11025,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10656,11 +11044,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10710,11 +11101,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -10726,11 +11120,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10742,11 +11139,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10758,11 +11158,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -10774,11 +11177,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -10792,11 +11198,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10843,11 +11252,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10859,11 +11271,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10875,11 +11290,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -10928,11 +11346,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -10944,11 +11365,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -10960,11 +11384,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -10976,11 +11403,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -10994,11 +11424,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11051,11 +11484,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -11067,11 +11503,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11083,11 +11522,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11099,11 +11541,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11115,11 +11560,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -11133,11 +11581,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11190,11 +11641,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -11206,11 +11660,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11222,11 +11679,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11238,11 +11698,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11254,11 +11717,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -11272,11 +11738,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11325,11 +11794,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -11341,11 +11813,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11357,11 +11832,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11373,11 +11851,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11389,11 +11870,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11446,11 +11930,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -11462,11 +11949,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11478,11 +11968,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11494,11 +11987,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11510,11 +12006,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -11528,11 +12027,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11585,11 +12087,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -11601,11 +12106,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11617,11 +12125,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11633,11 +12144,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11649,11 +12163,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -11667,11 +12184,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11724,11 +12244,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11740,11 +12263,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11756,11 +12282,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11772,11 +12301,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -11790,11 +12322,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11843,11 +12378,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11859,11 +12397,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11875,11 +12416,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -11891,11 +12435,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -11909,11 +12456,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -11966,11 +12516,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -11982,11 +12535,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -11998,11 +12554,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -12014,11 +12573,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -12032,11 +12594,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12095,11 +12660,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12111,11 +12679,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12168,11 +12739,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "storage_file.path_invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -12184,11 +12758,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12200,11 +12777,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `space.not_found`. */
@@ -12216,11 +12796,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -12234,11 +12817,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -12250,7 +12836,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -12266,7 +12852,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "storage.unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -12319,11 +12905,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12335,11 +12924,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `file.not_found`. */
@@ -12351,11 +12943,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "file.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12404,11 +12999,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12420,11 +13018,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `file.not_found`. */
@@ -12436,11 +13037,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "file.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -12454,11 +13058,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12511,11 +13118,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "storage_file.path_invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -12527,11 +13137,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12543,11 +13156,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `file.not_found`. */
@@ -12559,11 +13175,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "file.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -12577,11 +13196,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12634,11 +13256,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12650,11 +13275,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `file.not_found`. */
@@ -12666,11 +13294,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "file.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12714,11 +13345,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12730,11 +13364,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12783,11 +13420,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12799,11 +13439,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12853,11 +13496,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -12869,11 +13515,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12885,11 +13534,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -12901,11 +13553,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -12919,11 +13574,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -12972,11 +13630,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -12988,11 +13649,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -13004,11 +13668,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -13022,11 +13689,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13079,11 +13749,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -13095,11 +13768,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13111,11 +13787,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -13127,11 +13806,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -13143,11 +13825,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -13161,11 +13846,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13212,11 +13900,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13228,11 +13919,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13273,7 +13967,7 @@ export interface operations {
                     "application/json": components["schemas"]["Proxy"];
                 };
             };
-            /** @description The request was invalid. See `code` and `details`. Example code: `proxy.invalid`. */
+            /** @description The request was invalid. See `code` and `details`. Example code: `proxy.url_invalid`. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -13281,12 +13975,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "code": "proxy.url_invalid",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -13298,11 +13995,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13314,14 +14014,17 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
-            /** @description The request conflicts with the current resource state. Example code: `proxy.conflict`. */
+            /** @description The request conflicts with the current resource state. Example code: `proxy.pool_retired`. */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -13329,12 +14032,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "code": "proxy.pool_retired",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -13348,11 +14054,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -13364,7 +14073,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -13380,7 +14089,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "proxies.provider_temporarily_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -13430,11 +14139,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13446,11 +14158,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `proxy.not_found`. */
@@ -13462,11 +14177,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "proxy.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13514,11 +14232,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13530,11 +14251,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `proxy.not_found`. */
@@ -13546,14 +14270,17 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "proxy.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
-            /** @description The request conflicts with the current resource state. Example code: `proxy.conflict`. */
+            /** @description The request conflicts with the current resource state. Example code: `proxy.pool_retired`. */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -13561,12 +14288,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "code": "proxy.pool_retired",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -13580,11 +14310,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13627,7 +14360,7 @@ export interface operations {
                     "application/json": components["schemas"]["Proxy"];
                 };
             };
-            /** @description The request was invalid. See `code` and `details`. Example code: `proxy.invalid`. */
+            /** @description The request was invalid. See `code` and `details`. Example code: `proxy.url_invalid`. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -13635,12 +14368,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "code": "proxy.url_invalid",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -13652,11 +14388,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13668,11 +14407,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `proxy.not_found`. */
@@ -13684,14 +14426,17 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "proxy.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
-            /** @description The request conflicts with the current resource state. Example code: `proxy.conflict`. */
+            /** @description The request conflicts with the current resource state. Example code: `proxy.pool_retired`. */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -13699,12 +14444,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "code": "proxy.pool_retired",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -13718,11 +14466,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13761,7 +14512,7 @@ export interface operations {
                     "application/json": components["schemas"]["ProxyTestResponse"];
                 };
             };
-            /** @description The request was invalid. See `code` and `details`. Example code: `proxy.invalid`. */
+            /** @description The request was invalid. See `code` and `details`. Example code: `proxy.url_invalid`. */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -13769,12 +14520,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "code": "proxy.url_invalid",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -13786,11 +14540,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13802,11 +14559,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `proxy.not_found`. */
@@ -13818,11 +14578,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "proxy.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -13836,11 +14599,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -13852,7 +14618,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -13868,7 +14634,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "proxies.provider_temporarily_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -13921,11 +14687,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -13937,11 +14706,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -13990,11 +14762,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14006,11 +14781,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14057,11 +14835,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14073,11 +14854,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14120,11 +14904,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14136,14 +14923,17 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
-            /** @description The requested resource was not found. Example code: `proxy.pool_not_found`. */
+            /** @description The requested resource was not found. Example code: `proxy_pool.not_found`. */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -14151,12 +14941,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "proxy.pool_not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "code": "proxy_pool.not_found",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14207,11 +15000,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14223,11 +15019,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -14241,11 +15040,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14294,11 +15096,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14310,11 +15115,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14326,11 +15134,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14386,11 +15197,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14402,11 +15216,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14418,11 +15235,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -14436,11 +15256,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14491,11 +15314,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -14507,11 +15333,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14523,11 +15352,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14539,11 +15371,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14596,11 +15431,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -14612,11 +15450,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14628,11 +15469,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14644,11 +15488,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -14660,11 +15507,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -14678,11 +15528,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14731,11 +15584,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14747,11 +15603,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14763,11 +15622,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14818,11 +15680,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14834,11 +15699,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14850,11 +15718,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -14866,11 +15737,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -14884,11 +15758,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -14939,11 +15816,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -14955,11 +15835,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -14971,11 +15854,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -14987,11 +15873,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -15005,11 +15894,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -15062,11 +15954,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -15078,11 +15973,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15094,11 +15992,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -15110,11 +16011,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -15126,11 +16030,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -15144,11 +16051,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -15160,7 +16070,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -15176,7 +16086,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "storage.unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -15233,11 +16143,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -15249,11 +16162,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15265,11 +16181,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -15281,11 +16200,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -15297,11 +16219,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -15315,11 +16240,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -15331,7 +16259,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -15347,7 +16275,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "storage.unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -15403,11 +16331,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15419,11 +16350,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Run not found or not visible to actor */
@@ -15444,11 +16378,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -15504,11 +16441,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15520,11 +16460,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `run.not_found`. */
@@ -15536,11 +16479,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -15554,11 +16500,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -15612,11 +16561,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15628,11 +16580,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -15682,11 +16637,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -15698,11 +16656,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description A capability or usage limit was exceeded. Example code: `browser.concurrent_quota_exceeded`. */
@@ -15714,11 +16675,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser.concurrent_quota_exceeded",
-                     *       "error": "A capability or usage limit was exceeded.",
+                     *       "hint": "Reduce active usage or increase the applicable quota or budget before retrying.",
+                     *       "message": "A capability or usage limit was exceeded.",
                      *       "reasonClass": "capability_limit_exceeded"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15730,11 +16694,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `space.not_found`. */
@@ -15746,11 +16713,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -15762,11 +16732,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -15780,11 +16753,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -15843,11 +16819,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15859,11 +16838,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -15875,11 +16857,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -15928,11 +16913,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -15944,11 +16932,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -15960,11 +16951,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `runtime.not_stopped`. */
@@ -15976,11 +16970,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_stopped",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Stop the Runtime and wait for it to become stopped before retrying this operation.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -15994,11 +16991,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -16051,11 +17051,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16067,11 +17070,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -16083,11 +17089,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -16101,11 +17110,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -16169,11 +17181,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description A capability or usage limit was exceeded. Example code: `browser.concurrent_quota_exceeded`. */
@@ -16185,11 +17200,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "browser.concurrent_quota_exceeded",
-                     *       "error": "A capability or usage limit was exceeded.",
+                     *       "hint": "Reduce active usage or increase the applicable quota or budget before retrying.",
+                     *       "message": "A capability or usage limit was exceeded.",
                      *       "reasonClass": "capability_limit_exceeded"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16201,11 +17219,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -16217,14 +17238,17 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
-            /** @description The request conflicts with the current resource state. Example code: `runtime.not_executable`. */
+            /** @description The request conflicts with the current resource state. Example code: `runtime.start_in_progress`. */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -16232,12 +17256,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "runtime.not_executable",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "code": "runtime.start_in_progress",
+                     *       "hint": "Poll the current runtime-start handle until it reaches a terminal status.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -16251,11 +17278,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -16267,7 +17297,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -16283,7 +17313,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -16336,11 +17366,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16352,11 +17385,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -16368,11 +17404,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `runtime.not_active`. */
@@ -16384,11 +17423,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_active",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -16402,11 +17444,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -16418,7 +17463,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -16434,7 +17479,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -16490,11 +17535,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -16506,11 +17554,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16522,11 +17573,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -16574,11 +17628,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -16590,11 +17647,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16606,11 +17666,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `secrets.not_found`. */
@@ -16622,11 +17685,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -16640,11 +17706,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -16691,11 +17760,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16707,11 +17779,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `secrets.not_found`. */
@@ -16723,11 +17798,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -16783,11 +17861,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -16799,11 +17880,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16815,11 +17899,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `secrets.not_found`. */
@@ -16831,11 +17918,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `secrets.conflict`. */
@@ -16847,11 +17937,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The If-Match version is not the current version of the resource. */
@@ -16863,11 +17956,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.version_mismatch",
-                     *       "error": "The If-Match version is not the current version of the resource.",
+                     *       "hint": "Read the latest Secret version and retry with its current If-Match value.",
+                     *       "message": "The If-Match version is not the current version of the resource.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -16881,11 +17977,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -16936,11 +18035,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -16952,11 +18054,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `secrets.not_found`. */
@@ -16968,11 +18073,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The If-Match version is not the current version of the resource. */
@@ -16984,11 +18092,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.version_mismatch",
-                     *       "error": "The If-Match version is not the current version of the resource.",
+                     *       "hint": "Read the latest Secret version and retry with its current If-Match value.",
+                     *       "message": "The If-Match version is not the current version of the resource.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -17002,11 +18113,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17062,11 +18176,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -17078,11 +18195,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17094,11 +18214,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `secrets.not_found`. */
@@ -17110,11 +18233,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The If-Match version is not the current version of the resource. */
@@ -17126,11 +18252,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "secrets.version_mismatch",
-                     *       "error": "The If-Match version is not the current version of the resource.",
+                     *       "hint": "Read the latest Secret version and retry with its current If-Match value.",
+                     *       "message": "The If-Match version is not the current version of the resource.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -17144,11 +18273,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17195,11 +18327,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17211,11 +18346,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17265,11 +18403,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -17281,11 +18422,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17297,11 +18441,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -17313,11 +18460,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -17331,11 +18481,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17381,11 +18534,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17397,11 +18553,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `space.not_found`. */
@@ -17413,11 +18572,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17465,11 +18627,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17481,11 +18646,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `space.not_found`. */
@@ -17497,11 +18665,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `runtime.not_stopped`. */
@@ -17513,11 +18684,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_stopped",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Stop the Runtime and wait for it to become stopped before retrying this operation.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -17531,11 +18705,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17587,11 +18764,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -17603,11 +18783,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17619,11 +18802,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `space.not_found`. */
@@ -17635,11 +18821,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -17653,11 +18842,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17707,11 +18899,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17723,11 +18918,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17775,11 +18973,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -17791,11 +18992,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description A capability or usage limit was exceeded. Example code: `billing.insufficient_credits`. */
@@ -17807,11 +19011,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "billing.insufficient_credits",
-                     *       "error": "A capability or usage limit was exceeded.",
+                     *       "hint": "Add the required credits to this account, then retry.",
+                     *       "message": "A capability or usage limit was exceeded.",
                      *       "reasonClass": "capability_limit_exceeded"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17823,11 +19030,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `subaccount.conflict`. */
@@ -17839,11 +19049,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "subaccount.conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -17857,11 +19070,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17908,11 +19124,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -17924,11 +19143,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `subaccount.not_found`. */
@@ -17940,11 +19162,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "subaccount.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17995,11 +19220,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -18011,11 +19239,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18027,11 +19258,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `subaccount.not_found`. */
@@ -18043,11 +19277,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "subaccount.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `subaccount.conflict`. */
@@ -18059,11 +19296,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "subaccount.conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -18077,11 +19317,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18128,11 +19371,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18144,11 +19390,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `subaccount.not_found`. */
@@ -18160,11 +19409,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "subaccount.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -18178,11 +19430,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18226,11 +19481,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18242,11 +19500,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18300,11 +19561,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18316,11 +19580,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18367,11 +19634,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18383,11 +19653,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool_call.not_found`. */
@@ -18398,12 +19671,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "tool_call.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "code": "resource.not_found",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18452,11 +19728,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18468,11 +19747,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool_call.not_found`. */
@@ -18483,12 +19765,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "tool_call.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "code": "resource.not_found",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -18500,11 +19785,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -18518,11 +19806,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18575,11 +19866,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -18591,11 +19885,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18607,11 +19904,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool_call.not_found`. */
@@ -18622,12 +19922,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "tool_call.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "code": "resource.not_found",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -18639,11 +19942,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -18657,11 +19963,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18719,11 +20028,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18735,11 +20047,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool_call.not_found`. */
@@ -18750,12 +20065,15 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "code": "tool_call.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "code": "resource.not_found",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18804,11 +20122,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18820,11 +20141,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18874,11 +20198,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -18890,11 +20217,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -18906,11 +20236,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -18922,11 +20255,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -18940,11 +20276,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -18990,11 +20329,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -19006,11 +20348,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool.not_found`. */
@@ -19022,11 +20367,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -19074,11 +20422,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -19090,11 +20441,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool.not_found`. */
@@ -19106,11 +20460,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -19124,11 +20481,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -19180,11 +20540,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -19196,11 +20559,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -19212,11 +20578,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool.not_found`. */
@@ -19228,11 +20597,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -19244,11 +20616,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -19262,11 +20637,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -19318,11 +20696,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -19334,11 +20715,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -19350,11 +20734,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool.not_found`. */
@@ -19366,11 +20753,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -19382,11 +20772,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -19400,11 +20793,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -19416,7 +20812,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -19432,7 +20828,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -19490,11 +20886,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -19506,11 +20905,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -19522,11 +20924,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `tool.not_found`. */
@@ -19538,11 +20943,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
@@ -19554,11 +20962,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Tool name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -19572,11 +20983,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -19588,7 +21002,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -19604,7 +21018,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -20770,11 +22184,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -20786,11 +22203,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -20840,11 +22260,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -20856,11 +22279,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -20872,11 +22298,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `toolset.name_conflict`. */
@@ -20888,11 +22317,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "toolset.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Toolset name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -20906,11 +22338,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -20957,11 +22392,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -20973,11 +22411,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `toolset.not_found`. */
@@ -20989,11 +22430,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "toolset.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21042,11 +22486,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21058,11 +22505,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `toolset.not_found`. */
@@ -21074,11 +22524,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "toolset.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -21092,11 +22545,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21149,11 +22605,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -21165,11 +22624,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21181,11 +22643,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `toolset.not_found`. */
@@ -21197,11 +22662,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "toolset.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The request conflicts with the current resource state. Example code: `toolset.name_conflict`. */
@@ -21213,11 +22681,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "toolset.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
+                     *       "hint": "Choose an unused Toolset name in this Space and retry.",
+                     *       "message": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -21231,11 +22702,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21276,11 +22750,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21292,11 +22769,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21343,11 +22823,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21359,11 +22842,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21413,11 +22899,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -21429,11 +22918,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21445,11 +22937,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -21461,11 +22956,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -21479,11 +22977,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description An unexpected server error occurred. */
@@ -21495,7 +22996,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
+                     *       "message": "An unexpected server error occurred.",
                      *       "reasonClass": "server"
                      *     }
                      */
@@ -21511,7 +23012,7 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "run.browser_host_unavailable",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
+                     *       "message": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
                      *     }
                      */
@@ -21562,11 +23063,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21578,11 +23082,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -21594,11 +23101,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21647,11 +23157,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21663,11 +23176,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -21679,11 +23195,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -21697,11 +23216,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21748,11 +23270,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21764,11 +23289,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21818,11 +23346,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -21834,11 +23365,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21850,11 +23384,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -21868,11 +23405,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -21919,11 +23459,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -21935,11 +23478,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -21951,11 +23497,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -22004,11 +23553,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -22020,11 +23572,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -22036,11 +23591,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -22054,11 +23612,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -22111,11 +23672,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *       "message": "The request was invalid. See `code` and `details`.",
                      *       "reasonClass": "invalid_input"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -22127,11 +23691,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -22143,11 +23710,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -22159,11 +23729,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -22177,11 +23750,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -22231,11 +23807,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -22247,11 +23826,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -22263,11 +23845,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -22318,11 +23903,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -22334,11 +23922,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -22350,11 +23941,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -22368,11 +23962,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -22421,11 +24018,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -22437,11 +24037,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -22453,11 +24056,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -22471,11 +24077,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -22524,11 +24133,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *       "message": "Authentication required: the API key is missing or invalid.",
                      *       "reasonClass": "unauthorized"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Forbidden: the API key cannot access this resource. */
@@ -22540,11 +24152,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *       "message": "Forbidden: the API key cannot access this resource.",
                      *       "reasonClass": "capability_denied"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description The requested resource was not found. Example code: `runtime.not_found`. */
@@ -22556,11 +24171,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
+                     *       "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *       "message": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
@@ -22574,11 +24192,14 @@ export interface operations {
                     /**
                      * @example {
                      *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *       "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
                      *     }
                      */
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        hint: string;
+                    };
                 };
             };
             /** @description Unexpected error. */
