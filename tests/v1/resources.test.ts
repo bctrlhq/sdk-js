@@ -168,3 +168,21 @@ test('async waits use query parameters and preserve the accepted runtime handle'
     { path: '/v1/conversations/conv_1/turns/turn_1/cancel', body: null },
   ]);
 });
+
+
+test('agent keys send the agent name and retain the person and usage metadata', async () => {
+  let body: unknown;
+  const response = { data: { id: 'key-agent', type: 'agent', agent: { name: 'Invoice bot' },
+    actsFor: { userId: 'person-1' }, lastUsedAt: '2026-09-30T01:00:00.000Z' }, secret: 'test-only-secret' };
+  const client = new Bctrl({ apiKey: 'test', baseUrl: 'https://api.example.test', fetch: async (_url, init) => {
+    body = JSON.parse(String(init?.body));
+    return Response.json(response, { status: 201 });
+  } });
+  const created = await client.apiKeys.create({ type: 'agent', agent: { name: 'Invoice bot' } });
+  assert.deepEqual(body, { type: 'agent', agent: { name: 'Invoice bot' } });
+  assert.equal(created.data.type, 'agent');
+  if (created.data.type !== 'agent') throw new Error('missing agent response');
+  assert.deepEqual(created.data.actsFor, { userId: 'person-1' });
+  assert.equal(created.data.agent.name, 'Invoice bot');
+  assert.equal(created.data.lastUsedAt, response.data.lastUsedAt);
+});
