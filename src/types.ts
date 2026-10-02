@@ -161,7 +161,7 @@ export type V1RuntimeStartRequest = OpenApiSchemas['RuntimeStartRequest'];
 /** Upload straight into a Run: a Space File at `path` (default `uploads/<name>`), bound to it. */
 export interface V1RunFileUploadRequest {
   file: Blob;
-  name?: string;
+  filename?: string;
   path?: string;
 }
 
@@ -174,7 +174,7 @@ export type V1FileDeleteResponse = OpenApiSchemas['FileDeleteResponse'];
 export interface V1FileUploadRequest {
   spaceId?: string;
   file: Blob;
-  name?: string;
+  filename?: string;
   path?: string;
   metadata?: JsonObject;
 }

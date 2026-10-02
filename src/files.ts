@@ -44,12 +44,12 @@ export class V1FilesClient {
 
   upload(request: V1FileUploadRequest): Promise<V1File> {
     const form = new FormData();
-    if (request.name) {
-      form.set('file', request.file, request.name);
+    if (request.filename) {
+      form.set('file', request.file, request.filename);
     } else {
       form.set('file', request.file);
     }
-    if (request.name) form.set('name', request.name);
+    if (request.filename) form.set('filename', request.filename);
     if (request.path) form.set('path', request.path);
     if (request.metadata) form.set('metadata', JSON.stringify(request.metadata));
 

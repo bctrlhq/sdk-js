@@ -97,7 +97,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.runs.files.add('run_1', 'file_1');
   await client.runs.files.upload(
     'run_1',
-    { file: new Blob(['x']), name: 'a.txt' },
+    { file: new Blob(['x']), filename: 'a.txt' },
     { idempotencyKey: 'upload-1' }
   );
   await client.runs.files.retry('run_1', 'file_1');
@@ -154,7 +154,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
 
 test('async waits use query parameters and preserve the accepted runtime handle', async () => {
   const requests: Array<{ path: string; body: unknown }> = [];
-  const handle: V1RuntimeStartAccepted = { runtimeId: 'rt_1', runId: 'run_1', status: 'starting' };
+  const handle: V1RuntimeStartAccepted = { object: 'runtime', runtimeId: 'rt_1', runId: 'run_1', status: 'starting' };
   const client = new Bctrl({ apiKey: 'test', baseUrl: 'https://example.test', fetch: async (input, init) => {
     const url = new URL(String(input));
     requests.push({ path: url.pathname + url.search, body: init?.body ? JSON.parse(String(init.body)) : null });

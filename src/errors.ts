@@ -37,6 +37,18 @@ export class BctrlApiError extends BctrlError {
     return typeof this.context?.status === 'number' ? this.context.status : undefined;
   }
 
+  get hint(): string | undefined {
+    return typeof this.context?.hint === 'string' ? this.context.hint : undefined;
+  }
+
+  get reasonClass(): string | undefined {
+    return typeof this.context?.reasonClass === 'string' ? this.context.reasonClass : undefined;
+  }
+
+  get details(): Record<string, unknown> | undefined {
+    return this.context?.details as Record<string, unknown> | undefined;
+  }
+
   get requestId(): string | undefined {
     return typeof this.context?.requestId === 'string' ? this.context.requestId : undefined;
   }
@@ -111,11 +123,13 @@ export function createV1HttpError(input: {
   code?: string;
   requestId?: string;
   body?: unknown;
+  hint?: string; reasonClass?: string; details?: Record<string, unknown>;
 }): BctrlApiError {
   const context: V1ErrorContext = {
     status: input.status,
     requestId: input.requestId,
     body: input.body,
+    hint: input.hint, reasonClass: input.reasonClass, details: input.details,
   };
   const code = input.code;
   if (code) context.code = code;

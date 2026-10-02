@@ -9,6 +9,7 @@ import {
 import { SDK_VERSION } from './version.js';
 
 const API_PREFIX = '/v1';
+const API_DATED_VERSION = '2026-10-01';
 
 export interface V1ClientOptions {
   apiKey?: string;
@@ -44,6 +45,7 @@ export interface V1ToolInvocationOptions extends V1IdempotencyOptions {
 }
 
 interface V1ErrorBody {
+  hint?: string; reasonClass?: string; details?: Record<string, unknown>;
   message: string;
   code?: string;
   requestId?: string;
@@ -95,7 +97,7 @@ function parseResponseBody(text: string): unknown {
 
 function responseRequestId(response: Response): string | undefined {
   return (
-    response.headers.get('x-request-id') ?? response.headers.get('x-bctrl-request-id') ?? undefined
+    response.headers.get('bctrl-request-id') ?? undefined
   );
 }
 
@@ -103,16 +105,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value && typeof value === 'object' && !Array.isArray(value));
 }
 
-function parseV1ErrorBody(parsed: unknown, fallbackText: string): V1ErrorBody {
+function parseV1ErrorBody(body: unknown, fallbackText: string): V1ErrorBody {
+  const parsed = isRecord(body) && isRecord(body.error) ? body.error : undefined;
   if (isRecord(parsed) && typeof parsed.message === 'string') {
     return {
       message: parsed.message,
+      ...(typeof parsed.hint === 'string' ? { hint: parsed.hint } : {}),
+      ...(typeof parsed.reasonClass === 'string' ? { reasonClass: parsed.reasonClass } : {}),
+      ...(isRecord(parsed.details) ? { details: parsed.details } : {}),
       ...(typeof parsed.code === 'string' ? { code: parsed.code } : {}),
       ...(typeof parsed.requestId === 'string' ? { requestId: parsed.requestId } : {}),
     };
-  }
-  if (typeof parsed === 'string' && parsed.trim()) {
-    return { message: parsed.trim() };
   }
   return { message: fallbackText.trim() || 'Unknown error' };
 }
@@ -176,6 +179,7 @@ export class V1HttpClient {
       Accept: 'application/json',
       Authorization: `Bearer ${this.apiKey}`,
       'x-sdk-version': SDK_VERSION,
+      'BCTRL-Version': API_DATED_VERSION,
       'User-Agent': `@bctrl/sdk/${SDK_VERSION} v1`,
       ...(this.subaccountId ? { 'BCTRL-Subaccount-Id': this.subaccountId } : {}),
       ...options.headers,
@@ -241,6 +245,7 @@ export class V1HttpClient {
       throw createV1HttpError({
         status: response.status,
         message: errorBody.message,
+        hint: errorBody.hint, reasonClass: errorBody.reasonClass, details: errorBody.details,
         code: errorBody.code,
         requestId: errorBody.requestId ?? responseRequestId(response),
         body: parsed,

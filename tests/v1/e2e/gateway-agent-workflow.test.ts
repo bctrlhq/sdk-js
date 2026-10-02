@@ -66,7 +66,7 @@ test(
       const file = await client.files.upload({
         spaceId: currentSpaceId,
         file: new Blob(['SDK gateway workflow fixture\n'], { type: 'text/plain' }),
-        name: 'sdk-workflow-fixture.txt',
+        filename: 'sdk-workflow-fixture.txt',
         path: 'e2e/sdk-workflow-fixture.txt',
         metadata: { suite: 'sdk-gateway-e2e' },
       });
@@ -79,9 +79,9 @@ test(
       assert.equal(await content.text(), 'SDK gateway workflow fixture\n');
 
       const renamedFile = await client.files.update(file.id, {
-        name: 'sdk-workflow-fixture-renamed.txt',
+        filename: 'sdk-workflow-fixture-renamed.txt',
       });
-      assert.equal(renamedFile.name, 'sdk-workflow-fixture-renamed.txt');
+      assert.equal(renamedFile.filename, 'sdk-workflow-fixture-renamed.txt');
 
       const runtime = await client.runtimes.create({
         spaceId: currentSpaceId,

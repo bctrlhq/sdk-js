@@ -134,9 +134,9 @@ export class V1RunFilesNamespaceClient {
     options: V1IdempotencyOptions = {}
   ): Promise<V1RunFile> {
     const form = new FormData();
-    if (request.name) form.set('file', request.file, request.name);
+    if (request.filename) form.set('file', request.file, request.filename);
     else form.set('file', request.file);
-    if (request.name) form.set('name', request.name);
+    if (request.filename) form.set('filename', request.filename);
     if (request.path) form.set('path', request.path);
     return this.http.request(this.path(runId, '/upload'), {
       method: 'POST',
