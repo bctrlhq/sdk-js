@@ -108,6 +108,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.browserExtensions.list();
   await client.proxies.geo.list({ country: 'us', type: 'city' });
   await client.proxies.locations.list({ pool: 'pool1', limit: 10 });
+  await client.locations.list({ limit: 1, order: 'asc' });
 
   assert.deepEqual(
     requests.map(({ method, path }) => `${method} ${path}`),
@@ -134,6 +135,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'GET /v1/browser/extensions',
       'GET /v1/proxies/geo?country=us&type=city',
       'GET /v1/proxies/locations?pool=pool1&limit=10',
+      'GET /v1/locations?limit=1&order=asc',
     ]
   );
   assert.equal(requests[0]?.headers.get('bctrl-runtime-id'), 'rt_1');

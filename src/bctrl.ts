@@ -10,6 +10,7 @@ import { V1BrowserExtensionsClient } from './browserExtensions.js';
 import { V1ConversationsClient } from './conversations.js';
 import { isControllerBusy } from './errors.js';
 import { V1FilesClient } from './files.js';
+import { V1LocationsClient } from './locations.js';
 import { V1HelpClient } from './help.js';
 import { V1HttpClient, type V1ClientOptions } from './http.js';
 import { V1NotificationRecipientsClient } from './notificationRecipients.js';
@@ -29,6 +30,7 @@ export type BctrlV1Options = V1ClientOptions;
 export class BctrlV1 {
   private readonly options: BctrlV1Options;
   private readonly http: V1HttpClient;
+  private _locations: V1LocationsClient | null = null;
   private _spaces: V1SpacesClient | null = null;
   private _runtimes: V1RuntimesClient | null = null;
   private _runs: V1RunsClient | null = null;
@@ -62,6 +64,10 @@ export class BctrlV1 {
 
   withSubaccount(subaccountId: string): BctrlV1 {
     return new BctrlV1({ ...this.options, subaccountId });
+  }
+
+  get locations(): V1LocationsClient {
+    return this._locations ??= new V1LocationsClient(this.http);
   }
 
   get spaces(): V1SpacesClient {
