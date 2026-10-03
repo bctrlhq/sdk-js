@@ -51,7 +51,8 @@ export const makeRequest = async (
         signals.push(abortSignal);
     }
     const newSignals = anySignal(signals);
-    const response = await fetchFn(url, {
+    try {
+        return await fetchFn(url, {
         method: method,
         headers,
         body: requestBody,
@@ -60,11 +61,10 @@ export const makeRequest = async (
         // @ts-ignore
         duplex,
         ...(disableCache && isCacheNoStoreSupported() ? { cache: "no-store" as RequestCache } : {}),
-    });
-
-    if (timeoutAbortId != null) {
-        clearTimeout(timeoutAbortId);
+        });
+    } finally {
+        if (timeoutAbortId != null) {
+            clearTimeout(timeoutAbortId);
+        }
     }
-
-    return response;
 };

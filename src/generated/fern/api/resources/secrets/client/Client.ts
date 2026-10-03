@@ -124,35 +124,36 @@ export class SecretsClient {
     }
 
     /**
-     * Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+     * Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
      *
-     * @param {Bctrl.SecretRevealRequest} request
+     * @param {Bctrl.SecretCreateRequest} request
      * @param {SecretsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.BadRequestError}
      * @throws {@link Bctrl.UnauthorizedError}
      * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link Bctrl.ConflictError}
      * @throws {@link Bctrl.TooManyRequestsError}
      * @throws {@link errors.BctrlError}
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.secrets.reveal({
-     *         path: "path"
+     *     await client.secrets.create({
+     *         path: "path",
+     *         type: "login"
      *     })
      */
-    public reveal(
-        request: Bctrl.SecretRevealRequest,
+    public create(
+        request: Bctrl.SecretCreateRequest,
         requestOptions?: SecretsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.SecretRevealResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__reveal(request, requestOptions));
+    ): core.HttpResponsePromise<Bctrl.Secret> {
+        return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
-    private async __reveal(
-        request: Bctrl.SecretRevealRequest,
+    private async __create(
+        request: Bctrl.SecretCreateRequest,
         requestOptions?: SecretsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.SecretRevealResponse>> {
+    ): Promise<core.WithRawResponse<Bctrl.Secret>> {
         const { "Idempotency-Key": idempotencyKey, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -171,7 +172,7 @@ export class SecretsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                "v1/secrets:reveal",
+                "v1/secrets",
             ),
             method: "POST",
             headers: _headers,
@@ -186,7 +187,7 @@ export class SecretsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.SecretRevealResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.Secret, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -197,8 +198,8 @@ export class SecretsClient {
                     throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
                     throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
                     throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -210,11 +211,11 @@ export class SecretsClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/secrets:reveal");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/secrets");
     }
 
     /**
-     * Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+     * Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
      *
      * @param {Bctrl.GetSecretsRequest} request
      * @param {SecretsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -227,7 +228,7 @@ export class SecretsClient {
      *
      * @example
      *     await client.secrets.get({
-     *         path: "path"
+     *         secret: "secret"
      *     })
      */
     public get(
@@ -241,7 +242,7 @@ export class SecretsClient {
         request: Bctrl.GetSecretsRequest,
         requestOptions?: SecretsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Bctrl.Secret>> {
-        const { path } = request;
+        const { secret } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -258,7 +259,7 @@ export class SecretsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/secrets/${core.url.encodePathParam(path)}`,
+                `v1/secrets/${core.url.encodePathParam(secret)}`,
             ),
             method: "GET",
             headers: _headers,
@@ -290,104 +291,7 @@ export class SecretsClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/secrets/{path}");
-    }
-
-    /**
-     * Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-     *
-     * @param {Bctrl.SecretPutRequest} request
-     * @param {SecretsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Bctrl.BadRequestError}
-     * @throws {@link Bctrl.UnauthorizedError}
-     * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
-     * @throws {@link Bctrl.PreconditionFailedError}
-     * @throws {@link Bctrl.TooManyRequestsError}
-     * @throws {@link errors.BctrlError}
-     * @throws {@link errors.BctrlTimeoutError}
-     *
-     * @example
-     *     await client.secrets.put({
-     *         path: "path"
-     *     })
-     */
-    public put(
-        request: Bctrl.SecretPutRequest,
-        requestOptions?: SecretsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Secret> {
-        return core.HttpResponsePromise.fromPromise(this.__put(request, requestOptions));
-    }
-
-    private async __put(
-        request: Bctrl.SecretPutRequest,
-        requestOptions?: SecretsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Secret>> {
-        const { path, "If-Match": ifMatch, "Idempotency-Key": idempotencyKey, ..._body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "If-Match": ifMatch,
-                "Idempotency-Key": idempotencyKey,
-                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
-                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
-                "BCTRL-Version": requestOptions?.bctrlVersion,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await (this._options.fetcher ?? core.fetcher)({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.BctrlEnvironment.Production,
-                `v1/secrets/${core.url.encodePathParam(path)}`,
-            ),
-            method: "PUT",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Bctrl.Secret, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
-                case 412:
-                    throw new Bctrl.PreconditionFailedError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
-                default:
-                    throw new errors.BctrlError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "PUT", "/v1/secrets/{path}");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/secrets/{secret}");
     }
 
     /**
@@ -406,7 +310,7 @@ export class SecretsClient {
      *
      * @example
      *     await client.secrets.delete({
-     *         path: "path"
+     *         secret: "secret"
      *     })
      */
     public delete(
@@ -420,7 +324,7 @@ export class SecretsClient {
         request: Bctrl.DeleteSecretsRequest,
         requestOptions?: SecretsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Bctrl.SecretDeleteResponse>> {
-        const { path, "If-Match": ifMatch, "Idempotency-Key": idempotencyKey } = request;
+        const { secret, "If-Match": ifMatch, "Idempotency-Key": idempotencyKey } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -439,7 +343,7 @@ export class SecretsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/secrets/${core.url.encodePathParam(path)}`,
+                `v1/secrets/${core.url.encodePathParam(secret)}`,
             ),
             method: "DELETE",
             headers: _headers,
@@ -475,7 +379,7 @@ export class SecretsClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/v1/secrets/{path}");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/v1/secrets/{secret}");
     }
 
     /**
@@ -495,7 +399,7 @@ export class SecretsClient {
      *
      * @example
      *     await client.secrets.update({
-     *         path: "path"
+     *         secret: "secret"
      *     })
      */
     public update(
@@ -509,7 +413,7 @@ export class SecretsClient {
         request: Bctrl.SecretPatchRequest,
         requestOptions?: SecretsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Bctrl.Secret>> {
-        const { path, "If-Match": ifMatch, "Idempotency-Key": idempotencyKey, ..._body } = request;
+        const { secret, "If-Match": ifMatch, "Idempotency-Key": idempotencyKey, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -528,7 +432,7 @@ export class SecretsClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/secrets/${core.url.encodePathParam(path)}`,
+                `v1/secrets/${core.url.encodePathParam(secret)}`,
             ),
             method: "PATCH",
             headers: _headers,
@@ -569,6 +473,200 @@ export class SecretsClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "PATCH", "/v1/secrets/{path}");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "PATCH", "/v1/secrets/{secret}");
+    }
+
+    /**
+     * Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+     *
+     * @param {Bctrl.SecretRevealRequest} request
+     * @param {SecretsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Bctrl.BadRequestError}
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link Bctrl.TooManyRequestsError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     *
+     * @example
+     *     await client.secrets.reveal({
+     *         secret: "secret"
+     *     })
+     */
+    public reveal(
+        request: Bctrl.SecretRevealRequest,
+        requestOptions?: SecretsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.SecretRevealResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__reveal(request, requestOptions));
+    }
+
+    private async __reveal(
+        request: Bctrl.SecretRevealRequest,
+        requestOptions?: SecretsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.SecretRevealResponse>> {
+        const { secret, "Idempotency-Key": idempotencyKey, ..._body } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": idempotencyKey,
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                `v1/secrets/${core.url.encodePathParam(secret)}/reveal`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Bctrl.SecretRevealResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/secrets/{secret}/reveal");
+    }
+
+    /**
+     * List version metadata by secret ID. Values and ciphertext are never returned.
+     *
+     * @param {Bctrl.VersionsSecretsRequest} request
+     * @param {SecretsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Bctrl.BadRequestError}
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     *
+     * @example
+     *     await client.secrets.versions({
+     *         secret: "secret"
+     *     })
+     */
+    public async versions(
+        request: Bctrl.VersionsSecretsRequest,
+        requestOptions?: SecretsClient.RequestOptions,
+    ): Promise<core.Page<Bctrl.SecretVersion, Bctrl.SecretVersionList>> {
+        const list = core.HttpResponsePromise.interceptFunction(
+            async (request: Bctrl.VersionsSecretsRequest): Promise<core.WithRawResponse<Bctrl.SecretVersionList>> => {
+                const { secret, cursor, order, limit } = request;
+                const _queryParams: Record<string, unknown> = {
+                    cursor,
+                    order: order != null ? order : undefined,
+                    limit,
+                };
+                const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+                const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+                    _authRequest.headers,
+                    this._options?.headers,
+                    mergeOnlyDefinedHeaders({
+                        "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                        "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                        "BCTRL-Version": requestOptions?.bctrlVersion,
+                    }),
+                    requestOptions?.headers,
+                );
+                const _response = await (this._options.fetcher ?? core.fetcher)({
+                    url: core.url.join(
+                        (await core.Supplier.get(this._options.baseUrl)) ??
+                            (await core.Supplier.get(this._options.environment)) ??
+                            environments.BctrlEnvironment.Production,
+                        `v1/secrets/${core.url.encodePathParam(secret)}/versions`,
+                    ),
+                    method: "GET",
+                    headers: _headers,
+                    queryString: core.url
+                        .queryBuilder()
+                        .addMany(_queryParams)
+                        .mergeAdditional(requestOptions?.queryParams)
+                        .build(),
+                    timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+                    maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+                    abortSignal: requestOptions?.abortSignal,
+                    fetchFn: this._options?.fetch,
+                    logging: this._options.logging,
+                });
+                if (_response.ok) {
+                    return { data: _response.body as Bctrl.SecretVersionList, rawResponse: _response.rawResponse };
+                }
+                if (_response.error.reason === "status-code") {
+                    switch (_response.error.statusCode) {
+                        case 400:
+                            throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                        case 401:
+                            throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                        case 403:
+                            throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                        case 404:
+                            throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                        default:
+                            throw new errors.BctrlError({
+                                statusCode: _response.error.statusCode,
+                                body: _response.error.body,
+                                rawResponse: _response.rawResponse,
+                            });
+                    }
+                }
+                return handleNonStatusCodeError(
+                    _response.error,
+                    _response.rawResponse,
+                    "GET",
+                    "/v1/secrets/{secret}/versions",
+                );
+            },
+        );
+        const dataWithRawResponse = await list(request).withRawResponse();
+        return new core.Page<Bctrl.SecretVersion, Bctrl.SecretVersionList>({
+            response: dataWithRawResponse.data,
+            rawResponse: dataWithRawResponse.rawResponse,
+            hasNextPage: (response) =>
+                response?.nextCursor != null &&
+                !(typeof response?.nextCursor === "string" && response?.nextCursor === ""),
+            getItems: (response) => response?.data ?? [],
+            loadPage: (response) => {
+                return list(core.setObjectProperty(request, "cursor", response?.nextCursor));
+            },
+        });
     }
 }

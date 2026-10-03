@@ -3,18 +3,13 @@
 /**
  * @example
  *     {
- *         path: "path"
+ *         path: "path",
+ *         type: "login"
  *     }
  */
-export interface SecretPutRequest {
-    /** Secret path, for example `prod/github/bot`. May contain `/`. */
-    path: string;
-    /** Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise. */
-    "If-Match"?: string;
+export interface SecretCreateRequest {
     /** Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
     "Idempotency-Key"?: string;
-    /** Rollback: make the values of this earlier version the new version. Send it alone. */
-    fromVersion?: number;
     label?: string | null;
     /** Free-form notes. Write-only. */
     notes?: string;
@@ -22,16 +17,18 @@ export interface SecretPutRequest {
     origins?: string[];
     /** Password of a `login`. Write-only. */
     password?: string;
+    /** Secret path, for example `prod/github/bot`. May contain `/`. */
+    path: string;
     /** TOTP seed (base32) of a `login`. Write-only. */
     totp?: string;
     /** `login`: username, password and TOTP seed for a site. `value`: one opaque value. */
-    type?: SecretPutRequest.Type;
+    type: SecretCreateRequest.Type;
     username?: string | null;
     /** The value of a `value` secret. Write-only. */
     value?: string;
 }
 
-export namespace SecretPutRequest {
+export namespace SecretCreateRequest {
     /** `login`: username, password and TOTP seed for a site. `value`: one opaque value. */
     export const Type = {
         Login: "login",

@@ -10,13 +10,11 @@ test(
   { skip: shouldRun ? false : 'set BCTRL_E2E=1 and BCTRL_API_KEY' },
   async () => {
     const client = new Bctrl({
-      apiKey: process.env.BCTRL_API_KEY,
-      baseUrl: process.env.BCTRL_API_BASE_URL,
+      token: process.env.BCTRL_API_KEY!,
+      baseUrl: process.env.BCTRL_API_BASE_URL?.replace(/\/v1\/?$/, ''),
     });
 
-    const space = await client.spaces.create({
-      name: `sdk-v1-e2e-${Date.now()}`,
-    });
+    const space = await client.spaces.create({ name: `sdk-v1-e2e-${Date.now()}` });
     const files = await client.files.list({ spaceId: space.id, limit: 1 });
 
     assert.equal(typeof space.id, 'string');

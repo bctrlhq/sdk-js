@@ -67,5 +67,8 @@ test('wait helper treats unknown and awaiting_input as terminal without dispatch
   let reads = 0;
   assert.deepEqual(await waitFor(async () => { reads++; return { status: 'unknown' }; }), { status: 'unknown' });
   assert.equal(reads, 1);
+  for (const status of ['cancelled', 'timed_out']) {
+    assert.deepEqual(await waitFor(async () => ({ status }), { timeoutMs: 0 }), { status });
+  }
   assert.deepEqual(await waitFor(async () => ({ status: 'awaiting_input' })), { status: 'awaiting_input' });
 });

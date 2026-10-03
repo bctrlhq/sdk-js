@@ -9,6 +9,7 @@ import { BrowserClient } from "./api/resources/browser/client/Client.js";
 import { BrowsersClient } from "./api/resources/browsers/client/Client.js";
 import { ConversationsClient } from "./api/resources/conversations/client/Client.js";
 import { EnvironmentsClient } from "./api/resources/environments/client/Client.js";
+import { EventsClient } from "./api/resources/events/client/Client.js";
 import { FilesClient } from "./api/resources/files/client/Client.js";
 import { LocationsClient } from "./api/resources/locations/client/Client.js";
 import { NotificationRecipientsClient } from "./api/resources/notificationRecipients/client/Client.js";
@@ -45,6 +46,7 @@ export class BctrlClient {
     protected _browsers: BrowsersClient | undefined;
     protected _conversations: ConversationsClient | undefined;
     protected _environments: EnvironmentsClient | undefined;
+    protected _events: EventsClient | undefined;
     protected _files: FilesClient | undefined;
     protected _locations: LocationsClient | undefined;
     protected _notificationRecipients: NotificationRecipientsClient | undefined;
@@ -88,6 +90,10 @@ export class BctrlClient {
 
     public get environments(): EnvironmentsClient {
         return (this._environments ??= new EnvironmentsClient(this._options));
+    }
+
+    public get events(): EventsClient {
+        return (this._events ??= new EventsClient(this._options));
     }
 
     public get files(): FilesClient {

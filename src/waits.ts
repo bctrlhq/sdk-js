@@ -6,7 +6,7 @@ export async function waitFor<T extends { status: string }>(read: () => Promise<
   while (true) {
     options.signal?.throwIfAborted();
     const result = await read();
-    if (['succeeded', 'failed', 'canceled', 'unknown', 'awaiting_input', 'ended'].includes(result.status)) return result;
+    if (['succeeded', 'failed', 'cancelled', 'timed_out', 'unknown', 'awaiting_input', 'ended'].includes(result.status)) return result;
     if (Date.now() >= deadline) throw new Error('Timed out waiting for an outcome');
     await new Promise((resolve) => setTimeout(resolve, Math.min(options.intervalMs ?? 250, Math.max(0, deadline - Date.now()))));
   }

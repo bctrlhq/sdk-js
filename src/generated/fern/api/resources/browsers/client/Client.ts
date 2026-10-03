@@ -11,6 +11,7 @@ import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCode
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
+import { EventsClient } from "../resources/events/client/Client.js";
 import { RunsClient } from "../resources/runs/client/Client.js";
 
 export declare namespace BrowsersClient {
@@ -25,6 +26,7 @@ export declare namespace BrowsersClient {
 export class BrowsersClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<BrowsersClient.Options>;
     protected _connections: ConnectionsClient | undefined;
+    protected _events: EventsClient | undefined;
     protected _runs: RunsClient | undefined;
 
     constructor(options: BrowsersClient.Options) {
@@ -33,6 +35,10 @@ export class BrowsersClient {
 
     public get connections(): ConnectionsClient {
         return (this._connections ??= new ConnectionsClient(this._options));
+    }
+
+    public get events(): EventsClient {
+        return (this._events ??= new EventsClient(this._options));
     }
 
     public get runs(): RunsClient {

@@ -24,13 +24,13 @@ test('conversation streams resume after a cursor and parse arbitrarily chunked S
     );
   };
   const client = new Bctrl({
-    apiKey: 'test',
+    token: 'test',
     baseUrl: 'https://api.example.test',
     fetch: fetchMock,
   });
 
   const events = [];
-  for await (const event of client.conversations.events.stream('conv_1', { after: '41' })) {
+  for await (const event of await client.conversations.stream({ conversationId: 'conv_1', after: '41' })) {
     events.push(event);
   }
 

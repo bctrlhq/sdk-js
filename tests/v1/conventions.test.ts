@@ -1,38 +1,26 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { V1HttpClient } from '../../src/http.js';
-import { BctrlPermissionError } from '../../src/errors.js';
+import { Bctrl, BctrlError, Api } from '../../src/index.js';
 
-test('the transport pins its dated version and preserves canonical error context', async () => {
-  const http = new V1HttpClient({ apiKey: 'test-key', maxRetries: 0, fetch: async (_url, init) => {
-    assert.equal(new Headers(init?.headers).get('BCTRL-Version'), '2026-10-01');
-    return Response.json({ error: {
-      code: 'auth.forbidden', message: 'Denied', hint: 'Grant the scope.',
-      reasonClass: 'capability_denied', requestId: 'req-test', details: { scope: 'computer' },
-      future: true,
-    } }, { status: 403, headers: { 'BCTRL-Request-Id': 'req-test' } });
+test('the generated transport pins its dated version and preserves the canonical error envelope', async () => {
+  const envelope = { error: { code: 'auth.forbidden', message: 'Denied', hint: 'Grant the scope.', reasonClass: 'capability_denied', requestId: 'req-test', details: { scope: 'computer' }, future: true } };
+  const client = new Bctrl({ token: 'test-key', maxRetries: 0, fetch: async (_url, init) => {
+    assert.equal(new Headers(init?.headers).get('BCTRL-Version'), '2026-10-03');
+    return Response.json(envelope, { status: 403, headers: { 'BCTRL-Request-Id': 'req-test' } });
   } });
-  await assert.rejects(http.request('/spaces'), (error: unknown) => {
-    assert.ok(error instanceof BctrlPermissionError);
-    assert.equal(error.message, 'Denied');
-    assert.equal(error.code, 'auth.forbidden');
-    assert.equal(error.requestId, 'req-test');
-    assert.equal(error.hint, 'Grant the scope.');
-    assert.equal(error.reasonClass, 'capability_denied');
-    assert.deepEqual(error.details, { scope: 'computer' });
+  await assert.rejects(client.spaces.list(), (error: unknown) => {
+    assert.ok(error instanceof Api.ForbiddenError);
+    assert.equal(error.statusCode, 403);
+    assert.deepEqual(error.body, envelope);
+    assert.equal(error.rawResponse?.headers.get('BCTRL-Request-Id'), 'req-test');
     return true;
   });
 });
 
-test('an unknown effect outcome is returned once without automatic retry', async () => {
+test('an unknown successful outcome is returned once without retrying the effect', async () => {
   let effects = 0;
-  const http = new V1HttpClient({ apiKey: 'test-key', maxRetries: 3, fetch: async () => {
-    effects++;
-    return Response.json({ object: 'computer.result', status: 'unknown', data: null, eventId: 'evt-test' });
-  } });
-  const result = await http.request<{ status: string }>('/browsers/br-test/computer/click', {
-    method: 'POST', body: { x: 1, y: 2 }, headers: { 'Idempotency-Key': 'effect-test' },
-  });
-  assert.equal(result.status, 'unknown');
+  const outcome = { object: 'computer.result', status: 'unknown', data: null, eventId: 'evt-test' };
+  const client = new Bctrl({ token: 'test', maxRetries: 3, fetch: async () => { effects++; return Response.json(outcome); } });
+  assert.deepEqual(await client.tools.call({ toolRef: 'computer.use', body: { action: 'click', coordinate: [1, 2] } }), outcome);
   assert.equal(effects, 1);
 });
