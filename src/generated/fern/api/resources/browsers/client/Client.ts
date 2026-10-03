@@ -14,6 +14,7 @@ import { ComputerClient } from "../resources/computer/client/Client.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
 import { ControlClient } from "../resources/control/client/Client.js";
 import { EventsClient } from "../resources/events/client/Client.js";
+import { RecordingClient } from "../resources/recording/client/Client.js";
 import { RunsClient } from "../resources/runs/client/Client.js";
 
 export declare namespace BrowsersClient {
@@ -31,6 +32,7 @@ export class BrowsersClient {
     protected _connections: ConnectionsClient | undefined;
     protected _control: ControlClient | undefined;
     protected _events: EventsClient | undefined;
+    protected _recording: RecordingClient | undefined;
     protected _runs: RunsClient | undefined;
 
     constructor(options: BrowsersClient.Options) {
@@ -51,6 +53,10 @@ export class BrowsersClient {
 
     public get events(): EventsClient {
         return (this._events ??= new EventsClient(this._options));
+    }
+
+    public get recording(): RecordingClient {
+        return (this._recording ??= new RecordingClient(this._options));
     }
 
     public get runs(): RunsClient {

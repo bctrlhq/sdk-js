@@ -169,6 +169,8 @@ export * from "./ProxyPool.js";
 export * from "./ProxyPoolListResponse.js";
 export * from "./ProxyTestResponse.js";
 export * from "./PublicErrorCode.js";
+export * from "./Recording.js";
+export * from "./RecordingsList.js";
 export * from "./ReleaseControlRequestSpaceId.js";
 export * from "./ResolvedBranding.js";
 export * from "./ResourceName.js";

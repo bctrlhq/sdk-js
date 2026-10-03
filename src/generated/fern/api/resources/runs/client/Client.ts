@@ -11,6 +11,7 @@ import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
 import { EventsClient } from "../resources/events/client/Client.js";
 import { FilesClient } from "../resources/files/client/Client.js";
+import { RecordingsClient } from "../resources/recordings/client/Client.js";
 import { TraceClient } from "../resources/trace/client/Client.js";
 
 export declare namespace RunsClient {
@@ -26,6 +27,7 @@ export class RunsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<RunsClient.Options>;
     protected _events: EventsClient | undefined;
     protected _files: FilesClient | undefined;
+    protected _recordings: RecordingsClient | undefined;
     protected _trace: TraceClient | undefined;
 
     constructor(options: RunsClient.Options) {
@@ -38,6 +40,10 @@ export class RunsClient {
 
     public get files(): FilesClient {
         return (this._files ??= new FilesClient(this._options));
+    }
+
+    public get recordings(): RecordingsClient {
+        return (this._recordings ??= new RecordingsClient(this._options));
     }
 
     public get trace(): TraceClient {

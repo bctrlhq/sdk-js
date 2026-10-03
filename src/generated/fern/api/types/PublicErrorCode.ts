@@ -237,6 +237,7 @@ export const PublicErrorCode = {
     ProxyUrlInvalid: "proxy.url_invalid",
     RateLimitExceeded: "rate_limit.exceeded",
     RateLimited: "rate_limited",
+    RecordingNotFound: "recording.not_found",
     RecordingRunNotReady: "recording.run_not_ready",
     RequestFailed: "request.failed",
     RequestInvalid: "request.invalid",
