@@ -1,0 +1,18 @@
+{
+  "id": "br_u1234567890123456789012", "object": "browser", "type": "browser", "name": "checkout",
+  "spaceId": "spc_u1234567890123456789012", "location": "us-east", "status": "running",
+  "createdAt": "2026-10-03T01:00:00Z", "updatedAt": "2026-10-03T01:00:00Z", "lastUsedAt": "2026-10-03T01:00:00Z",
+  "metadata": {}, "autoUpgrade": false, "expireAfterIdleDays": 30, "extensions": [], "forceOpenShadowRoots": false,
+  "gpu": false, "headless": true, "recording": false, "standbyAfterSeconds": 0, "stealth": "normal",
+  "timeoutSeconds": 300, "viewport": { "width": 1280, "height": 720 }, "webRtcProxyOnly": false,
+  "savedState": { "status": "none", "sizeBytes": null },
+  "currentRun": {
+    "id": "run_u1234567890123456789012", "object": "run", "resourceId": "br_u1234567890123456789012",
+    "resourceType": "browser", "spaceId": "spc_u1234567890123456789012", "location": "us-east", "status": "active",
+    "createdAt": "2026-10-03T01:00:00Z", "updatedAt": "2026-10-03T01:00:00Z", "startedAt": "2026-10-03T01:00:00Z",
+    "endedAt": null, "endReason": null, "control": { "holder": "none", "since": "2026-10-03T01:00:00Z" },
+    "recording": { "enabled": false },
+    "connections": { "cdpUrl": "wss://connect.example.test/cdp", "webdriverUrl": "https://connect.example.test/webdriver",
+      "liveViewUrl": "https://view.example.test/live", "liveViewReadOnlyUrl": "https://view.example.test/watch", "expiresAt": "2026-10-03T02:00:00Z" }
+  }
+}
