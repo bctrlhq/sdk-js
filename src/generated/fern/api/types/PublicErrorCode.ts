@@ -345,6 +345,8 @@ export const PublicErrorCode = {
     SpaceHasActiveRuntimes: "space.has_active_runtimes",
     SpaceNameConflict: "space.name_conflict",
     SpaceNotFound: "space.not_found",
+    SpendingCapReached: "spending_cap.reached",
+    SpendingCapUpdateForbidden: "spending_cap.update_forbidden",
     SpaceRegionInvalid: "space.region_invalid",
     StatusInvalid: "status.invalid",
     StorageNotConfigured: "storage.not_configured",

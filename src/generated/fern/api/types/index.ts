@@ -185,6 +185,8 @@ export * from "./SpaceEnvironmentPatch.js";
 export * from "./SpaceListResponse.js";
 export * from "./SpaceNetworkPolicy.js";
 export * from "./SpaceSecretsMount.js";
+export * from "./SpendingCap.js";
+export * from "./SpendingCapPatchRequest.js";
 export * from "./StartBrowsersRequestSpaceId.js";
 export * from "./StopBrowsersRequestSpaceId.js";
 export * from "./StreamEventsRequestCategory.js";

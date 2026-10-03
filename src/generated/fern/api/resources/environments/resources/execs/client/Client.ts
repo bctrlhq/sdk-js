@@ -300,6 +300,7 @@ export class ExecsClient {
      *
      * @throws {@link Bctrl.BadRequestError}
      * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.PaymentRequiredError}
      * @throws {@link Bctrl.ForbiddenError}
      * @throws {@link Bctrl.NotFoundError}
      * @throws {@link Bctrl.ConflictError}
@@ -366,6 +367,8 @@ export class ExecsClient {
                     throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Bctrl.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
                     throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

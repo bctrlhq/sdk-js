@@ -37,6 +37,9 @@ export namespace WebhookCreateResponse {
             RuntimeControlChanged: "runtime.control.changed",
             RuntimeStarted: "runtime.started",
             RuntimeStartFailed: "runtime.start_failed",
+            SpendingCapWarning: "spending_cap.warning",
+            SpendingCapStopRequested: "spending_cap.stop_requested",
+            SpendingCapStopped: "spending_cap.stopped",
         } as const;
         export type Item = (typeof Item)[keyof typeof Item];
     }

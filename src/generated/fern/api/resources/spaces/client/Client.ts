@@ -9,6 +9,7 @@ import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
+import { SpendingCapClient } from "../resources/spendingCap/client/Client.js";
 
 export declare namespace SpacesClient {
     export type Options = BaseClientOptions;
@@ -21,9 +22,14 @@ export declare namespace SpacesClient {
  */
 export class SpacesClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<SpacesClient.Options>;
+    protected _spendingCap: SpendingCapClient | undefined;
 
     constructor(options: SpacesClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
+    }
+
+    public get spendingCap(): SpendingCapClient {
+        return (this._spendingCap ??= new SpendingCapClient(this._options));
     }
 
     /**
