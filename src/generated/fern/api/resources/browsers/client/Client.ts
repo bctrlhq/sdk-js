@@ -12,6 +12,7 @@ import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
 import { ComputerClient } from "../resources/computer/client/Client.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
+import { ControlClient } from "../resources/control/client/Client.js";
 import { EventsClient } from "../resources/events/client/Client.js";
 import { RunsClient } from "../resources/runs/client/Client.js";
 
@@ -28,6 +29,7 @@ export class BrowsersClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<BrowsersClient.Options>;
     protected _computer: ComputerClient | undefined;
     protected _connections: ConnectionsClient | undefined;
+    protected _control: ControlClient | undefined;
     protected _events: EventsClient | undefined;
     protected _runs: RunsClient | undefined;
 
@@ -41,6 +43,10 @@ export class BrowsersClient {
 
     public get connections(): ConnectionsClient {
         return (this._connections ??= new ConnectionsClient(this._options));
+    }
+
+    public get control(): ControlClient {
+        return (this._control ??= new ControlClient(this._options));
     }
 
     public get events(): EventsClient {
