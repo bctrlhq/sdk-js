@@ -4,7 +4,7 @@ import test from 'node:test';
 import { Bctrl } from '../../../src/index.js';
 
 const shouldRun = process.env.BCTRL_E2E === '1' && Boolean(process.env.BCTRL_API_KEY);
-const AI_MODEL = 'openai/gpt-5.6-luna';
+const AI_MODEL = 'deepseek/deepseek-v4.1-flash';
 const POLL_INTERVAL_MS = 1_000;
 
 type ConversationDetail = Awaited<ReturnType<Bctrl['conversations']['get']>>;
@@ -83,20 +83,18 @@ test(
       });
       assert.equal(renamedFile.filename, 'sdk-workflow-fixture-renamed.txt');
 
-      const runtime = await client.runtimes.create({
+      const runtime = await client.browsers.create({
         spaceId: currentSpaceId,
-        type: 'browser',
         name: `sdk-agent-runtime-${Date.now()}`,
-        profile: false,
-        start: false,
-        config: { headless: true },
-      });
+        headless: true,
+      }, { wait: 60 });
       runtimeId = runtime.id;
 
-      const started = await client.runtimes.start(runtime.id);
-      runId = started.runId;
-      const activeRunId = started.runId;
-      assert.equal(started.runtimeId, runtime.id);
+      const started = runtime.currentRun;
+      assert.ok(started);
+      runId = started.id;
+      const activeRunId = started.id;
+      assert.equal(started.resourceId, runtime.id);
       assert.equal(started.status, 'active');
 
       const opened = await client.tools.call(
@@ -137,9 +135,9 @@ test(
         )
       );
 
-      const run = await client.runs.get(activeRunId, { include: 'connection' });
+      const run = await client.runs.get(activeRunId, { include: 'usage' });
       assert.equal(run.id, activeRunId);
-      assert.equal(run.runtimeId, runtime.id);
+      assert.equal(run.resourceId, runtime.id);
 
       const trace = await client.runs.trace.list(activeRunId, {
         resourceType: 'agent_turn',
@@ -156,8 +154,8 @@ test(
       }
       if (fileId) await client.files.delete(fileId).catch(() => {});
       if (runtimeId) {
-        await client.runtimes.stop(runtimeId).catch(() => {});
-        await client.runtimes.delete(runtimeId, { force: true }).catch(() => {});
+        await client.browsers.stop(runtimeId).catch(() => {});
+        await client.browsers.delete(runtimeId).catch(() => {});
       }
       if (spaceId) await client.spaces.delete(spaceId).catch(() => {});
     }

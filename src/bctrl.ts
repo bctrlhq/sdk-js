@@ -17,7 +17,7 @@ import { V1NotificationRecipientsClient } from './notificationRecipients.js';
 import { V1SecretsClient } from './secrets.js';
 import { V1ProxiesClient } from './proxies.js';
 import { V1RunsClient } from './runs.js';
-import { V1RuntimesClient } from './runtimes.js';
+import { V1BrowsersClient } from './browsers.js';
 import { V1SpacesClient } from './spaces.js';
 import { V1ToolCallsClient } from './toolCalls.js';
 import { V1ToolsClient } from './tools.js';
@@ -32,7 +32,7 @@ export class BctrlV1 {
   private readonly http: V1HttpClient;
   private _locations: V1LocationsClient | null = null;
   private _spaces: V1SpacesClient | null = null;
-  private _runtimes: V1RuntimesClient | null = null;
+  private _browsers: V1BrowsersClient | null = null;
   private _runs: V1RunsClient | null = null;
   private _conversations: V1ConversationsClient | null = null;
   private _files: V1FilesClient | null = null;
@@ -75,9 +75,9 @@ export class BctrlV1 {
     return this._spaces;
   }
 
-  get runtimes(): V1RuntimesClient {
-    this._runtimes ??= new V1RuntimesClient(this.http);
-    return this._runtimes;
+  get browsers(): V1BrowsersClient {
+    this._browsers ??= new V1BrowsersClient(this.http);
+    return this._browsers;
   }
 
   get runs(): V1RunsClient {

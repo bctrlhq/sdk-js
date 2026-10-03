@@ -107,43 +107,26 @@ export type V1SpaceAiMount = NonNullable<OpenApiSchemas['EnvironmentMountsOutput
 export type V1SpaceEnvironment = OpenApiSchemas['EnvironmentMountsOutput'];
 export type V1SpaceEnvironmentPatch = OpenApiSchemas['SpaceEnvironmentPatch'];
 
-export type V1RuntimeType = OpenApiSchemas['RuntimeSummary']['type'];
-export type V1RuntimeStatus = OpenApiSchemas['RuntimeSummary']['status'];
-export type V1BrowserStealth = NonNullable<OpenApiSchemas['BrowserRuntimeCreateConfig']['stealth']>;
-export type V1ProxyInput = OpenApiSchemas['RuntimeProxyInput'];
-export type V1RuntimeFingerprintCreateConfig = NonNullable<
-  OpenApiSchemas['BrowserRuntimeCreateConfig']['fingerprint']
->;
-export type V1BrowserNetworkTrafficSaver = NonNullable<
-  OpenApiSchemas['BrowserNetworkTrafficConfig']['saver']
->;
-export type V1BrowserNetworkTrafficResourceType = NonNullable<
-  OpenApiSchemas['BrowserNetworkTrafficConfig']['blockResourceTypes']
->[number];
+export type V1Browser = OpenApiSchemas['BrowserResource'];
+export type V1BrowserStatus = V1Browser['status'];
+export type V1BrowserStealth = V1Browser['stealth'];
+export type V1BrowserCreateRequest = OpenApiSchemas['BrowserCreateRequest'];
+export type V1BrowserUpdateRequest = OpenApiSchemas['BrowsersUpdateRequest'];
+export type V1BrowserDeleteResponse = OpenApiSchemas['BrowsersDeleteResponse'];
+export type V1BrowserStopRequest = OpenApiSchemas['BrowsersStopRequest'];
+export type V1BrowserListQuery = OpenApiQuery<'browsers.list'>;
+export type V1BrowserGetQuery = OpenApiQuery<'browsers.get'>;
+export type V1BrowserMutationQuery = OpenApiQuery<'browsers.update'>;
+export type V1BrowserStartQuery = OpenApiQuery<'browsers.start'>;
+export type V1BrowserCreateQuery = OpenApiQuery<'browsers.create'>;
+export type V1BrowserStopQuery = OpenApiQuery<'browsers.stop'>;
+export type V1BrowserRunHistoryQuery = OpenApiQuery<'browsers.runs.list'>;
 export type V1BrowserNetworkTrafficConfig = OpenApiSchemas['BrowserNetworkTrafficConfig'];
-export type V1BrowserRuntimeCreateConfig = OpenApiSchemas['BrowserRuntimeCreateConfig'];
-export type V1BrowserRuntimeConfig = OpenApiSchemas['BrowserRuntimeConfig'];
-export type V1RuntimeFingerprint = OpenApiSchemas['RuntimeFingerprint'];
-export type V1RuntimeCreateRequest = OpenApiSchemas['RuntimeCreateRequest'];
-export type V1RuntimeUpdateRequest = OpenApiSchemas['RuntimeUpdateRequest'];
-export type V1RuntimeDeleteResponse = OpenApiSchemas['RuntimeDeleteResponse'];
-export type V1RuntimeListQuery = OpenApiQuery<'runtimes.list'>;
-export type V1RuntimeGetQuery = OpenApiQuery<'runtimes.get'>;
-export type V1RuntimeSummary = OpenApiSchemas['RuntimeSummary'];
-export type V1Runtime = OpenApiSchemas['RuntimeDetail'];
-export type V1RuntimeCreateResponse = OpenApiSchemas['RuntimeCreateResponse'];
-export type V1RuntimeStartAccepted = OpenApiSchemas['RuntimeStartAccepted'];
-export type V1RuntimeStartedResponse = OpenApiSchemas['RuntimeStartResponse'];
-export type V1RuntimeStartResponse = V1RuntimeStartedResponse | V1RuntimeStartAccepted;
-export type V1RuntimeGetResponse = V1Runtime | V1RuntimeStartAccepted;
-export type V1RuntimeStartQuery = OpenApiQuery<'runtimes.start'>;
-export type V1RuntimeStopResponse = OpenApiSchemas['RuntimeStopResponse'];
-
+export type V1RunConnections = OpenApiSchemas['RunConnections'];
 export type V1RunListQuery = OpenApiQuery<'runs.list'>;
-export type V1RunSummary = OpenApiSchemas['RunSummary'];
-export type V1Run = OpenApiSchemas['RunSummary'];
-export type V1RunDetail = OpenApiSchemas['RunDetail'];
+export type V1Run = OpenApiSchemas['Run'];
 export type V1RunGetQuery = OpenApiQuery<'runs.get'>;
+export type V1RunDeleteResponse = OpenApiSchemas['RunsDeleteResponse'];
 export type V1RunUsage = OpenApiSchemas['RunUsage'];
 export type V1RunEvent = OpenApiSchemas['RunEvent'];
 export type V1RunEventsListQuery = OpenApiQuery<'runs.events.list'>;
@@ -157,7 +140,6 @@ export type V1RunFileBinding = OpenApiSchemas['RunFileBinding'];
 export type V1RunFileBindingState = OpenApiSchemas['RunFileBindingState'];
 export type V1RunFilesListQuery = OpenApiQuery<'runs.files.list'>;
 export type V1RunFileCollectRequest = OpenApiSchemas['RunFileCollectRequest'];
-export type V1RuntimeStartRequest = OpenApiSchemas['RuntimeStartRequest'];
 /** Upload straight into a Run: a Space File at `path` (default `uploads/<name>`), bound to it. */
 export interface V1RunFileUploadRequest {
   file: Blob;

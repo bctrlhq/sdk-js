@@ -3,7 +3,6 @@ import { iterateV1Pages } from './pagination.js';
 import type {
   V1ListEnvelope,
   V1Run,
-  V1RunDetail,
   V1RunEvent,
   V1RunEventsListQuery,
   V1RunFile,
@@ -12,6 +11,7 @@ import type {
   V1RunFileUploadRequest,
   V1RunListQuery,
   V1RunGetQuery,
+  V1RunDeleteResponse,
   V1RunStreamEvent,
   V1RunStreamQuery,
   V1TraceSpan,
@@ -45,8 +45,12 @@ export class V1RunsClient {
     return iterateV1Pages(query, (pageQuery) => this.list(pageQuery));
   }
 
-  get(runId: string, query: V1RunGetQuery = {}): Promise<V1RunDetail> {
+  get(runId: string, query: V1RunGetQuery = {}): Promise<V1Run> {
     return this.http.request(`/runs/${encodeURIComponent(runId)}`, { query });
+  }
+
+  delete(runId: string): Promise<V1RunDeleteResponse> {
+    return this.http.request(`/runs/${encodeURIComponent(runId)}`, { method: 'DELETE' });
   }
 
   streamUrl(runId: string, query: V1RunStreamQuery = {}): string {

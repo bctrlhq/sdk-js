@@ -46,7 +46,7 @@ test('http retries only safe requests or idempotent unsafe requests', async () =
     },
   });
   assert.deepEqual(
-    await idempotentClient.request('/runtimes/runtime_1/start', {
+    await idempotentClient.request('/browsers/br_1/start', {
       method: 'POST',
       headers: { 'Idempotency-Key': 'start-1' },
     }),

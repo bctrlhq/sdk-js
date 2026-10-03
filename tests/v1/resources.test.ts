@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { Bctrl, type V1RuntimeStartAccepted } from '../../src/index.js';
+import { Bctrl, type V1Browser } from '../../src/index.js';
 
 test('computer.use preserves vendor action fields and returns a typed desktop result', async () => {
   const requests: unknown[] = [];
@@ -89,10 +89,10 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.conversations.create({ runtimeId: 'rt_1' });
   await client.conversations.update('conv_1', {});
   await client.conversations.messages.create('conv_1', { text: 'Complete checkout' });
-  await client.runtimes.start('rt_1');
+  await client.browsers.start('rt_1');
   await client.runs.trace.list('run_1');
   await client.runs.events.list('run_1');
-  await client.runs.get('run_1', { include: 'connection' });
+  await client.runs.get('run_1', { include: 'usage' });
   await client.runs.files.list('run_1', { role: 'input' });
   await client.runs.files.add('run_1', 'file_1');
   await client.runs.files.upload(
@@ -103,8 +103,8 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.runs.files.retry('run_1', 'file_1');
   await client.runs.files.remove('run_1', 'file_1');
   await client.runs.files.collect('run_1', { runtimePath: 'downloads/r.pdf' });
-  await client.runtimes.start('rt_1', { files: [{ fileId: 'file_1' }] });
-  await client.runtimes.get('rt_1', { include: 'connection' });
+  await client.browsers.stop('br_1', { discardState: true }, { idempotencyKey: 'stop-1' });
+  await client.browsers.get('br_1', { wait: 0 });
   await client.browserExtensions.list();
   await client.proxies.geo.list({ country: 'us', type: 'city' });
   await client.proxies.locations.list({ pool: 'pool1', limit: 10 });
@@ -120,18 +120,18 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'POST /v1/conversations',
       'PATCH /v1/conversations/conv_1',
       'POST /v1/conversations/conv_1/messages',
-      'POST /v1/runtimes/rt_1/start',
+      'POST /v1/browsers/rt_1/start',
       'GET /v1/runs/run_1/trace',
       'GET /v1/runs/run_1/events',
-      'GET /v1/runs/run_1?include=connection',
+      'GET /v1/runs/run_1?include=usage',
       'GET /v1/runs/run_1/files?role=input',
       'POST /v1/runs/run_1/files',
       'POST /v1/runs/run_1/files/upload',
       'POST /v1/runs/run_1/files/file_1/retry',
       'DELETE /v1/runs/run_1/files/file_1',
       'POST /v1/runs/run_1/files/collect',
-      'POST /v1/runtimes/rt_1/start',
-      'GET /v1/runtimes/rt_1?include=connection',
+      'POST /v1/browsers/br_1/stop',
+      'GET /v1/browsers/br_1?wait=0',
       'GET /v1/browser/extensions',
       'GET /v1/proxies/geo?country=us&type=city',
       'GET /v1/proxies/locations?pool=pool1&limit=10',
@@ -146,42 +146,73 @@ test('the SDK exposes only the canonical automation resources and routes', async
   assert.deepEqual(requests[7]?.body, {});
   assert.deepEqual(requests[12]?.body, { fileId: 'file_1' });
   assert.equal(requests[13]?.headers.get('idempotency-key'), 'upload-1');
-  assert.deepEqual(requests[17]?.body, { files: [{ fileId: 'file_1' }] });
+  assert.deepEqual(requests[17]?.body, { discardState: true });
+  assert.equal(requests[17]?.headers.get('idempotency-key'), 'stop-1');
+  assert.equal('runtimes' in client, false);
 
   assert.equal('invocations' in client, false);
   assert.equal('vault' in client, false);
-  assert.equal('targets' in client.runtimes, false);
-  assert.equal('humanActions' in client.runtimes, false);
+  assert.equal('targets' in client.browsers, false);
+  assert.equal('humanActions' in client.browsers, false);
 });
 
-test('async waits use query parameters and preserve the accepted runtime handle', async () => {
-  const requests: Array<{ path: string; body: unknown }> = [];
-  const handle: V1RuntimeStartAccepted = { object: 'runtime', runtimeId: 'rt_1', runId: 'run_1', status: 'starting' };
+test('browser lifecycle keeps current Run connections and separates stop state from metadata', async () => {
+  const timestamp = '2026-10-02T00:00:00.000Z';
+  const browser: V1Browser = {
+    object: 'browser', id: 'br_1', type: 'browser', spaceId: 'sp_1', name: 'Browser',
+    location: 'auto', status: 'running', savedState: { status: 'none', sizeBytes: null },
+    lastUsedAt: timestamp, expireAfterIdleDays: 7, stealth: 'normal', gpu: false,
+    viewport: { width: 1920, height: 1080 }, headless: false, recording: true,
+    timeoutSeconds: 3600, standbyAfterSeconds: 0, autoUpgrade: true,
+    webRtcProxyOnly: true, forceOpenShadowRoots: false, extensions: [], metadata: {},
+    createdAt: timestamp, updatedAt: timestamp,
+    currentRun: {
+      object: 'run', id: 'run_1', resourceId: 'br_1', resourceType: 'browser', spaceId: 'sp_1',
+      status: 'active', location: 'us-east', control: { holder: 'agent', since: timestamp },
+      startedAt: timestamp, endedAt: null, endReason: null, recording: { enabled: true },
+      createdAt: timestamp, updatedAt: timestamp,
+      connections: { cdpUrl: 'wss://edge.test/cdp', webdriverUrl: 'https://edge.test/wd',
+        liveViewUrl: 'https://view.test/input', liveViewReadOnlyUrl: 'https://view.test/read', expiresAt: timestamp },
+    },
+  };
+  const requests: Array<{ method: string; path: string; body: unknown; key: string | null }> = [];
   const client = new Bctrl({ apiKey: 'test', baseUrl: 'https://example.test', fetch: async (input, init) => {
     const url = new URL(String(input));
-    requests.push({ path: url.pathname + url.search, body: init?.body ? JSON.parse(String(init.body)) : null });
-    return new Response(JSON.stringify(url.pathname.includes('/turns/') ? { id: 'turn_1', status: 'succeeded' } : handle), {
-      status: url.pathname.includes('/turns/') ? 200 : 202, headers: { 'content-type': 'application/json' },
-    });
-  }});
-  const started = await client.runtimes.start('rt_1', { wait: 0, recording: false });
-  assert.deepEqual(started, handle);
-  if (started.status === 'starting') {
-    void started.runId;
-    // @ts-expect-error accepted handles carry no connection credentials
-    void started.connection;
-  }
-  assert.deepEqual(await client.runtimes.get('rt_1', { wait: 1 }), handle);
-  await client.conversations.turns.get('conv_1', 'turn_1', { wait: 60 });
-  await client.conversations.turns.cancel('conv_1', 'turn_1');
+    requests.push({ method: init?.method ?? 'GET', path: url.pathname + url.search,
+      body: init?.body ? JSON.parse(String(init.body)) : null, key: new Headers(init?.headers).get('idempotency-key') });
+    const body = url.pathname.endsWith('/runs') ? { data: [browser.currentRun], nextCursor: null, hasMore: false }
+      : init?.method === 'DELETE' ? { object: 'deleted', id: browser.id, deleted: true } : browser;
+    return Response.json(body, { status: 200 });
+  } });
+  const created = await client.browsers.create({ name: 'Browser', headless: true }, { idempotencyKey: 'create-1' });
+  assert.deepEqual(created.currentRun?.connections, browser.currentRun?.connections);
+  assert.equal(requests.length, 1, 'create returns its Run without another start or credential lookup');
+  await client.browsers.get('name / encoded', { wait: 2 });
+  await client.browsers.start('br_1', { idempotencyKey: 'start-1', spaceId: 'default' });
+  await client.browsers.stop('br_1', { discardState: true }, { idempotencyKey: 'stop-1' });
+  await client.browsers.update('br_1', { recording: false });
+  assert.equal((await client.browsers.listRuns('br_1', { include: 'usage', status: 'ended' })).data[0]?.id, 'run_1');
+  await client.browsers.revokeConnections('br_1', { idempotencyKey: 'revoke-1' });
+  await client.browsers.delete('br_1');
   assert.deepEqual(requests, [
-    { path: '/v1/runtimes/rt_1/start?wait=0', body: { recording: false } },
-    { path: '/v1/runtimes/rt_1?wait=1', body: null },
-    { path: '/v1/conversations/conv_1/turns/turn_1?wait=60', body: null },
-    { path: '/v1/conversations/conv_1/turns/turn_1/cancel', body: null },
+    { method: 'POST', path: '/v1/browsers', body: { name: 'Browser', headless: true }, key: 'create-1' },
+    { method: 'GET', path: '/v1/browsers/name%20%2F%20encoded?wait=2', body: null, key: null },
+    { method: 'POST', path: '/v1/browsers/br_1/start?spaceId=default', body: {}, key: 'start-1' },
+    { method: 'POST', path: '/v1/browsers/br_1/stop', body: { discardState: true }, key: 'stop-1' },
+    { method: 'PATCH', path: '/v1/browsers/br_1', body: { recording: false }, key: null },
+    { method: 'GET', path: '/v1/browsers/br_1/runs?include=usage&status=ended', body: null, key: null },
+    { method: 'POST', path: '/v1/browsers/br_1/connections/revoke', body: {}, key: 'revoke-1' },
+    { method: 'DELETE', path: '/v1/browsers/br_1', body: null, key: null },
   ]);
+  if (false) {
+    // @ts-expect-error profile flags are removed from browser creation
+    await client.browsers.create({ profile: true });
+    // @ts-expect-error each browser create starts its first Run
+    await client.browsers.create({ start: false });
+    // @ts-expect-error start configuration belongs to the resource PATCH
+    await client.browsers.start('br_1', { recording: false });
+  }
 });
-
 
 test('agent keys send the agent name and retain the person and usage metadata', async () => {
   let body: unknown;
