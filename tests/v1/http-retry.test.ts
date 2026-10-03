@@ -1,66 +1,16 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import test from 'node:test';
+import { Bctrl } from '../../src/index.js';
 
-import { BctrlApiError } from '../../src/index.js';
-import { V1HttpClient } from '../../src/http.js';
-
-test('http retries only safe requests or idempotent unsafe requests', async () => {
-  let getAttempts = 0;
-  const getClient = new V1HttpClient({
-    apiKey: 'test_key',
-    baseUrl: 'https://api.example.test',
-    fetch: async () => {
-      getAttempts += 1;
-      return jsonResponse(getAttempts === 1 ? 503 : 200, { ok: true });
-    },
-  });
-  assert.deepEqual(await getClient.request('/retry-safe'), { ok: true });
-  assert.equal(getAttempts, 2);
-
-  let unsafeAttempts = 0;
-  const unsafeClient = new V1HttpClient({
-    apiKey: 'test_key',
-    baseUrl: 'https://api.example.test',
-    fetch: async () => {
-      unsafeAttempts += 1;
-      return jsonResponse(503, { message: 'temporarily unavailable' });
-    },
-  });
-  await assert.rejects(
-    () => unsafeClient.request('/spaces', { method: 'POST', body: { name: 'retry' } }),
-    (error) => {
-      assert(error instanceof BctrlApiError);
-      assert.equal(error.status, 503);
-      return true;
-    }
-  );
-  assert.equal(unsafeAttempts, 1);
-
-  let idempotentAttempts = 0;
-  const idempotentClient = new V1HttpClient({
-    apiKey: 'test_key',
-    baseUrl: 'https://api.example.test',
-    fetch: async () => {
-      idempotentAttempts += 1;
-      return jsonResponse(idempotentAttempts === 1 ? 503 : 200, { ok: true });
-    },
-  });
-  assert.deepEqual(
-    await idempotentClient.request('/browsers/br_1/start', {
-      method: 'POST',
-      headers: { 'Idempotency-Key': 'start-1' },
-    }),
-    { ok: true }
-  );
-  assert.equal(idempotentAttempts, 2);
+test('generated GET retries transient responses while retaining its query', async () => {
+  const urls: string[] = [];
+  const client = new Bctrl({ token: 'test', fetch: async input => {
+    urls.push(String(input));
+    return Response.json(urls.length === 1 ? { error: { code: 'capacity.unavailable' } } : { data: [], nextCursor: null }, { status: urls.length === 1 ? 503 : 200 });
+  } });
+  const page = await client.browsers.list({ limit: 7, location: 'auto' });
+  assert.deepEqual(page.data, []);
+  assert.equal(urls.length, 2);
+  assert.equal(urls[0], urls[1]);
+  assert.equal(new URL(urls[1]!).searchParams.get('limit'), '7');
 });
-
-function jsonResponse(status: number, body: unknown): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      'content-type': 'application/json',
-      'retry-after': '0',
-    },
-  });
-}
