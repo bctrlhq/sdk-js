@@ -107,6 +107,7 @@ export const PublicErrorCode = {
     BrowserNameConflict: "browser.name_conflict",
     BrowserChanged: "browser.changed",
     BrowserNotRunning: "browser.not_running",
+    BrowserControlHeld: "browser.control_held",
     BrowserConnectionsUnavailable: "browser.connections_unavailable",
     BrowserAlreadyStarted: "browser.already_started",
     BrowserIdentityInUse: "browser.identity_in_use",

@@ -1,3 +1,5 @@
+export * from "./computer/client/requests/index.js";
+export * as computer from "./computer/index.js";
 export * from "./connections/client/requests/index.js";
 export * as connections from "./connections/index.js";
 export * from "./events/client/requests/index.js";

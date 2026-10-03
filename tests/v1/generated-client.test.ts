@@ -72,3 +72,18 @@ test('wait helper treats unknown and awaiting_input as terminal without dispatch
   }
   assert.deepEqual(await waitFor(async () => ({ status: 'awaiting_input' })), { status: 'awaiting_input' });
 });
+
+test('generated Computer click preserves unknown and its Event ID without retrying', async () => {
+  const requests: { url: URL; headers: Headers; body: unknown }[] = [];
+  const result = { object: 'computer.result', status: 'unknown', eventId: 'evt_lost_click', data: null };
+  const client = new Bctrl({ token: 'test', maxRetries: 5, fetch: async (url, options) => {
+    requests.push({ url: new URL(String(url)), headers: new Headers(options?.headers), body: JSON.parse(String(options?.body)) });
+    return Response.json(result);
+  } });
+  assert.deepEqual(await client.browsers.computer.click({ browserId: 'checkout / europe', coordinate: [12, 34],
+    'Idempotency-Key': 'click-once' }, { maxRetries: 4 }), result);
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0]!.url.pathname, '/v1/browsers/checkout%20%2F%20europe/computer/click');
+  assert.equal(requests[0]!.headers.get('Idempotency-Key'), 'click-once');
+  assert.deepEqual(requests[0]!.body, { coordinate: [12, 34] });
+});

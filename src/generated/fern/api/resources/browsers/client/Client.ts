@@ -10,6 +10,7 @@ import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
+import { ComputerClient } from "../resources/computer/client/Client.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
 import { EventsClient } from "../resources/events/client/Client.js";
 import { RunsClient } from "../resources/runs/client/Client.js";
@@ -25,12 +26,17 @@ export declare namespace BrowsersClient {
  */
 export class BrowsersClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<BrowsersClient.Options>;
+    protected _computer: ComputerClient | undefined;
     protected _connections: ConnectionsClient | undefined;
     protected _events: EventsClient | undefined;
     protected _runs: RunsClient | undefined;
 
     constructor(options: BrowsersClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
+    }
+
+    public get computer(): ComputerClient {
+        return (this._computer ??= new ComputerClient(this._options));
     }
 
     public get connections(): ConnectionsClient {
