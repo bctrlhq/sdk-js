@@ -5,43 +5,14 @@ import type * as Bctrl from "../../../../index.js";
 /**
  * @example
  *     {
- *         events: ["run.started"],
+ *         events: ["events"],
  *         url: "url"
  *     }
  */
 export interface WebhookCreateRequest {
     /** Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
     "Idempotency-Key"?: string;
-    events: WebhookCreateRequest.Events.Item[];
+    events: string[];
     name?: Bctrl.ResourceName;
     url: string;
-}
-
-export namespace WebhookCreateRequest {
-    export type Events = Events.Item[];
-
-    export namespace Events {
-        export const Item = {
-            RunStarted: "run.started",
-            ToolCallCompleted: "tool_call.completed",
-            ToolCallFailed: "tool_call.failed",
-            TurnCompleted: "turn.completed",
-            TurnFailed: "turn.failed",
-            RunCompleted: "run.completed",
-            RunFailed: "run.failed",
-            ToolInputRequested: "tool_input.requested",
-            ToolInputResponded: "tool_input.responded",
-            ToolInputExpired: "tool_input.expired",
-            ViewCreated: "view.created",
-            ViewRevoked: "view.revoked",
-            RecordingReady: "recording.ready",
-            RuntimeControlChanged: "runtime.control.changed",
-            RuntimeStarted: "runtime.started",
-            RuntimeStartFailed: "runtime.start_failed",
-            SpendingCapWarning: "spending_cap.warning",
-            SpendingCapStopRequested: "spending_cap.stop_requested",
-            SpendingCapStopped: "spending_cap.stopped",
-        } as const;
-        export type Item = (typeof Item)[keyof typeof Item];
-    }
 }

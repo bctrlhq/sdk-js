@@ -138,7 +138,7 @@ export class WebhooksClient {
      *
      * @example
      *     await client.webhooks.create({
-     *         events: ["run.started"],
+     *         events: ["events"],
      *         url: "url"
      *     })
      */
