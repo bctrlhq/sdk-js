@@ -245,7 +245,6 @@ export * from "./SecretVersion.js";
 export * from "./SecretVersionList.js";
 export * from "./Sha256Digest.js";
 export * from "./Space.js";
-export * from "./SpaceDeleteResponse.js";
 export * from "./SpaceEnvironmentPatch.js";
 export * from "./SpaceListResponse.js";
 export * from "./SpaceNetworkPolicy.js";

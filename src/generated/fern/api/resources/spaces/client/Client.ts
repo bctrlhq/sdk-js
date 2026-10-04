@@ -292,7 +292,7 @@ export class SpacesClient {
     }
 
     /**
-     * Delete a space after its active runtimes have been stopped.
+     * Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.
      *
      * @param {Bctrl.DeleteSpacesRequest} request
      * @param {SpacesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -313,15 +313,18 @@ export class SpacesClient {
     public delete(
         request: Bctrl.DeleteSpacesRequest,
         requestOptions?: SpacesClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.SpaceDeleteResponse> {
+    ): core.HttpResponsePromise<Bctrl.Space> {
         return core.HttpResponsePromise.fromPromise(this.__delete(request, requestOptions));
     }
 
     private async __delete(
         request: Bctrl.DeleteSpacesRequest,
         requestOptions?: SpacesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.SpaceDeleteResponse>> {
-        const { spaceId, "Idempotency-Key": idempotencyKey } = request;
+    ): Promise<core.WithRawResponse<Bctrl.Space>> {
+        const { spaceId, wait, "Idempotency-Key": idempotencyKey } = request;
+        const _queryParams: Record<string, unknown> = {
+            wait,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -343,7 +346,11 @@ export class SpacesClient {
             ),
             method: "DELETE",
             headers: _headers,
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -351,7 +358,7 @@ export class SpacesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.SpaceDeleteResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.Space, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
