@@ -9,6 +9,7 @@ import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
+import { A2AClient } from "../resources/a2A/client/Client.js";
 import { VersionsClient } from "../resources/versions/client/Client.js";
 
 export declare namespace AgentsClient {
@@ -22,10 +23,15 @@ export declare namespace AgentsClient {
  */
 export class AgentsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<AgentsClient.Options>;
+    protected _a2A: A2AClient | undefined;
     protected _versions: VersionsClient | undefined;
 
     constructor(options: AgentsClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
+    }
+
+    public get a2A(): A2AClient {
+        return (this._a2A ??= new A2AClient(this._options));
     }
 
     public get versions(): VersionsClient {

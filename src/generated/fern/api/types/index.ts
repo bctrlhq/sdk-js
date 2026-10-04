@@ -1,3 +1,5 @@
+export * from "./A2AAgentCard.js";
+export * from "./A2AJsonRpcResponse.js";
 export * from "./Account.js";
 export * from "./AccountUsage.js";
 export * from "./AccountUsageBreakdown.js";
