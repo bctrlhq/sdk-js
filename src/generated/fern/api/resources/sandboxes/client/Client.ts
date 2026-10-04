@@ -12,8 +12,10 @@ import * as Bctrl from "../../../index.js";
 import { BrowserClient } from "../resources/browser/client/Client.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
 import { FilesClient } from "../resources/files/client/Client.js";
+import { PortsClient } from "../resources/ports/client/Client.js";
 import { ProcessesClient } from "../resources/processes/client/Client.js";
 import { SnapshotsClient } from "../resources/snapshots/client/Client.js";
+import { SshSessionsClient } from "../resources/sshSessions/client/Client.js";
 
 export declare namespace SandboxesClient {
     export type Options = BaseClientOptions;
@@ -29,8 +31,10 @@ export class SandboxesClient {
     protected _browser: BrowserClient | undefined;
     protected _connections: ConnectionsClient | undefined;
     protected _files: FilesClient | undefined;
+    protected _ports: PortsClient | undefined;
     protected _processes: ProcessesClient | undefined;
     protected _snapshots: SnapshotsClient | undefined;
+    protected _sshSessions: SshSessionsClient | undefined;
 
     constructor(options: SandboxesClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
@@ -48,12 +52,20 @@ export class SandboxesClient {
         return (this._files ??= new FilesClient(this._options));
     }
 
+    public get ports(): PortsClient {
+        return (this._ports ??= new PortsClient(this._options));
+    }
+
     public get processes(): ProcessesClient {
         return (this._processes ??= new ProcessesClient(this._options));
     }
 
     public get snapshots(): SnapshotsClient {
         return (this._snapshots ??= new SnapshotsClient(this._options));
+    }
+
+    public get sshSessions(): SshSessionsClient {
+        return (this._sshSessions ??= new SshSessionsClient(this._options));
     }
 
     /**
