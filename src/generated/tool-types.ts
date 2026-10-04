@@ -44,9 +44,11 @@ export interface BuiltinToolOutputMap {
   "captcha.solve": components['schemas']["BuiltinToolCaptchaSolveOutput"];
   "captcha.status": components['schemas']["BuiltinToolCaptchaStatusOutput"];
   "captcha.wait": components['schemas']["BuiltinToolCaptchaWaitOutput"];
+  "code.execute": components['schemas']["BuiltinToolCodeExecuteOutput"];
   "computer.use": components['schemas']["BuiltinToolComputerUseOutput"];
   "files.list": components['schemas']["BuiltinToolFilesListOutput"];
   "files.read_text": components['schemas']["BuiltinToolFilesReadTextOutput"];
+  "human.request": components['schemas']["BuiltinToolHumanRequestOutput"];
   "run.files.add": components['schemas']["BuiltinToolRunFilesAddOutput"];
   "run.files.collect": components['schemas']["BuiltinToolRunFilesCollectOutput"];
   "run.files.export": components['schemas']["BuiltinToolRunFilesExportOutput"];
@@ -54,12 +56,12 @@ export interface BuiltinToolOutputMap {
   "runtime.files.list": components['schemas']["BuiltinToolRuntimeFilesListOutput"];
   "secrets.fill": components['schemas']["BuiltinToolSecretsFillOutput"];
   "secrets.list": components['schemas']["BuiltinToolSecretsListOutput"];
+  "secrets.request": components['schemas']["BuiltinToolSecretsRequestOutput"];
   "stagehand.act": components['schemas']["BuiltinToolStagehandActOutput"];
   "stagehand.extract": components['schemas']["BuiltinToolStagehandExtractOutput"];
   "stagehand.observe": components['schemas']["BuiltinToolStagehandObserveOutput"];
 }
 
 export type BuiltinToolName = keyof BuiltinToolInputMap;
-export type SyncBuiltinToolName = keyof BuiltinToolOutputMap;
-export type AsyncBuiltinToolName = "browser.pages.activate" | "browser.pages.close" | "browser.pages.open" | "browser.setInputFiles" | "captcha.solve" | "code.execute" | "computer.use" | "human.request" | "run.files.add" | "run.files.collect" | "run.files.export" | "secrets.request" | "stagehand.act" | "stagehand.extract" | "stagehand.observe";
+export type AsyncBuiltinToolName = BuiltinToolName;
 

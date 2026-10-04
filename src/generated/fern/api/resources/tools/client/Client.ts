@@ -18,7 +18,7 @@ export declare namespace ToolsClient {
 }
 
 /**
- * Built-in and custom tools, including synchronous and asynchronous invocation.
+ * Built-in and custom Tools with durable calls and optional waiting.
  */
 export class ToolsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<ToolsClient.Options>;
@@ -125,7 +125,7 @@ export class ToolsClient {
     }
 
     /**
-     * Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.
+     * Create an organization custom callable tool. Agents select these tools in their immutable version definitions.
      *
      * @param {Bctrl.CreateToolsRequest} request
      * @param {ToolsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -478,115 +478,5 @@ export class ToolsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "PATCH", "/v1/tools/{toolRef}");
-    }
-
-    /**
-     * Call a synchronous tool and wait for its validated result.
-     *
-     * @param {Bctrl.CallToolsRequest} request
-     * @param {ToolsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Bctrl.BadRequestError}
-     * @throws {@link Bctrl.UnauthorizedError}
-     * @throws {@link Bctrl.PaymentRequiredError}
-     * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
-     * @throws {@link Bctrl.TooManyRequestsError}
-     * @throws {@link Bctrl.InternalServerError}
-     * @throws {@link Bctrl.ServiceUnavailableError}
-     * @throws {@link errors.BctrlError}
-     * @throws {@link errors.BctrlTimeoutError}
-     *
-     * @example
-     *     await client.tools.call({
-     *         toolRef: "toolRef",
-     *         body: {}
-     *     })
-     */
-    public call(
-        request: Bctrl.CallToolsRequest,
-        requestOptions?: ToolsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.JsonValue | undefined> {
-        return core.HttpResponsePromise.fromPromise(this.__call(request, requestOptions));
-    }
-
-    private async __call(
-        request: Bctrl.CallToolsRequest,
-        requestOptions?: ToolsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.JsonValue | undefined>> {
-        const { toolRef, "BCTRL-Runtime-Id": bctrlRuntimeId, "Idempotency-Key": idempotencyKey, body: _body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "BCTRL-Runtime-Id": bctrlRuntimeId,
-                "Idempotency-Key": idempotencyKey,
-                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
-                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
-                "BCTRL-Version": requestOptions?.bctrlVersion,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await (this._options.fetcher ?? core.fetcher)({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.BctrlEnvironment.Production,
-                `v1/tools/${core.url.encodePathParam(toolRef)}/call`,
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Bctrl.JsonValue | undefined, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 402:
-                    throw new Bctrl.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new Bctrl.InternalServerError(
-                        _response.error.body as Bctrl.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new Bctrl.ServiceUnavailableError(
-                        _response.error.body as Bctrl.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.BctrlError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/tools/{toolRef}/call");
     }
 }

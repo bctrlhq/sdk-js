@@ -19,8 +19,8 @@ test('the generated transport pins its dated version and preserves the canonical
 
 test('an unknown successful outcome is returned once without retrying the effect', async () => {
   let effects = 0;
-  const outcome = { object: 'computer.result', status: 'unknown', data: null, eventId: 'evt-test' };
+  const outcome = { object: 'tool_call', id: 'tc_test', tool: 'computer.use', status: 'unknown', resultAvailable: false };
   const client = new Bctrl({ token: 'test', maxRetries: 3, fetch: async () => { effects++; return Response.json(outcome); } });
-  assert.deepEqual(await client.tools.call({ toolRef: 'computer.use', body: { action: 'click', coordinate: [1, 2] } }), outcome);
+  assert.deepEqual(await client.tools.calls.create({ toolRef: 'computer.use', input: { action: 'click', coordinate: [1, 2] } }), outcome);
   assert.equal(effects, 1);
 });

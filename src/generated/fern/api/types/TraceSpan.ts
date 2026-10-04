@@ -51,12 +51,11 @@ export namespace TraceSpan {
     export const Status = {
         Queued: "queued",
         Running: "running",
-        RequiresInput: "requires_input",
-        Suspended: "suspended",
+        AwaitingInput: "awaiting_input",
         Succeeded: "succeeded",
         Failed: "failed",
-        Cancelled: "cancelled",
-        TimedOut: "timed_out",
+        Canceled: "canceled",
+        Unknown: "unknown",
     } as const;
     export type Status = (typeof Status)[keyof typeof Status];
 }

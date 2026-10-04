@@ -3,15 +3,16 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { Bctrl, type BrowserResource } from '../../src/index.js';
 
-test('computer.use preserves vendor action fields and returns a typed desktop result', async () => {
+test('computer.use keeps vendor action fields and names its browser in the body', async () => {
   const requests: unknown[] = [];
   const client = new Bctrl({ token: 'test', baseUrl: 'https://api.example.test', fetch: async (_input, init) => {
     requests.push(JSON.parse(String(init?.body)));
-    return new Response(JSON.stringify({ action: 'scroll', width: 800, height: 600 }), { status: 200, headers: { 'content-type': 'application/json' } });
+    return new Response(JSON.stringify({ object: 'tool_call', id: 'tc_1', tool: 'computer.use', status: 'succeeded', resultAvailable: true }), { status: 200, headers: { 'content-type': 'application/json' } });
   } });
   const input = { action: 'scroll', scroll_direction: 'down', scroll_amount: 2, coordinate: [20, 30] } as const;
-  const result = await client.tools.call({ toolRef: 'computer.use', body: { ...input, coordinate: [20, 30] }, "BCTRL-Runtime-Id": 'rt_test' });
-  assert.ok(result && typeof result === 'object' && !Array.isArray(result) && 'width' in result); assert.equal(result.width, 800); assert.deepEqual(requests, [input]);
+  const call = await client.tools.calls.create({ toolRef: 'computer.use', input: { ...input, coordinate: [20, 30] }, runtimeId: 'br_test', wait: 30 });
+  assert.equal(call.status, 'succeeded');
+  assert.deepEqual(requests, [{ input, runtimeId: 'br_test' }]);
 });
 
 test('the SDK exposes only the canonical automation resources and routes', async () => {
@@ -29,20 +30,16 @@ test('the SDK exposes only the canonical automation resources and routes', async
     });
 
     const response =
-      url.pathname === '/v1/tools/stagehand.act/call'
-        ? { clicked: true }
+      url.pathname === '/v1/tools/stagehand.act/calls'
+        ? { id: 'call_0', status: 'succeeded' }
         : url.pathname === '/v1/tools/captcha.solve/calls'
           ? { id: 'call_1', status: 'queued' }
           : url.pathname === '/v1/tool-calls/call_1/result'
             ? { token: 'solved' }
-            : url.pathname === '/v1/conversations'
-              ? method === 'POST'
-                ? { id: 'conv_1', status: 'idle' }
-                : { data: [], nextCursor: null }
+            : url.pathname === '/v1/tasks'
+              ? { id: 'task_1', status: 'queued' }
                 : url.pathname === '/v1/conversations/conv_1'
                   ? { id: 'conv_1', status: 'idle' }
-                  : url.pathname === '/v1/conversations/conv_1/messages'
-                    ? { conversationId: 'conv_1', turnId: 'turn_1' }
                   : url.pathname === '/v1/runs/run_1/trace'
                     ? { data: [], nextCursor: null }
                     : url.pathname === '/v1/runs/run_1/events'
@@ -62,22 +59,19 @@ test('the SDK exposes only the canonical automation resources and routes', async
     fetch: fetchMock,
   });
 
-  const actResult = await client.tools.call({ toolRef: 'stagehand.act', body: {
-    instruction: 'Continue',
-  }, "BCTRL-Runtime-Id": 'rt_1' });
-  assert.deepEqual(actResult, { clicked: true });
-  await client.tools.calls.create({ toolRef: 'captcha.solve', body: {}, "BCTRL-Runtime-Id": 'rt_1' });
-  await client.tools.calls.create({ toolRef: 'code.execute', body: {
+  const act = await client.tools.calls.create({ toolRef: 'stagehand.act', input: { instruction: 'Continue' }, runtimeId: 'rt_1', wait: 30 });
+  assert.equal(act.status, 'succeeded');
+  await client.tools.calls.create({ toolRef: 'captcha.solve', input: {}, runtimeId: 'rt_1' });
+  await client.tools.calls.create({ toolRef: 'code.execute', input: {
       source: 'export default async () => ({ ok: true });',
       input: { value: 1 },
       language: 'typescript',
       maxLogBytes: 500_000,
       timeoutMs: 1_000,
-    }, "BCTRL-Runtime-Id": 'rt_1', "Idempotency-Key": 'code-execute-1' });
+    }, "Idempotency-Key": 'code-execute-1' });
   await client.toolCalls.result({ toolCallId: 'call_1', wait: 30 });
-  await client.conversations.create({ runtimeId: 'rt_1' });
+  await client.tasks.create({ agent: 'agt_1', input: 'Complete checkout' });
   await client.conversations.update({ conversationId: 'conv_1' });
-  await client.conversations.messages.create({ conversationId: 'conv_1', text: 'Complete checkout' });
   await client.browsers.start({ browserId: 'rt_1' });
   await client.runs.trace.list({ runId: 'run_1' });
   await client.runs.events.list({ runId: 'run_1' });
@@ -98,13 +92,12 @@ test('the SDK exposes only the canonical automation resources and routes', async
   assert.deepEqual(
     requests.map(({ method, path }) => `${method} ${path}`),
     [
-      'POST /v1/tools/stagehand.act/call',
+      'POST /v1/tools/stagehand.act/calls?wait=30',
       'POST /v1/tools/captcha.solve/calls',
       'POST /v1/tools/code.execute/calls',
       'GET /v1/tool-calls/call_1/result?wait=30',
-      'POST /v1/conversations',
+      'POST /v1/tasks',
       'PATCH /v1/conversations/conv_1',
-      'POST /v1/conversations/conv_1/messages',
       'POST /v1/browsers/rt_1/start',
       'GET /v1/runs/run_1/trace',
       'GET /v1/runs/run_1/events',
@@ -123,16 +116,18 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'GET /v1/locations?order=asc&limit=1',
     ]
   );
-  assert.equal(requests[0]?.headers.get('bctrl-runtime-id'), 'rt_1');
-  assert.equal(requests[1]?.headers.get('bctrl-runtime-id'), 'rt_1');
-  assert.equal(requests[2]?.headers.get('bctrl-runtime-id'), 'rt_1');
+  // The browser is a body field now; the old BCTRL-Runtime-Id header is gone.
+  assert.equal(requests[0]?.headers.get('bctrl-runtime-id'), null);
+  assert.equal((requests[0]?.body as Record<string, unknown>)?.runtimeId, 'rt_1');
+  assert.equal((requests[1]?.body as Record<string, unknown>)?.runtimeId, 'rt_1');
+  assert.equal((requests[2]?.body as Record<string, unknown>)?.runtimeId, undefined);
   assert.equal(requests[2]?.headers.get('idempotency-key'), 'code-execute-1');
-  assert.equal((requests[0]?.body as Record<string, unknown>)?.runtimeId, undefined);
-  assert.deepEqual(requests[7]?.body, {});
-  assert.deepEqual(requests[12]?.body, { fileId: 'file_1' });
-  assert.equal(requests[13]?.headers.get('idempotency-key'), 'upload-1');
-  assert.deepEqual(requests[17]?.body, { discardState: true });
-  assert.equal(requests[17]?.headers.get('idempotency-key'), 'stop-1');
+  assert.deepEqual(requests[4]?.body, { agent: 'agt_1', input: 'Complete checkout' });
+  assert.deepEqual(requests[6]?.body, {});
+  assert.deepEqual(requests[11]?.body, { fileId: 'file_1' });
+  assert.equal(requests[12]?.headers.get('idempotency-key'), 'upload-1');
+  assert.deepEqual(requests[16]?.body, { discardState: true });
+  assert.equal(requests[16]?.headers.get('idempotency-key'), 'stop-1');
   assert.equal('runtimes' in client, false);
 
   assert.equal('invocations' in client, false);

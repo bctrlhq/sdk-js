@@ -5,37 +5,11 @@ import { Bctrl } from '../../../src/index.js';
 
 const shouldRun = process.env.BCTRL_E2E === '1' && Boolean(process.env.BCTRL_API_KEY);
 const AI_MODEL = 'deepseek/deepseek-v4.1-flash';
-const POLL_INTERVAL_MS = 1_000;
-
-type ConversationDetail = Awaited<ReturnType<Bctrl['conversations']['get']>>;
-
-async function waitForAssistantMessage(
-  client: Bctrl,
-  conversationId: string,
-  turnId: string,
-  timeoutMs: number
-): Promise<{ detail: ConversationDetail; text: string; model: string | null }> {
-  const deadline = Date.now() + timeoutMs;
-
-  while (Date.now() < deadline) {
-    const detail = await client.conversations.get({ conversationId: conversationId });
-    const assistant = detail.messages.find(
-      (message) => message.role === 'assistant' && message.turnId === turnId
-    );
-
-    if (detail.status === 'idle' && assistant?.text) {
-      return { detail, text: assistant.text, model: assistant.model };
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
-  }
-
-  throw new Error(`Conversation ${conversationId} did not produce an assistant message in time`);
-}
+const TERMINAL = new Set(['succeeded', 'failed', 'canceled', 'unknown', 'awaiting_input']);
 
 test(
-  'SDK drives a gateway runtime, browser tool, and Luna agent conversation end to end',
-  { skip: shouldRun ? false : 'set BCTRL_E2E=1 and BCTRL_API_KEY', timeout: 420_000 },
+  'SDK drives files, a gateway browser, a Tool call and an Agent Task end to end',
+  { skip: shouldRun ? false : 'set BCTRL_E2E=1 and BCTRL_API_KEY', timeout: 600_000 },
   async () => {
     const client = new Bctrl({
       token: process.env.BCTRL_API_KEY!,
@@ -44,19 +18,12 @@ test(
 
     let spaceId: string | undefined;
     let runtimeId: string | undefined;
-    let runId: string | undefined;
-    let conversationId: string | undefined;
+    let agentId: string | undefined;
+    let taskId: string | undefined;
     let fileId: string | undefined;
 
     try {
-      const space = await client.spaces.create({ name: `sdk-agent-e2e-${Date.now()}`, environment: {
-          ai: {
-            default: {
-              model: AI_MODEL,
-              reasoningEffort: 'high',
-            },
-          },
-        } });
+      const space = await client.spaces.create({ name: `sdk-agent-e2e-${Date.now()}` });
       const currentSpaceId = space.id;
       spaceId = currentSpaceId;
 
@@ -77,51 +44,35 @@ test(
 
       const started = runtime.currentRun;
       assert.ok(started);
-      runId = started.id;
-      const activeRunId = started.id;
       assert.equal(started.resourceId, runtime.id);
       assert.equal(started.status, 'active');
 
-      const opened = await client.tools.call({ toolRef: 'browser.pages.open', body: { url: 'https://example.com' }, "BCTRL-Runtime-Id": runtime.id });
-      assert.equal(typeof opened, 'object');
+      const opened = await client.tools.calls.create({ toolRef: 'browser.pages.open', input: { url: 'https://example.com' }, runtimeId: runtime.id, wait: 30 });
+      assert.equal(opened.status, 'succeeded');
 
-      const conversation = await client.conversations.create({ runtimeId: runtime.id, model: AI_MODEL, title: 'SDK gateway agent workflow' });
-      conversationId = conversation.id;
-      assert.equal(conversation.model, AI_MODEL);
+      const agent = await client.agents.create({ spaceId: currentSpaceId, name: `sdk-reader-${Date.now()}`, model: AI_MODEL,
+        instructions: 'You operate a web browser through your browser tool. Be brief.',
+        scope: { spaces: [], capabilities: ['browsers.create', 'cdp', 'computer'], maxConcurrentRuntimes: 1, budgetUsd: 1 } });
+      agentId = agent.id;
 
-      const accepted = await client.conversations.messages.create({ conversationId: conversation.id, text:
-          'Use the currently open page and report its exact document title. Reply with only the title.', model: AI_MODEL, fileIds: [file.id] });
+      const accepted = await client.tasks.create({ agent: agent.id,
+        input: 'Open https://example.com and report the main heading of the page.',
+        outputSchema: { type: 'object', properties: { heading: { type: 'string' } }, required: ['heading'] } });
+      taskId = accepted.id;
       assert.equal(accepted.status, 'queued');
-      assert.equal(accepted.runId, activeRunId);
 
-      const completed = await waitForAssistantMessage(
-        client,
-        conversation.id,
-        accepted.turnId,
-        360_000
-      );
-      assert.equal(completed.model, AI_MODEL);
-      assert.match(completed.text, /example domain/i);
-      assert(
-        completed.detail.messages.some(
-          (message) => message.id === accepted.messageId && message.role === 'user'
-        )
-      );
+      let task = accepted;
+      const deadline = Date.now() + 540_000;
+      while (!TERMINAL.has(task.status) && Date.now() < deadline) task = await client.tasks.get({ taskId: accepted.id, wait: 30 });
+      assert.equal(task.status, 'succeeded');
+      assert.match(String((task.output as { heading?: unknown } | null)?.heading), /example domain/i);
+      assert.equal(task.runs.length, 1);
 
-      const run = await client.runs.get({ runId: activeRunId, include: 'usage' });
-      assert.equal(run.id, activeRunId);
-      assert.equal(run.resourceId, runtime.id);
-
-      const trace = await client.runs.trace.list({ runId: activeRunId, resourceType: 'agent_turn', limit: 20 });
-      assert(
-        trace.data.some(
-          (span) => span.resourceId === accepted.turnId && span.status === 'succeeded'
-        )
-      );
+      const run = await client.runs.get({ runId: task.runs[0]!, include: 'usage' });
+      assert.equal(run.taskId, accepted.id);
     } finally {
-      if (conversationId) {
-        await client.conversations.cancel({ conversationId: conversationId }).catch(() => {});
-      }
+      if (taskId) await client.tasks.cancel({ taskId }).catch(() => {});
+      if (agentId) await client.agents.delete({ agentId }).catch(() => {});
       if (fileId) await client.files.delete({ fileId: fileId }).catch(() => {});
       if (runtimeId) {
         await client.browsers.stop({ browserId: runtimeId }).catch(() => {});

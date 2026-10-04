@@ -43,11 +43,11 @@ export class ToolCallsClient {
     ): Promise<core.Page<Bctrl.ToolCall, Bctrl.ToolCallListResponse>> {
         const list = core.HttpResponsePromise.interceptFunction(
             async (request: Bctrl.ListToolCallsRequest): Promise<core.WithRawResponse<Bctrl.ToolCallListResponse>> => {
-                const { runtimeId, runId, turnId, tool, status, cursor, order, limit, spaceId } = request;
+                const { runtimeId, runId, taskId, tool, status, cursor, order, limit, spaceId } = request;
                 const _queryParams: Record<string, unknown> = {
                     runtimeId,
                     runId,
-                    turnId,
+                    taskId,
                     tool,
                     status: status != null ? status : undefined,
                     cursor,
@@ -148,7 +148,10 @@ export class ToolCallsClient {
         request: Bctrl.GetToolCallsRequest,
         requestOptions?: ToolCallsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Bctrl.ToolCall>> {
-        const { toolCallId } = request;
+        const { toolCallId, wait } = request;
+        const _queryParams: Record<string, unknown> = {
+            wait,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -169,7 +172,11 @@ export class ToolCallsClient {
             ),
             method: "GET",
             headers: _headers,
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,

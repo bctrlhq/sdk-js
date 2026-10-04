@@ -2,6 +2,7 @@
 
 import * as Bctrl from "./api/index.js";
 import { AccountClient } from "./api/resources/account/client/Client.js";
+import { AgentsClient } from "./api/resources/agents/client/Client.js";
 import { AiClient } from "./api/resources/ai/client/Client.js";
 import { ApiKeysClient } from "./api/resources/apiKeys/client/Client.js";
 import { AuthClient } from "./api/resources/auth/client/Client.js";
@@ -18,9 +19,9 @@ import { RunsClient } from "./api/resources/runs/client/Client.js";
 import { SecretsClient } from "./api/resources/secrets/client/Client.js";
 import { SpacesClient } from "./api/resources/spaces/client/Client.js";
 import { SubaccountsClient } from "./api/resources/subaccounts/client/Client.js";
+import { TasksClient } from "./api/resources/tasks/client/Client.js";
 import { ToolCallsClient } from "./api/resources/toolCalls/client/Client.js";
 import { ToolsClient } from "./api/resources/tools/client/Client.js";
-import { ToolsetsClient } from "./api/resources/toolsets/client/Client.js";
 import { UsageClient } from "./api/resources/usage/client/Client.js";
 import { ViewsClient } from "./api/resources/views/client/Client.js";
 import { WebhooksClient } from "./api/resources/webhooks/client/Client.js";
@@ -41,6 +42,7 @@ export declare namespace BctrlClient {
 export class BctrlClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<BctrlClient.Options>;
     protected _account: AccountClient | undefined;
+    protected _agents: AgentsClient | undefined;
     protected _apiKeys: ApiKeysClient | undefined;
     protected _auth: AuthClient | undefined;
     protected _browsers: BrowsersClient | undefined;
@@ -55,9 +57,9 @@ export class BctrlClient {
     protected _secrets: SecretsClient | undefined;
     protected _spaces: SpacesClient | undefined;
     protected _subaccounts: SubaccountsClient | undefined;
+    protected _tasks: TasksClient | undefined;
     protected _toolCalls: ToolCallsClient | undefined;
     protected _tools: ToolsClient | undefined;
-    protected _toolsets: ToolsetsClient | undefined;
     protected _usage: UsageClient | undefined;
     protected _views: ViewsClient | undefined;
     protected _webhooks: WebhooksClient | undefined;
@@ -70,6 +72,10 @@ export class BctrlClient {
 
     public get account(): AccountClient {
         return (this._account ??= new AccountClient(this._options));
+    }
+
+    public get agents(): AgentsClient {
+        return (this._agents ??= new AgentsClient(this._options));
     }
 
     public get apiKeys(): ApiKeysClient {
@@ -128,16 +134,16 @@ export class BctrlClient {
         return (this._subaccounts ??= new SubaccountsClient(this._options));
     }
 
+    public get tasks(): TasksClient {
+        return (this._tasks ??= new TasksClient(this._options));
+    }
+
     public get toolCalls(): ToolCallsClient {
         return (this._toolCalls ??= new ToolCallsClient(this._options));
     }
 
     public get tools(): ToolsClient {
         return (this._tools ??= new ToolsClient(this._options));
-    }
-
-    public get toolsets(): ToolsetsClient {
-        return (this._toolsets ??= new ToolsetsClient(this._options));
     }
 
     public get usage(): UsageClient {

@@ -12,7 +12,6 @@ export type ToolCreateRequest =
               url: string;
           };
           inputSchema: Bctrl.JsonObject;
-          modes?: ("sync" | "async")[] | undefined;
           name: string;
           outputSchema: Bctrl.JsonObject;
           runtimeTypes?: ("browser" | "desktop")[] | undefined;
@@ -27,7 +26,6 @@ export type ToolCreateRequest =
               type: "code";
           };
           inputSchema: Bctrl.JsonObject;
-          modes?: ("sync" | "async")[] | undefined;
           name: string;
           outputSchema: Bctrl.JsonObject;
           runtimeTypes?: ("browser" | "desktop")[] | undefined;
@@ -39,7 +37,6 @@ export type ToolCreateRequest =
               sourceTurnId: string;
               type: "workflow";
           };
-          modes?: ("sync" | "async")[] | undefined;
           name: string;
           runtimeTypes?: ("browser" | "desktop")[] | undefined;
           spaceId?: (string | "default") | undefined;

@@ -17,7 +17,7 @@ export interface ViewCreateRequest {
     components?: Bctrl.ViewComponentsInput;
     /** Allow live browser interaction and actions from the notification center. */
     control?: boolean;
-    /** Allow sending messages to and cancelling turns in the included conversations. Defaults to the value of control. */
+    /** Allow giving input to and cancelling Tasks in the included conversations. Defaults to the value of control. */
     conversationSend?: boolean;
     /** View lifetime in seconds. Defaults to 8 hours; maximum 30 days. */
     expiresInSeconds?: number;

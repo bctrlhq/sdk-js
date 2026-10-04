@@ -3,11 +3,10 @@
 export const ListTraceRequestStatusItem = {
     Queued: "queued",
     Running: "running",
-    RequiresInput: "requires_input",
-    Suspended: "suspended",
+    AwaitingInput: "awaiting_input",
     Succeeded: "succeeded",
     Failed: "failed",
-    Cancelled: "cancelled",
-    TimedOut: "timed_out",
+    Canceled: "canceled",
+    Unknown: "unknown",
 } as const;
 export type ListTraceRequestStatusItem = (typeof ListTraceRequestStatusItem)[keyof typeof ListTraceRequestStatusItem];

@@ -11,7 +11,6 @@ export interface CustomTool {
     id: string;
     implementation: Bctrl.CustomToolImplementation;
     inputSchema: Bctrl.JsonObject;
-    modes: CustomTool.Modes.Item[];
     name: string;
     object: CustomTool.Object_;
     outputSchema: Bctrl.JsonObject;
@@ -22,16 +21,6 @@ export interface CustomTool {
 }
 
 export namespace CustomTool {
-    export type Modes = Modes.Item[];
-
-    export namespace Modes {
-        export const Item = {
-            Sync: "sync",
-            Async: "async",
-        } as const;
-        export type Item = (typeof Item)[keyof typeof Item];
-    }
-
     export const Object_ = {
         Tool: "tool",
     } as const;

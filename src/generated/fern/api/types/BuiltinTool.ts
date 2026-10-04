@@ -9,7 +9,6 @@ export interface BuiltinTool {
     id: BuiltinTool.Id;
     implementation: BuiltinTool.Implementation;
     inputSchema: Bctrl.JsonObject;
-    modes: BuiltinTool.Modes.Item[];
     name: BuiltinTool.Name;
     object: BuiltinTool.Object_;
     outputSchema: Bctrl.JsonObject;
@@ -86,16 +85,6 @@ export namespace BuiltinTool {
             Builtin: "builtin",
         } as const;
         export type Type = (typeof Type)[keyof typeof Type];
-    }
-
-    export type Modes = Modes.Item[];
-
-    export namespace Modes {
-        export const Item = {
-            Sync: "sync",
-            Async: "async",
-        } as const;
-        export type Item = (typeof Item)[keyof typeof Item];
     }
 
     export const Name = {

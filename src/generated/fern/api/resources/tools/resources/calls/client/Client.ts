@@ -24,9 +24,9 @@ export class CallsClient {
     }
 
     /**
-     * Start one durable asynchronous tool call.
+     * Create a durable ToolCall and optionally wait for its status.
      *
-     * @param {Bctrl.tools.CreateCallsRequest} request
+     * @param {Bctrl.tools.ToolCallRequest} request
      * @param {CallsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.BadRequestError}
@@ -44,27 +44,29 @@ export class CallsClient {
      * @example
      *     await client.tools.calls.create({
      *         toolRef: "toolRef",
-     *         body: {}
+     *         input: {}
      *     })
      */
     public create(
-        request: Bctrl.tools.CreateCallsRequest,
+        request: Bctrl.tools.ToolCallRequest,
         requestOptions?: CallsClient.RequestOptions,
     ): core.HttpResponsePromise<Bctrl.ToolCall> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
-        request: Bctrl.tools.CreateCallsRequest,
+        request: Bctrl.tools.ToolCallRequest,
         requestOptions?: CallsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Bctrl.ToolCall>> {
-        const { toolRef, "BCTRL-Runtime-Id": bctrlRuntimeId, "Idempotency-Key": idempotencyKey, body: _body } = request;
+        const { toolRef, wait, "Idempotency-Key": idempotencyKey, ..._body } = request;
+        const _queryParams: Record<string, unknown> = {
+            wait,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "BCTRL-Runtime-Id": bctrlRuntimeId,
                 "Idempotency-Key": idempotencyKey,
                 "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
                 "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
@@ -82,7 +84,11 @@ export class CallsClient {
             method: "POST",
             headers: _headers,
             contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             requestType: "json",
             body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,

@@ -4,15 +4,19 @@ import type * as Bctrl from "../../../../index.js";
 
 /**
  * @example
- *     {}
+ *     {
+ *         from: "2026-07-26T12:00:00Z",
+ *         to: "2026-07-26T12:00:00Z"
+ *     }
  */
 export interface ListConversationsRequest {
-    /** Filter by a prefixed space ID, or pass `default` to use the caller default space. */
-    spaceId?: string;
-    runtimeId?: string;
-    status?: Bctrl.ListConversationsRequestStatus;
     cursor?: string;
     /** Order by createdAt and ID. Defaults to desc. */
     order?: Bctrl.ListConversationsRequestOrder;
     limit?: number;
+    /** Filter by a prefixed space ID, or pass `default` to use the caller default space. */
+    spaceId?: string;
+    agent?: string;
+    from?: Bctrl.Rfc3339Timestamp;
+    to?: Bctrl.Rfc3339Timestamp;
 }

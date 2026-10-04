@@ -9,8 +9,7 @@ import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
-import { MessagesClient } from "../resources/messages/client/Client.js";
-import { TurnsClient } from "../resources/turns/client/Client.js";
+import { EventsClient } from "../resources/events/client/Client.js";
 
 export declare namespace ConversationsClient {
     export type Options = BaseClientOptions;
@@ -19,23 +18,18 @@ export declare namespace ConversationsClient {
 }
 
 /**
- * Durable agent conversations, messages, turns, and event streams.
+ * Preview Conversation records and their canonical event history.
  */
 export class ConversationsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<ConversationsClient.Options>;
-    protected _messages: MessagesClient | undefined;
-    protected _turns: TurnsClient | undefined;
+    protected _events: EventsClient | undefined;
 
     constructor(options: ConversationsClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
     }
 
-    public get messages(): MessagesClient {
-        return (this._messages ??= new MessagesClient(this._options));
-    }
-
-    public get turns(): TurnsClient {
-        return (this._turns ??= new TurnsClient(this._options));
+    public get events(): EventsClient {
+        return (this._events ??= new EventsClient(this._options));
     }
 
     /**
@@ -50,24 +44,28 @@ export class ConversationsClient {
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.conversations.list()
+     *     await client.conversations.list({
+     *         from: "2026-07-26T12:00:00Z",
+     *         to: "2026-07-26T12:00:00Z"
+     *     })
      */
     public async list(
         request: Bctrl.ListConversationsRequest = {},
         requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.Page<Bctrl.Conversation, Bctrl.ConversationListResponse>> {
+    ): Promise<core.Page<Bctrl.ConversationRecord, Bctrl.ConversationListResponse>> {
         const list = core.HttpResponsePromise.interceptFunction(
             async (
                 request: Bctrl.ListConversationsRequest,
             ): Promise<core.WithRawResponse<Bctrl.ConversationListResponse>> => {
-                const { spaceId, runtimeId, status, cursor, order, limit } = request;
+                const { cursor, order, limit, spaceId, agent, from: from_, to } = request;
                 const _queryParams: Record<string, unknown> = {
-                    spaceId,
-                    runtimeId,
-                    status: status != null ? status : undefined,
                     cursor,
                     order: order != null ? order : undefined,
                     limit,
+                    spaceId,
+                    agent,
+                    from: from_ != null ? from_ : undefined,
+                    to: to != null ? to : undefined,
                 };
                 const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -124,7 +122,7 @@ export class ConversationsClient {
             },
         );
         const dataWithRawResponse = await list(request).withRawResponse();
-        return new core.Page<Bctrl.Conversation, Bctrl.ConversationListResponse>({
+        return new core.Page<Bctrl.ConversationRecord, Bctrl.ConversationListResponse>({
             response: dataWithRawResponse.data,
             rawResponse: dataWithRawResponse.rawResponse,
             hasNextPage: (response) =>
@@ -138,100 +136,7 @@ export class ConversationsClient {
     }
 
     /**
-     * Create an agent conversation bound to an active runtime.
-     *
-     * @param {Bctrl.ConversationCreateRequest} request
-     * @param {ConversationsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Bctrl.BadRequestError}
-     * @throws {@link Bctrl.UnauthorizedError}
-     * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
-     * @throws {@link Bctrl.TooManyRequestsError}
-     * @throws {@link errors.BctrlError}
-     * @throws {@link errors.BctrlTimeoutError}
-     *
-     * @example
-     *     await client.conversations.create({
-     *         runtimeId: "runtimeId"
-     *     })
-     */
-    public create(
-        request: Bctrl.ConversationCreateRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Conversation> {
-        return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
-    }
-
-    private async __create(
-        request: Bctrl.ConversationCreateRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Conversation>> {
-        const { "Idempotency-Key": idempotencyKey, ..._body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "Idempotency-Key": idempotencyKey,
-                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
-                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
-                "BCTRL-Version": requestOptions?.bctrlVersion,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await (this._options.fetcher ?? core.fetcher)({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.BctrlEnvironment.Production,
-                "v1/conversations",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Bctrl.Conversation, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
-                default:
-                    throw new errors.BctrlError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/conversations");
-    }
-
-    /**
-     * Get a conversation with its durable messages and turns.
+     * Get a runtime-free Conversation record; read its events for history.
      *
      * @param {Bctrl.GetConversationsRequest} request
      * @param {ConversationsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -250,19 +155,15 @@ export class ConversationsClient {
     public get(
         request: Bctrl.GetConversationsRequest,
         requestOptions?: ConversationsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.ConversationDetail> {
+    ): core.HttpResponsePromise<Bctrl.ConversationRecord> {
         return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
     }
 
     private async __get(
         request: Bctrl.GetConversationsRequest,
         requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.ConversationDetail>> {
-        const { conversationId, messageCursor, messageLimit } = request;
-        const _queryParams: Record<string, unknown> = {
-            messageCursor,
-            messageLimit,
-        };
+    ): Promise<core.WithRawResponse<Bctrl.ConversationRecord>> {
+        const { conversationId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -283,11 +184,7 @@ export class ConversationsClient {
             ),
             method: "GET",
             headers: _headers,
-            queryString: core.url
-                .queryBuilder()
-                .addMany(_queryParams)
-                .mergeAdditional(requestOptions?.queryParams)
-                .build(),
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -295,7 +192,7 @@ export class ConversationsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.ConversationDetail, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.ConversationRecord, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -324,9 +221,101 @@ export class ConversationsClient {
     }
 
     /**
-     * Update the defaults used by future turns in a conversation.
+     * Delete an idle Conversation and retire its workspace.
      *
-     * @param {Bctrl.ConversationUpdateRequest} request
+     * @param {Bctrl.DeleteConversationsRequest} request
+     * @param {ConversationsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link Bctrl.ConflictError}
+     * @throws {@link Bctrl.TooManyRequestsError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     *
+     * @example
+     *     await client.conversations.delete({
+     *         conversationId: "conversationId"
+     *     })
+     */
+    public delete(
+        request: Bctrl.DeleteConversationsRequest,
+        requestOptions?: ConversationsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.ConversationDeleteResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__delete(request, requestOptions));
+    }
+
+    private async __delete(
+        request: Bctrl.DeleteConversationsRequest,
+        requestOptions?: ConversationsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.ConversationDeleteResponse>> {
+        const { conversationId, "Idempotency-Key": idempotencyKey } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": idempotencyKey,
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                `v1/conversations/${core.url.encodePathParam(conversationId)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Bctrl.ConversationDeleteResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "DELETE",
+            "/v1/conversations/{conversationId}",
+        );
+    }
+
+    /**
+     * Update a Conversation title and metadata.
+     *
+     * @param {Bctrl.ConversationsUpdateRequest} request
      * @param {ConversationsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.BadRequestError}
@@ -344,16 +333,16 @@ export class ConversationsClient {
      *     })
      */
     public update(
-        request: Bctrl.ConversationUpdateRequest,
+        request: Bctrl.ConversationsUpdateRequest,
         requestOptions?: ConversationsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Conversation> {
+    ): core.HttpResponsePromise<Bctrl.ConversationRecord> {
         return core.HttpResponsePromise.fromPromise(this.__update(request, requestOptions));
     }
 
     private async __update(
-        request: Bctrl.ConversationUpdateRequest,
+        request: Bctrl.ConversationsUpdateRequest,
         requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Conversation>> {
+    ): Promise<core.WithRawResponse<Bctrl.ConversationRecord>> {
         const { conversationId, "Idempotency-Key": idempotencyKey, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -387,7 +376,7 @@ export class ConversationsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.Conversation, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.ConversationRecord, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -419,298 +408,5 @@ export class ConversationsClient {
             "PATCH",
             "/v1/conversations/{conversationId}",
         );
-    }
-
-    /**
-     * Cancel the active turn in a conversation.
-     *
-     * @param {Bctrl.CancelConversationsRequest} request
-     * @param {ConversationsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Bctrl.UnauthorizedError}
-     * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
-     * @throws {@link Bctrl.TooManyRequestsError}
-     * @throws {@link errors.BctrlError}
-     * @throws {@link errors.BctrlTimeoutError}
-     *
-     * @example
-     *     await client.conversations.cancel({
-     *         conversationId: "conversationId"
-     *     })
-     */
-    public cancel(
-        request: Bctrl.CancelConversationsRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.ConversationCancelResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__cancel(request, requestOptions));
-    }
-
-    private async __cancel(
-        request: Bctrl.CancelConversationsRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.ConversationCancelResponse>> {
-        const { conversationId, "Idempotency-Key": idempotencyKey } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "Idempotency-Key": idempotencyKey,
-                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
-                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
-                "BCTRL-Version": requestOptions?.bctrlVersion,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await (this._options.fetcher ?? core.fetcher)({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.BctrlEnvironment.Production,
-                `v1/conversations/${core.url.encodePathParam(conversationId)}/cancel`,
-            ),
-            method: "POST",
-            headers: _headers,
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Bctrl.ConversationCancelResponse, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 401:
-                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
-                default:
-                    throw new errors.BctrlError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "POST",
-            "/v1/conversations/{conversationId}/cancel",
-        );
-    }
-
-    /**
-     * Stream normalized durable conversation events.
-     */
-    public stream(
-        request: Bctrl.StreamConversationsRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): core.HttpResponsePromise<core.Stream<Bctrl.ConversationEvent>> {
-        return core.HttpResponsePromise.fromPromise(this.__stream(request, requestOptions));
-    }
-
-    private async __stream(
-        request: Bctrl.StreamConversationsRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<core.Stream<Bctrl.ConversationEvent>>> {
-        const { conversationId, after, "Last-Event-ID": lastEventId } = request;
-        const _queryParams: Record<string, unknown> = {
-            after,
-        };
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "Last-Event-ID": lastEventId,
-                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
-                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
-                "BCTRL-Version": requestOptions?.bctrlVersion,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await (this._options.fetcher ?? core.fetcher)<ReadableStream>({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.BctrlEnvironment.Production,
-                `v1/conversations/${core.url.encodePathParam(conversationId)}/stream`,
-            ),
-            method: "GET",
-            headers: _headers,
-            queryString: core.url
-                .queryBuilder()
-                .addMany(_queryParams)
-                .mergeAdditional(requestOptions?.queryParams)
-                .build(),
-            responseType: "sse",
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: new core.Stream({
-                    stream: _response.body,
-                    parse: (data) => data as any,
-                    signal: requestOptions?.abortSignal,
-                    eventShape: {
-                        type: "sse",
-                    },
-                }),
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 401:
-                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
-                default:
-                    throw new errors.BctrlError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(
-            _response.error,
-            _response.rawResponse,
-            "GET",
-            "/v1/conversations/{conversationId}/stream",
-        );
-    }
-
-    /**
-     * Create a conversation and queue its first agent turn in one call, starting the runtime when needed.
-     *
-     * @param {Bctrl.ConversationStartRequest} request
-     * @param {ConversationsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Bctrl.BadRequestError}
-     * @throws {@link Bctrl.UnauthorizedError}
-     * @throws {@link Bctrl.PaymentRequiredError}
-     * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
-     * @throws {@link Bctrl.TooManyRequestsError}
-     * @throws {@link Bctrl.InternalServerError}
-     * @throws {@link Bctrl.ServiceUnavailableError}
-     * @throws {@link errors.BctrlError}
-     * @throws {@link errors.BctrlTimeoutError}
-     *
-     * @example
-     *     await client.conversations.start({
-     *         runtimeId: "runtimeId",
-     *         text: "text"
-     *     })
-     */
-    public start(
-        request: Bctrl.ConversationStartRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.ConversationStartAccepted> {
-        return core.HttpResponsePromise.fromPromise(this.__start(request, requestOptions));
-    }
-
-    private async __start(
-        request: Bctrl.ConversationStartRequest,
-        requestOptions?: ConversationsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.ConversationStartAccepted>> {
-        const { "Idempotency-Key": idempotencyKey, ..._body } = request;
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "Idempotency-Key": idempotencyKey,
-                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
-                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
-                "BCTRL-Version": requestOptions?.bctrlVersion,
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await (this._options.fetcher ?? core.fetcher)({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.BctrlEnvironment.Production,
-                "v1/conversations/start",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Bctrl.ConversationStartAccepted, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
-                case 401:
-                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
-                case 402:
-                    throw new Bctrl.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
-                case 403:
-                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
-                case 500:
-                    throw new Bctrl.InternalServerError(
-                        _response.error.body as Bctrl.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 503:
-                    throw new Bctrl.ServiceUnavailableError(
-                        _response.error.body as Bctrl.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.BctrlError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/conversations/start");
     }
 }

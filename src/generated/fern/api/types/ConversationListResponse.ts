@@ -3,7 +3,7 @@
 import type * as Bctrl from "../index.js";
 
 export interface ConversationListResponse {
-    data: Bctrl.Conversation[];
+    data: Bctrl.ConversationRecord[];
     hasMore: boolean;
     nextCursor: string | null;
 }

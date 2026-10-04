@@ -477,7 +477,7 @@ export class SecretsClient {
     }
 
     /**
-     * Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+     * Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Task agents, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
      *
      * @param {Bctrl.SecretRevealRequest} request
      * @param {SecretsClient.RequestOptions} requestOptions - Request-specific configuration.

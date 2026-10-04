@@ -1,4 +1,3 @@
-export * from "./messages/client/requests/index.js";
-export * as messages from "./messages/index.js";
-export * from "./turns/client/requests/index.js";
-export * as turns from "./turns/index.js";
+export * from "./events/client/requests/index.js";
+export * as events from "./events/index.js";
+export * from "./events/types/index.js";

@@ -9,7 +9,7 @@ import type * as Bctrl from "../../../../index.js";
 export interface ListToolCallsRequest {
     runtimeId?: string;
     runId?: string;
-    turnId?: string;
+    taskId?: string;
     tool?: string;
     status?: Bctrl.ListToolCallsRequestStatus;
     cursor?: string;

@@ -18,22 +18,11 @@ export interface ToolUpdateRequest {
     description?: string;
     implementation?: Bctrl.ToolUpdateRequestImplementation;
     inputSchema?: Bctrl.JsonObject;
-    modes?: ToolUpdateRequest.Modes.Item[];
     outputSchema?: Bctrl.JsonObject;
     runtimeTypes?: ToolUpdateRequest.RuntimeTypes.Item[];
 }
 
 export namespace ToolUpdateRequest {
-    export type Modes = Modes.Item[];
-
-    export namespace Modes {
-        export const Item = {
-            Sync: "sync",
-            Async: "async",
-        } as const;
-        export type Item = (typeof Item)[keyof typeof Item];
-    }
-
     export type RuntimeTypes = RuntimeTypes.Item[];
 
     export namespace RuntimeTypes {

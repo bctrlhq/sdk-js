@@ -3,10 +3,10 @@
 export const ListToolCallsRequestStatus = {
     Queued: "queued",
     Running: "running",
-    RequiresInput: "requires_input",
+    AwaitingInput: "awaiting_input",
     Succeeded: "succeeded",
     Failed: "failed",
-    Cancelled: "cancelled",
-    TimedOut: "timed_out",
+    Canceled: "canceled",
+    Unknown: "unknown",
 } as const;
 export type ListToolCallsRequestStatus = (typeof ListToolCallsRequestStatus)[keyof typeof ListToolCallsRequestStatus];
