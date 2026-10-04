@@ -9,13 +9,13 @@ import { AuthClient } from "./api/resources/auth/client/Client.js";
 import { BrowserClient } from "./api/resources/browser/client/Client.js";
 import { BrowsersClient } from "./api/resources/browsers/client/Client.js";
 import { ConversationsClient } from "./api/resources/conversations/client/Client.js";
-import { EnvironmentsClient } from "./api/resources/environments/client/Client.js";
 import { EventsClient } from "./api/resources/events/client/Client.js";
 import { FilesClient } from "./api/resources/files/client/Client.js";
 import { LocationsClient } from "./api/resources/locations/client/Client.js";
 import { NotificationRecipientsClient } from "./api/resources/notificationRecipients/client/Client.js";
 import { ProxiesClient } from "./api/resources/proxies/client/Client.js";
 import { RunsClient } from "./api/resources/runs/client/Client.js";
+import { SandboxesClient } from "./api/resources/sandboxes/client/Client.js";
 import { SecretsClient } from "./api/resources/secrets/client/Client.js";
 import { SpacesClient } from "./api/resources/spaces/client/Client.js";
 import { SubaccountsClient } from "./api/resources/subaccounts/client/Client.js";
@@ -47,13 +47,13 @@ export class BctrlClient {
     protected _auth: AuthClient | undefined;
     protected _browsers: BrowsersClient | undefined;
     protected _conversations: ConversationsClient | undefined;
-    protected _environments: EnvironmentsClient | undefined;
     protected _events: EventsClient | undefined;
     protected _files: FilesClient | undefined;
     protected _locations: LocationsClient | undefined;
     protected _notificationRecipients: NotificationRecipientsClient | undefined;
     protected _proxies: ProxiesClient | undefined;
     protected _runs: RunsClient | undefined;
+    protected _sandboxes: SandboxesClient | undefined;
     protected _secrets: SecretsClient | undefined;
     protected _spaces: SpacesClient | undefined;
     protected _subaccounts: SubaccountsClient | undefined;
@@ -94,10 +94,6 @@ export class BctrlClient {
         return (this._conversations ??= new ConversationsClient(this._options));
     }
 
-    public get environments(): EnvironmentsClient {
-        return (this._environments ??= new EnvironmentsClient(this._options));
-    }
-
     public get events(): EventsClient {
         return (this._events ??= new EventsClient(this._options));
     }
@@ -120,6 +116,10 @@ export class BctrlClient {
 
     public get runs(): RunsClient {
         return (this._runs ??= new RunsClient(this._options));
+    }
+
+    public get sandboxes(): SandboxesClient {
+        return (this._sandboxes ??= new SandboxesClient(this._options));
     }
 
     public get secrets(): SecretsClient {
