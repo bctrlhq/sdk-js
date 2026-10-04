@@ -6,7 +6,7 @@ export type ApiKeyCreateRequest =
     | {
           expiresAt?: (string | null) | undefined;
           name?: Bctrl.ResourceName | undefined;
-          scopes?: "*"[] | undefined;
+          scopes?: string[] | undefined;
           subaccountId?: Bctrl.SubaccountId | undefined;
           type?: ("organization" | "subaccount") | undefined;
       }
@@ -16,7 +16,7 @@ export type ApiKeyCreateRequest =
           };
           expiresAt?: (string | null) | undefined;
           name?: Bctrl.ResourceName | undefined;
-          scopes?: "*"[] | undefined;
+          scopes?: string[] | undefined;
           subaccountId?: Bctrl.SubaccountId | undefined;
           type: "agent";
       };

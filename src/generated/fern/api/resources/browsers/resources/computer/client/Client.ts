@@ -10,6 +10,7 @@ import * as environments from "../../../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../../../errors/index.js";
 import * as Bctrl from "../../../../../index.js";
+import { ClipboardClient } from "../resources/clipboard/client/Client.js";
 
 export declare namespace ComputerClient {
     export type Options = BaseClientOptions;
@@ -19,9 +20,14 @@ export declare namespace ComputerClient {
 
 export class ComputerClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<ComputerClient.Options>;
+    protected _clipboard: ClipboardClient | undefined;
 
     constructor(options: ComputerClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
+    }
+
+    public get clipboard(): ClipboardClient {
+        return (this._clipboard ??= new ClipboardClient(this._options));
     }
 
     /**

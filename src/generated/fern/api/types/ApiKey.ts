@@ -14,7 +14,7 @@ export namespace ApiKey {
         lastUsedAt: Bctrl.Rfc3339Timestamp | null;
         name: string | null;
         object: ApiKeyOrganization.Object_;
-        scopes: ApiKeyOrganization.Scopes.Item[];
+        scopes: string[];
         subaccountId: Bctrl.SubaccountId | null;
         updatedAt: Bctrl.Rfc3339Timestamp;
         usageCount: Bctrl.NonNegativeCount;
@@ -25,14 +25,6 @@ export namespace ApiKey {
             ApiKey: "api_key",
         } as const;
         export type Object_ = (typeof Object_)[keyof typeof Object_];
-        export type Scopes = Scopes.Item[];
-
-        export namespace Scopes {
-            export const Item = {
-                All: "*",
-            } as const;
-            export type Item = (typeof Item)[keyof typeof Item];
-        }
     }
 
     export interface Subaccount {
@@ -44,7 +36,7 @@ export namespace ApiKey {
         lastUsedAt: Bctrl.Rfc3339Timestamp | null;
         name: string | null;
         object: ApiKeySubaccount.Object_;
-        scopes: ApiKeySubaccount.Scopes.Item[];
+        scopes: string[];
         subaccountId: Bctrl.SubaccountId | null;
         updatedAt: Bctrl.Rfc3339Timestamp;
         usageCount: Bctrl.NonNegativeCount;
@@ -55,14 +47,6 @@ export namespace ApiKey {
             ApiKey: "api_key",
         } as const;
         export type Object_ = (typeof Object_)[keyof typeof Object_];
-        export type Scopes = Scopes.Item[];
-
-        export namespace Scopes {
-            export const Item = {
-                All: "*",
-            } as const;
-            export type Item = (typeof Item)[keyof typeof Item];
-        }
     }
 
     export interface Agent {
@@ -76,7 +60,7 @@ export namespace ApiKey {
         lastUsedAt: Bctrl.Rfc3339Timestamp | null;
         name: string | null;
         object: ApiKeyAgent.Object_;
-        scopes: ApiKeyAgent.Scopes.Item[];
+        scopes: string[];
         subaccountId: Bctrl.SubaccountId | null;
         updatedAt: Bctrl.Rfc3339Timestamp;
         usageCount: Bctrl.NonNegativeCount;
@@ -95,13 +79,5 @@ export namespace ApiKey {
             ApiKey: "api_key",
         } as const;
         export type Object_ = (typeof Object_)[keyof typeof Object_];
-        export type Scopes = Scopes.Item[];
-
-        export namespace Scopes {
-            export const Item = {
-                All: "*",
-            } as const;
-            export type Item = (typeof Item)[keyof typeof Item];
-        }
     }
 }

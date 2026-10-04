@@ -14,6 +14,8 @@ import { ComputerClient } from "../resources/computer/client/Client.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
 import { ControlClient } from "../resources/control/client/Client.js";
 import { EventsClient } from "../resources/events/client/Client.js";
+import { FilesClient } from "../resources/files/client/Client.js";
+import { PagesClient } from "../resources/pages/client/Client.js";
 import { RecordingClient } from "../resources/recording/client/Client.js";
 import { RunsClient } from "../resources/runs/client/Client.js";
 
@@ -32,6 +34,8 @@ export class BrowsersClient {
     protected _connections: ConnectionsClient | undefined;
     protected _control: ControlClient | undefined;
     protected _events: EventsClient | undefined;
+    protected _files: FilesClient | undefined;
+    protected _pages: PagesClient | undefined;
     protected _recording: RecordingClient | undefined;
     protected _runs: RunsClient | undefined;
 
@@ -53,6 +57,14 @@ export class BrowsersClient {
 
     public get events(): EventsClient {
         return (this._events ??= new EventsClient(this._options));
+    }
+
+    public get files(): FilesClient {
+        return (this._files ??= new FilesClient(this._options));
+    }
+
+    public get pages(): PagesClient {
+        return (this._pages ??= new PagesClient(this._options));
     }
 
     public get recording(): RecordingClient {
@@ -584,6 +596,118 @@ export class BrowsersClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "PATCH", "/v1/browsers/{browserId}");
+    }
+
+    /**
+     * Send an HTTP request from the browser itself: it carries the browser's cookies, proxy and TLS/HTTP2 fingerprint and is not subject to CORS. The response body is returned base64 encoded up to maxBytes (truncated is true beyond it). Human control blocks it; the Run's Events record the URL without its query, the status and the byte count. An interrupted request returns unknown and must not be repeated automatically.
+     *
+     * @param {Bctrl.BrowserFetchRequest} request
+     * @param {BrowsersClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Bctrl.BadRequestError}
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link Bctrl.ConflictError}
+     * @throws {@link Bctrl.TooManyRequestsError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     *
+     * @example
+     *     await client.browsers.fetch({
+     *         browserId: "browserId",
+     *         url: "url"
+     *     })
+     */
+    public fetch(
+        request: Bctrl.BrowserFetchRequest,
+        requestOptions?: BrowsersClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.BrowserFetchResult> {
+        return core.HttpResponsePromise.fromPromise(this.__fetch(request, requestOptions));
+    }
+
+    private async __fetch(
+        request: Bctrl.BrowserFetchRequest,
+        requestOptions?: BrowsersClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.BrowserFetchResult>> {
+        const { browserId, spaceId, "Idempotency-Key": idempotencyKey, ..._body } = request;
+        const _queryParams: Record<string, unknown> = {
+            spaceId: Array.isArray(spaceId)
+                ? spaceId.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : spaceId != null
+                  ? typeof spaceId === "string"
+                      ? spaceId
+                      : toJson(spaceId)
+                  : undefined,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": idempotencyKey,
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                `v1/browsers/${core.url.encodePathParam(browserId)}/fetch`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Bctrl.BrowserFetchResult, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/v1/browsers/{browserId}/fetch",
+        );
     }
 
     /**

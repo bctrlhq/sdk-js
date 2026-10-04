@@ -9,6 +9,7 @@ import type * as Bctrl from "../../../../index.js";
 export interface SpaceCreateRequest {
     /** Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
     "Idempotency-Key"?: string;
+    capabilityScopes?: string[];
     environment?: Bctrl.EnvironmentMounts;
     expireAfterIdleDays?: number;
     name?: Bctrl.ResourceName;

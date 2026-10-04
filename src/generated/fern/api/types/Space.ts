@@ -3,6 +3,7 @@
 import type * as Bctrl from "../index.js";
 
 export interface Space {
+    capabilityScopes: string[];
     createdAt: Bctrl.Rfc3339Timestamp;
     environment: Bctrl.EnvironmentMountsOutput;
     expireAfterIdleDays: number;

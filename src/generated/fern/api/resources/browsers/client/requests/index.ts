@@ -1,4 +1,5 @@
 export { BrowserCreateRequest } from "./BrowserCreateRequest.js";
+export { BrowserFetchRequest } from "./BrowserFetchRequest.js";
 export type { BrowsersStartRequest } from "./BrowsersStartRequest.js";
 export type { BrowsersStopRequest } from "./BrowsersStopRequest.js";
 export { BrowsersUpdateRequest } from "./BrowsersUpdateRequest.js";
