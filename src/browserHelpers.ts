@@ -1,6 +1,6 @@
 import { BrowsersClient } from './generated/fern/api/resources/browsers/client/Client.js';
-import type { BrowserResource, BrowserCreateRequest, GetBrowsersRequest } from './generated/fern/api/index.js';
-import { HttpResponsePromise } from './generated/fern/core/fetcher/index.js';
+import type { BrowserResource, BrowserCreateRequest, BrowserFetchStreamRequest, GetBrowsersRequest } from './generated/fern/api/index.js';
+import { HttpResponsePromise, type BinaryResponse } from './generated/fern/core/fetcher/index.js';
 
 export type WaitOptions = { timeoutMs?: number; signal?: AbortSignal };
 export type PlaywrightConnector<T> = { chromium: { connectOverCDP: (url: string) => Promise<T> } };
@@ -8,6 +8,32 @@ export type Browser = BrowserResource & {
   connect<T>(playwright: PlaywrightConnector<T>, options?: WaitOptions): Promise<T>;
   waitUntilReady(options?: WaitOptions): Promise<Browser>;
 };
+
+/**
+ * The site's response, as the browser received it: `status`, `headers` and `body` are the upstream's, not the API
+ * call's. The body streams; it can be read once.
+ */
+export type FetchStreamResponse = BinaryResponse & {
+  status: number;
+  ok: boolean;
+  headers: Headers;
+  body: ReadableStream<Uint8Array>;
+  /** The Run Event that accepted the request. */
+  eventId: string | undefined;
+  text(): Promise<string>;
+  json<T = unknown>(): Promise<T>;
+};
+
+function fetchStreamResponse(data: BinaryResponse, headers: Headers): FetchStreamResponse {
+  const status = Number(headers.get('BCTRL-Fetch-Status'));
+  const upstream = new Headers(JSON.parse(headers.get('BCTRL-Fetch-Headers') ?? '{}') as Record<string, string>);
+  const body = data.stream() ?? new ReadableStream<Uint8Array>({ start: (controller) => controller.close() });
+  const text = async () => new TextDecoder().decode(await data.arrayBuffer());
+  return Object.assign(data, {
+    status, ok: status >= 200 && status < 300, headers: upstream, body, eventId: headers.get('BCTRL-Event-Id') ?? undefined,
+    text, json: async <T>() => JSON.parse(await text()) as T,
+  });
+}
 
 export class Browsers extends BrowsersClient {
   private decorate(promise: HttpResponsePromise<BrowserResource>): HttpResponsePromise<Browser> {
@@ -22,6 +48,15 @@ export class Browsers extends BrowsersClient {
 
   override get(request: GetBrowsersRequest, options?: BrowsersClient.RequestOptions): HttpResponsePromise<Browser> {
     return this.decorate(super.get(request, options));
+  }
+
+  /**
+   * Sends the request from the browser and streams the response back. The request is sent once: a failure is never
+   * retried, since the site may already have acted on it.
+   */
+  override fetchStream(request: BrowserFetchStreamRequest, options?: BrowsersClient.RequestOptions): HttpResponsePromise<FetchStreamResponse> {
+    return HttpResponsePromise.fromPromise(super.fetchStream(request, { ...options, maxRetries: 0 }).withRawResponse()
+      .then(({ data, rawResponse }) => ({ data: fetchStreamResponse(data, rawResponse.headers), rawResponse })));
   }
 
   handle(resource: BrowserResource): Browser {

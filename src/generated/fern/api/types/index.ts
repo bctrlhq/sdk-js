@@ -99,6 +99,7 @@ export * from "./Event.js";
 export * from "./EventsListResponse.js";
 export * from "./ExtensionId.js";
 export * from "./FetchBrowsersRequestSpaceId.js";
+export * from "./FetchStreamBrowsersRequestSpaceId.js";
 export * from "./File_.js";
 export * from "./FileDeleteResponse.js";
 export * from "./FileFolder.js";

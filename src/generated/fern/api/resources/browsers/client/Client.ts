@@ -711,6 +711,110 @@ export class BrowsersClient {
     }
 
     /**
+     * Send an HTTP request from the browser itself, like fetch, and stream the response body back as it arrives, of any size and with bounded memory at every hop; a slow reader slows the upstream read. The upstream status is in BCTRL-Fetch-Status and its headers (JSON) in BCTRL-Fetch-Headers. A failure before the first byte is an error response; a failure after it aborts the stream, and the Run's completion Event records unknown. Human control blocks it.
+     *
+     * @throws {@link Bctrl.BadRequestError}
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link Bctrl.ConflictError}
+     * @throws {@link Bctrl.TooManyRequestsError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     */
+    public fetchStream(
+        request: Bctrl.BrowserFetchStreamRequest,
+        requestOptions?: BrowsersClient.RequestOptions,
+    ): core.HttpResponsePromise<core.BinaryResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__fetchStream(request, requestOptions));
+    }
+
+    private async __fetchStream(
+        request: Bctrl.BrowserFetchStreamRequest,
+        requestOptions?: BrowsersClient.RequestOptions,
+    ): Promise<core.WithRawResponse<core.BinaryResponse>> {
+        const { browserId, spaceId, "Idempotency-Key": idempotencyKey, ..._body } = request;
+        const _queryParams: Record<string, unknown> = {
+            spaceId: Array.isArray(spaceId)
+                ? spaceId.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : spaceId != null
+                  ? typeof spaceId === "string"
+                      ? spaceId
+                      : toJson(spaceId)
+                  : undefined,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": idempotencyKey,
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)<core.BinaryResponse>({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                `v1/browsers/${core.url.encodePathParam(browserId)}/fetch/stream`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
+            responseType: "binary-response",
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/v1/browsers/{browserId}/fetch/stream",
+        );
+    }
+
+    /**
      * Durably request a new Run of this browser, restoring its saved state. If a previous Run is stopping or saving, startup waits for it. An existing current Run is returned without starting another browser.
      *
      * @param {Bctrl.BrowsersStartRequest} request
