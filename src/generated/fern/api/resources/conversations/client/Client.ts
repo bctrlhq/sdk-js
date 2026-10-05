@@ -9,7 +9,6 @@ import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
-import { EventsClient } from "../resources/events/client/Client.js";
 
 export declare namespace ConversationsClient {
     export type Options = BaseClientOptions;
@@ -22,14 +21,9 @@ export declare namespace ConversationsClient {
  */
 export class ConversationsClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<ConversationsClient.Options>;
-    protected _events: EventsClient | undefined;
 
     constructor(options: ConversationsClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
-    }
-
-    public get events(): EventsClient {
-        return (this._events ??= new EventsClient(this._options));
     }
 
     /**

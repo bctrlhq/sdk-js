@@ -131,6 +131,7 @@ export const PublicErrorCode = {
     ConversationCursorInvalid: "conversation.cursor_invalid",
     ConversationMessageCursorInvalid: "conversation.message_cursor_invalid",
     ConversationNotFound: "conversation.not_found",
+    EventNotFound: "event.not_found",
     ConversationBusy: "conversation.busy",
     DeviceSessionDenied: "device_session.denied",
     DeviceSessionExpired: "device_session.expired",

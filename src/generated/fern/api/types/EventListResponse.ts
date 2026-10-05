@@ -2,7 +2,7 @@
 
 import type * as Bctrl from "../index.js";
 
-export interface TasksEventsListResponse {
+export interface EventListResponse {
     data: Bctrl.Event[];
     hasMore: boolean;
     nextCursor: string | null;

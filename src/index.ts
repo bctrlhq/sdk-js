@@ -1,5 +1,6 @@
 export { Bctrl } from './bctrl.js';
 export { Browsers, type Browser, type FetchStreamResponse, type PlaywrightConnector, type WaitOptions } from './browserHelpers.js';
+export { Conversations } from './conversationHelpers.js';
 export { waitFor } from './waits.js';
 export * as Api from './generated/fern/api/index.js';
 export type * from './generated/fern/api/index.js';

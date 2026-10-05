@@ -9,7 +9,6 @@ import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
-import { EventsClient } from "../resources/events/client/Client.js";
 import { TraceClient } from "../resources/trace/client/Client.js";
 
 export declare namespace TasksClient {
@@ -23,15 +22,10 @@ export declare namespace TasksClient {
  */
 export class TasksClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<TasksClient.Options>;
-    protected _events: EventsClient | undefined;
     protected _trace: TraceClient | undefined;
 
     constructor(options: TasksClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
-    }
-
-    public get events(): EventsClient {
-        return (this._events ??= new EventsClient(this._options));
     }
 
     public get trace(): TraceClient {

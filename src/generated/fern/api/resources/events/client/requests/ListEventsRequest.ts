@@ -10,6 +10,18 @@ import type * as Bctrl from "../../../../index.js";
  *     }
  */
 export interface ListEventsRequest {
+    /** Events of this browser, across its Runs. */
+    browser?: string;
+    /** Events of this sandbox. */
+    sandbox?: string;
+    /** Events of this Run. */
+    run?: string;
+    /** Events of this Task. */
+    task?: string;
+    /** A Conversation history: its Events. */
+    conversation?: string;
+    /** Events of Tasks run by this agent. */
+    agent?: string;
     category?: Bctrl.ListEventsRequestCategory;
     type?: string | string[];
     /** Actor ID. */
@@ -23,6 +35,4 @@ export interface ListEventsRequest {
     /** Order by createdAt and ID. Defaults to desc. */
     order?: Bctrl.ListEventsRequestOrder;
     limit?: number;
-    runId?: string;
-    runtimeId?: string;
 }

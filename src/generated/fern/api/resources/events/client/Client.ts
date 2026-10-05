@@ -27,7 +27,7 @@ export class EventsClient {
     }
 
     /**
-     * List immutable Events visible in the organization, subaccount and selected Space. Filter by Run, browser, event metadata or occurrence time.
+     * List immutable Events visible in the organization, subaccount and selected Space: every kind of Event, read in one place. Filter by browser, sandbox, Run, Task, Conversation (its history), agent, category (audit logs are the always-on categories), type, actor, channel, outcome or time.
      *
      * @param {Bctrl.ListEventsRequest} request
      * @param {EventsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -49,10 +49,16 @@ export class EventsClient {
     public async list(
         request: Bctrl.ListEventsRequest = {},
         requestOptions?: EventsClient.RequestOptions,
-    ): Promise<core.Page<Bctrl.Event, Bctrl.EventsListResponse>> {
+    ): Promise<core.Page<Bctrl.Event, Bctrl.EventListResponse>> {
         const list = core.HttpResponsePromise.interceptFunction(
-            async (request: Bctrl.ListEventsRequest): Promise<core.WithRawResponse<Bctrl.EventsListResponse>> => {
+            async (request: Bctrl.ListEventsRequest): Promise<core.WithRawResponse<Bctrl.EventListResponse>> => {
                 const {
+                    browser,
+                    sandbox,
+                    run,
+                    task,
+                    conversation,
+                    agent,
                     category,
                     type: type_,
                     actor,
@@ -64,10 +70,14 @@ export class EventsClient {
                     cursor,
                     order,
                     limit,
-                    runId,
-                    runtimeId,
                 } = request;
                 const _queryParams: Record<string, unknown> = {
+                    browser,
+                    sandbox,
+                    run,
+                    task,
+                    conversation,
+                    agent,
                     category: Array.isArray(category)
                         ? category.map((item) => (typeof item === "string" ? item : toJson(item)))
                         : category != null
@@ -97,8 +107,6 @@ export class EventsClient {
                     cursor,
                     order: order != null ? order : undefined,
                     limit,
-                    runId,
-                    runtimeId,
                 };
                 const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -132,7 +140,7 @@ export class EventsClient {
                     logging: this._options.logging,
                 });
                 if (_response.ok) {
-                    return { data: _response.body as Bctrl.EventsListResponse, rawResponse: _response.rawResponse };
+                    return { data: _response.body as Bctrl.EventListResponse, rawResponse: _response.rawResponse };
                 }
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
@@ -161,7 +169,7 @@ export class EventsClient {
             },
         );
         const dataWithRawResponse = await list(request).withRawResponse();
-        return new core.Page<Bctrl.Event, Bctrl.EventsListResponse>({
+        return new core.Page<Bctrl.Event, Bctrl.EventListResponse>({
             response: dataWithRawResponse.data,
             rawResponse: dataWithRawResponse.rawResponse,
             hasNextPage: (response) =>
@@ -172,5 +180,223 @@ export class EventsClient {
                 return list(core.setObjectProperty(request, "cursor", response?.nextCursor));
             },
         });
+    }
+
+    /**
+     * Read one Event by its ID.
+     *
+     * @param {Bctrl.GetEventsRequest} request
+     * @param {EventsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     *
+     * @example
+     *     await client.events.get({
+     *         eventId: "eventId"
+     *     })
+     */
+    public get(
+        request: Bctrl.GetEventsRequest,
+        requestOptions?: EventsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.Event> {
+        return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
+    }
+
+    private async __get(
+        request: Bctrl.GetEventsRequest,
+        requestOptions?: EventsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.Event>> {
+        const { eventId } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                `v1/events/${core.url.encodePathParam(eventId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Bctrl.Event, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/events/{eventId}");
+    }
+
+    /**
+     * Stream the same Events as they are committed, with the same filters. Resume after an Event ID with Last-Event-ID or after: the stream is in commit order, so a resumed stream has no gaps.
+     */
+    public stream(
+        request: Bctrl.StreamEventsRequest = {},
+        requestOptions?: EventsClient.RequestOptions,
+    ): core.HttpResponsePromise<core.Stream<Bctrl.Event>> {
+        return core.HttpResponsePromise.fromPromise(this.__stream(request, requestOptions));
+    }
+
+    private async __stream(
+        request: Bctrl.StreamEventsRequest = {},
+        requestOptions?: EventsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<core.Stream<Bctrl.Event>>> {
+        const {
+            browser,
+            sandbox,
+            run,
+            task,
+            conversation,
+            agent,
+            category,
+            type: type_,
+            actor,
+            actorType,
+            channel,
+            outcome,
+            from: from_,
+            to,
+            after,
+            "Last-Event-ID": lastEventId,
+        } = request;
+        const _queryParams: Record<string, unknown> = {
+            browser,
+            sandbox,
+            run,
+            task,
+            conversation,
+            agent,
+            category: Array.isArray(category)
+                ? category.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : category != null
+                  ? typeof category === "string"
+                      ? category
+                      : toJson(category)
+                  : undefined,
+            type: type_,
+            actor,
+            actorType: actorType != null ? actorType : undefined,
+            channel: Array.isArray(channel)
+                ? channel.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : channel != null
+                  ? typeof channel === "string"
+                      ? channel
+                      : toJson(channel)
+                  : undefined,
+            outcome: Array.isArray(outcome)
+                ? outcome.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : outcome != null
+                  ? typeof outcome === "string"
+                      ? outcome
+                      : toJson(outcome)
+                  : undefined,
+            from: from_ != null ? from_ : undefined,
+            to: to != null ? to : undefined,
+            after,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Last-Event-ID": lastEventId,
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)<ReadableStream>({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                "v1/events/stream",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            responseType: "sse",
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: new core.Stream({
+                    stream: _response.body,
+                    parse: (data) => data as any,
+                    signal: requestOptions?.abortSignal,
+                    eventShape: {
+                        type: "sse",
+                    },
+                }),
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Bctrl.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/events/stream");
     }
 }

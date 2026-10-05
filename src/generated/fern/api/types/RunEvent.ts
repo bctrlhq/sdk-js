@@ -63,6 +63,7 @@ export namespace RunEvent {
         Console: "console",
         Network: "network",
         Captcha: "captcha",
+        Vm: "vm",
     } as const;
     export type Category = (typeof Category)[keyof typeof Category];
     export const Channel = {

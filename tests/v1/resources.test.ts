@@ -42,7 +42,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
                   ? { id: 'conv_1', status: 'idle' }
                   : url.pathname === '/v1/runs/run_1/trace'
                     ? { data: [], nextCursor: null }
-                    : url.pathname === '/v1/runs/run_1/events'
+                    : url.pathname === '/v1/events'
                       ? { data: [], nextCursor: null }
                       : url.pathname === '/v1/browser/extensions'
                         ? { data: [], nextCursor: null }
@@ -74,7 +74,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
   await client.conversations.update({ conversationId: 'conv_1' });
   await client.browsers.start({ browserId: 'rt_1' });
   await client.runs.trace.list({ runId: 'run_1' });
-  await client.runs.events.list({ runId: 'run_1' });
+  await client.events.list({ run: 'run_1' });
   await client.runs.get({ runId: 'run_1', include: 'usage' });
   await client.runs.files.list({ runId: 'run_1', role: 'input' });
   await client.runs.files.add({ runId: 'run_1', fileId: 'file_1' });
@@ -100,7 +100,7 @@ test('the SDK exposes only the canonical automation resources and routes', async
       'PATCH /v1/conversations/conv_1',
       'POST /v1/browsers/rt_1/start',
       'GET /v1/runs/run_1/trace',
-      'GET /v1/runs/run_1/events',
+      'GET /v1/events?run=run_1',
       'GET /v1/runs/run_1?include=usage',
       'GET /v1/runs/run_1/files?role=input',
       'POST /v1/runs/run_1/files',

@@ -13,6 +13,7 @@ export type StreamEventsRequestCategory =
           | "console"
           | "network"
           | "captcha"
+          | "vm"
       )
     | (
           | "lifecycle"
@@ -26,4 +27,5 @@ export type StreamEventsRequestCategory =
           | "console"
           | "network"
           | "captcha"
+          | "vm"
       )[];

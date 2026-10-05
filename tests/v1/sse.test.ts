@@ -30,11 +30,11 @@ test('conversation history streams resume after a cursor and parse arbitrarily c
   });
 
   const events = [];
-  for await (const event of await client.conversations.events.stream({ conversationId: 'conv_1', after: '41' })) {
+  for await (const event of await client.events.stream({ conversation: 'conv_1', after: '41' })) {
     events.push(event);
   }
 
-  assert.equal(requested[0], 'https://api.example.test/v1/conversations/conv_1/events/stream?after=41');
+  assert.equal(requested[0], 'https://api.example.test/v1/events/stream?conversation=conv_1&after=41');
   assert.deepEqual(events, [
     { id: '42', type: 'task.status_changed' },
     { id: '43', type: 'message.created' },

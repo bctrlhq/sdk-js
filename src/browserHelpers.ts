@@ -1,5 +1,7 @@
 import { BrowsersClient } from './generated/fern/api/resources/browsers/client/Client.js';
-import type { BrowserResource, BrowserCreateRequest, BrowserFetchStreamRequest, GetBrowsersRequest } from './generated/fern/api/index.js';
+import { EventsClient } from './generated/fern/api/resources/events/client/Client.js';
+import type { BrowserResource, BrowserCreateRequest, BrowserFetchStreamRequest, GetBrowsersRequest, ListEventsRequest,
+  StreamEventsRequest } from './generated/fern/api/index.js';
 import { HttpResponsePromise, type BinaryResponse } from './generated/fern/core/fetcher/index.js';
 
 export type WaitOptions = { timeoutMs?: number; signal?: AbortSignal };
@@ -7,6 +9,11 @@ export type PlaywrightConnector<T> = { chromium: { connectOverCDP: (url: string)
 export type Browser = BrowserResource & {
   connect<T>(playwright: PlaywrightConnector<T>, options?: WaitOptions): Promise<T>;
   waitUntilReady(options?: WaitOptions): Promise<Browser>;
+  /** This browser's Events, across its Runs: the one Event log filtered by `browser`. */
+  events: {
+    list(query?: Omit<ListEventsRequest, 'browser'>): ReturnType<EventsClient['list']>;
+    stream(query?: Omit<StreamEventsRequest, 'browser'>): ReturnType<EventsClient['stream']>;
+  };
 };
 
 /**
@@ -73,8 +80,13 @@ export class Browsers extends BrowsersClient {
       }
       throw new Error('Timed out waiting for browser connections');
     };
+    const events = new EventsClient(this._options);
     return Object.defineProperties(resource, {
       waitUntilReady: { value: waitUntilReady },
+      events: { value: {
+        list: (query: Omit<ListEventsRequest, 'browser'> = {}) => events.list({ ...query, browser: resource.id }),
+        stream: (query: Omit<StreamEventsRequest, 'browser'> = {}) => events.stream({ ...query, browser: resource.id }),
+      } },
       connect: { value: async <T>(playwright: PlaywrightConnector<T>, options?: WaitOptions): Promise<T> => {
         const browser = await waitUntilReady(options);
         return playwright.chromium.connectOverCDP(browser.currentRun!.connections!.cdpUrl);

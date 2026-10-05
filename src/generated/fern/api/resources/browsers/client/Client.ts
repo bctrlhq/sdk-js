@@ -13,7 +13,6 @@ import * as Bctrl from "../../../index.js";
 import { ComputerClient } from "../resources/computer/client/Client.js";
 import { ConnectionsClient } from "../resources/connections/client/Client.js";
 import { ControlClient } from "../resources/control/client/Client.js";
-import { EventsClient } from "../resources/events/client/Client.js";
 import { FilesClient } from "../resources/files/client/Client.js";
 import { PagesClient } from "../resources/pages/client/Client.js";
 import { RecordingClient } from "../resources/recording/client/Client.js";
@@ -33,7 +32,6 @@ export class BrowsersClient {
     protected _computer: ComputerClient | undefined;
     protected _connections: ConnectionsClient | undefined;
     protected _control: ControlClient | undefined;
-    protected _events: EventsClient | undefined;
     protected _files: FilesClient | undefined;
     protected _pages: PagesClient | undefined;
     protected _recording: RecordingClient | undefined;
@@ -53,10 +51,6 @@ export class BrowsersClient {
 
     public get control(): ControlClient {
         return (this._control ??= new ControlClient(this._options));
-    }
-
-    public get events(): EventsClient {
-        return (this._events ??= new EventsClient(this._options));
     }
 
     public get files(): FilesClient {
