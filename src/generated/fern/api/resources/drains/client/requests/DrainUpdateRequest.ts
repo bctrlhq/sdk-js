@@ -29,12 +29,14 @@ export namespace DrainUpdateRequest {
             Human: "human",
             Secrets: "secrets",
             Connection: "connection",
+            Alert: "alert",
             Agent: "agent",
             Page: "page",
             Console: "console",
             Network: "network",
             Captcha: "captcha",
             Vm: "vm",
+            Kernel: "kernel",
         } as const;
         export type Item = (typeof Item)[keyof typeof Item];
     }

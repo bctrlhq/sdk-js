@@ -8,12 +8,14 @@ export type ListEventsRequestCategory =
           | "human"
           | "secrets"
           | "connection"
+          | "alert"
           | "agent"
           | "page"
           | "console"
           | "network"
           | "captcha"
           | "vm"
+          | "kernel"
       )
     | (
           | "lifecycle"
@@ -22,10 +24,12 @@ export type ListEventsRequestCategory =
           | "human"
           | "secrets"
           | "connection"
+          | "alert"
           | "agent"
           | "page"
           | "console"
           | "network"
           | "captcha"
           | "vm"
+          | "kernel"
       )[];

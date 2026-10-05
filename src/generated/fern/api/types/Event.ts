@@ -62,12 +62,14 @@ export namespace Event {
         Human: "human",
         Secrets: "secrets",
         Connection: "connection",
+        Alert: "alert",
         Agent: "agent",
         Page: "page",
         Console: "console",
         Network: "network",
         Captcha: "captcha",
         Vm: "vm",
+        Kernel: "kernel",
     } as const;
     export type Category = (typeof Category)[keyof typeof Category];
     export const Channel = {

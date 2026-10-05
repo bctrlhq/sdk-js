@@ -8,12 +8,14 @@ export type StreamEventsRequestCategory =
           | "human"
           | "secrets"
           | "connection"
+          | "alert"
           | "agent"
           | "page"
           | "console"
           | "network"
           | "captcha"
           | "vm"
+          | "kernel"
       )
     | (
           | "lifecycle"
@@ -22,10 +24,12 @@ export type StreamEventsRequestCategory =
           | "human"
           | "secrets"
           | "connection"
+          | "alert"
           | "agent"
           | "page"
           | "console"
           | "network"
           | "captcha"
           | "vm"
+          | "kernel"
       )[];
