@@ -157,6 +157,7 @@ export const PublicErrorCode = {
     SandboxPortRefused: "sandbox.port_refused",
     SandboxPortUnreachable: "sandbox.port_unreachable",
     SandboxSnapshotSpaceMismatch: "sandbox.snapshot_space_mismatch",
+    SandboxSecretEnvFork: "sandbox.secret_env_fork",
     SandboxSnapshotNotFound: "sandboxSnapshot.not_found",
     SandboxSnapshotNameConflict: "sandboxSnapshot.name_conflict",
     EnvironmentSnapshotsUnavailable: "environment.snapshots_unavailable",

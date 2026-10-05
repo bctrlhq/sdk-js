@@ -240,6 +240,8 @@ export * from "./SandboxProcess.js";
 export * from "./SandboxProcessAccepted.js";
 export * from "./SandboxProcessEvent.js";
 export * from "./SandboxProcessStatus.js";
+export * from "./SandboxSecretEnv.js";
+export * from "./SandboxSecretEnvState.js";
 export * from "./SandboxSnapshot.js";
 export * from "./SandboxSnapshotDeleteResponse.js";
 export * from "./SandboxSnapshotSchedule.js";
