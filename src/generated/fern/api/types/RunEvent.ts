@@ -30,6 +30,8 @@ export interface RunEvent {
     taskId: string | null;
     time: Bctrl.Rfc3339Timestamp;
     timestamp: Bctrl.Rfc3339Timestamp;
+    /** W3C trace ID: GET /traces/{traceId} returns the span tree. */
+    traceId: string | null;
     type: string;
     updatedAt: Bctrl.Rfc3339Timestamp;
 }

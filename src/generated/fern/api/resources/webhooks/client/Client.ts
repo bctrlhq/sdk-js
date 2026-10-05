@@ -124,7 +124,7 @@ export class WebhooksClient {
     }
 
     /**
-     * Create a signed webhook endpoint. The signing secret is returned once; store it securely and verify every delivery signature.
+     * Create a webhook endpoint. Deliveries are signed per Standard Webhooks (webhook-id, webhook-timestamp, webhook-signature), so any Standard Webhooks library verifies them. The whsec_ signing secret is returned once; store it securely.
      *
      * @param {Bctrl.WebhookCreateRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -466,7 +466,7 @@ export class WebhooksClient {
     }
 
     /**
-     * Replace a webhook signing secret immediately. The new secret is returned once.
+     * Replace a webhook signing secret. The new secret is returned once and signs every delivery from now on; for 24 hours the previous secret also signs (a second v1 signature), so receivers can switch without dropping deliveries.
      *
      * @param {Bctrl.RotateSecretWebhooksRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.

@@ -25,6 +25,8 @@ export interface Task {
     spaceId: string;
     startedAt: Bctrl.Rfc3339Timestamp | null;
     status: Task.Status;
+    /** W3C trace ID: GET /traces/{traceId} returns the span tree. */
+    traceId: string | null;
     updatedAt: Bctrl.Rfc3339Timestamp;
     usage: Task.Usage;
     version: number;

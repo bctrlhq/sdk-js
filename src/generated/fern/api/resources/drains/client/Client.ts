@@ -10,27 +10,27 @@ import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCode
 import * as errors from "../../../../errors/index.js";
 import * as Bctrl from "../../../index.js";
 
-export declare namespace TasksClient {
+export declare namespace DrainsClient {
     export type Options = BaseClientOptions;
 
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
 /**
- * Preview Tasks, structured output, input requests and canonical event streams.
+ * Preview continuous Event export to OTLP collectors, S3 or R2 buckets and HTTPS endpoints.
  */
-export class TasksClient {
-    protected readonly _options: NormalizedClientOptionsWithAuth<TasksClient.Options>;
+export class DrainsClient {
+    protected readonly _options: NormalizedClientOptionsWithAuth<DrainsClient.Options>;
 
-    constructor(options: TasksClient.Options) {
+    constructor(options: DrainsClient.Options) {
         this._options = normalizeClientOptionsWithAuth(options);
     }
 
     /**
-     * List Tasks by Agent, Conversation, status and time in the selected tenant or Space.
+     * List the drains that export Events to your own observability stack or bucket.
      *
-     * @param {Bctrl.ListTasksRequest} request
-     * @param {TasksClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {Bctrl.ListDrainsRequest} request
+     * @param {DrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.UnauthorizedError}
      * @throws {@link Bctrl.ForbiddenError}
@@ -38,27 +38,19 @@ export class TasksClient {
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.tasks.list({
-     *         from: "2026-07-26T12:00:00Z",
-     *         to: "2026-07-26T12:00:00Z"
-     *     })
+     *     await client.drains.list()
      */
     public async list(
-        request: Bctrl.ListTasksRequest = {},
-        requestOptions?: TasksClient.RequestOptions,
-    ): Promise<core.Page<Bctrl.Task, Bctrl.TasksListResponse>> {
+        request: Bctrl.ListDrainsRequest = {},
+        requestOptions?: DrainsClient.RequestOptions,
+    ): Promise<core.Page<Bctrl.Drain, Bctrl.DrainsListResponse>> {
         const list = core.HttpResponsePromise.interceptFunction(
-            async (request: Bctrl.ListTasksRequest): Promise<core.WithRawResponse<Bctrl.TasksListResponse>> => {
-                const { cursor, order, limit, agent, conversation, status, from: from_, to } = request;
+            async (request: Bctrl.ListDrainsRequest): Promise<core.WithRawResponse<Bctrl.DrainsListResponse>> => {
+                const { cursor, order, limit } = request;
                 const _queryParams: Record<string, unknown> = {
                     cursor,
                     order: order != null ? order : undefined,
                     limit,
-                    agent,
-                    conversation,
-                    status: status != null ? status : undefined,
-                    from: from_ != null ? from_ : undefined,
-                    to: to != null ? to : undefined,
                 };
                 const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -76,7 +68,7 @@ export class TasksClient {
                         (await core.Supplier.get(this._options.baseUrl)) ??
                             (await core.Supplier.get(this._options.environment)) ??
                             environments.BctrlEnvironment.Production,
-                        "v1/tasks",
+                        "v1/drains",
                     ),
                     method: "GET",
                     headers: _headers,
@@ -92,7 +84,7 @@ export class TasksClient {
                     logging: this._options.logging,
                 });
                 if (_response.ok) {
-                    return { data: _response.body as Bctrl.TasksListResponse, rawResponse: _response.rawResponse };
+                    return { data: _response.body as Bctrl.DrainsListResponse, rawResponse: _response.rawResponse };
                 }
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
@@ -108,11 +100,11 @@ export class TasksClient {
                             });
                     }
                 }
-                return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/tasks");
+                return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/drains");
             },
         );
         const dataWithRawResponse = await list(request).withRawResponse();
-        return new core.Page<Bctrl.Task, Bctrl.TasksListResponse>({
+        return new core.Page<Bctrl.Drain, Bctrl.DrainsListResponse>({
             response: dataWithRawResponse.data,
             rawResponse: dataWithRawResponse.rawResponse,
             hasNextPage: (response) =>
@@ -126,37 +118,37 @@ export class TasksClient {
     }
 
     /**
-     * Run an Agent on the input in a new or existing idle Conversation. The Task starts queued; read or wait on it with GET /v1/tasks/{taskId}.
+     * Create a drain. Events after now are exported in batches, in commit order, retried with backoff until delivered: otlp sends them as OTLP/HTTP logs and their finished spans as traces, s3 and r2 write gzipped NDJSON under time-partitioned keys, https posts NDJSON signed like webhooks (the secret is returned once). Credentials are secret references.
      *
-     * @param {Bctrl.TaskCreateRequest} request
-     * @param {TasksClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {Bctrl.DrainCreateRequest} request
+     * @param {DrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.BadRequestError}
      * @throws {@link Bctrl.UnauthorizedError}
      * @throws {@link Bctrl.ForbiddenError}
-     * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
      * @throws {@link Bctrl.TooManyRequestsError}
      * @throws {@link errors.BctrlError}
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.tasks.create({
-     *         agent: "agent",
-     *         input: "input"
+     *     await client.drains.create({
+     *         destination: {
+     *             type: "https",
+     *             url: "url"
+     *         }
      *     })
      */
     public create(
-        request: Bctrl.TaskCreateRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Task> {
+        request: Bctrl.DrainCreateRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.DrainCreateResponse> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
-        request: Bctrl.TaskCreateRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Task>> {
+        request: Bctrl.DrainCreateRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.DrainCreateResponse>> {
         const { "Idempotency-Key": idempotencyKey, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -175,7 +167,7 @@ export class TasksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                "v1/tasks",
+                "v1/drains",
             ),
             method: "POST",
             headers: _headers,
@@ -190,7 +182,7 @@ export class TasksClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.Task, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.DrainCreateResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -201,10 +193,6 @@ export class TasksClient {
                     throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
                     throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
-                case 404:
-                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
                     throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -216,42 +204,38 @@ export class TasksClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/tasks");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/drains");
     }
 
     /**
-     * Read Task status, structured output, artifacts, input request, Browser Runs and usage. Wait ends when the Task finishes or requests input.
+     * Get a drain with its delivery status: last delivery, last error and the Events and bytes sent.
      *
-     * @param {Bctrl.GetTasksRequest} request
-     * @param {TasksClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {Bctrl.GetDrainsRequest} request
+     * @param {DrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.UnauthorizedError}
      * @throws {@link Bctrl.ForbiddenError}
      * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.TooManyRequestsError}
      * @throws {@link errors.BctrlError}
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.tasks.get({
-     *         taskId: "taskId"
+     *     await client.drains.get({
+     *         drainId: "drainId"
      *     })
      */
     public get(
-        request: Bctrl.GetTasksRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Task> {
+        request: Bctrl.GetDrainsRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.Drain> {
         return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
     }
 
     private async __get(
-        request: Bctrl.GetTasksRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Task>> {
-        const { taskId, wait } = request;
-        const _queryParams: Record<string, unknown> = {
-            wait,
-        };
+        request: Bctrl.GetDrainsRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.Drain>> {
+        const { drainId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -268,15 +252,11 @@ export class TasksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/tasks/${core.url.encodePathParam(taskId)}`,
+                `v1/drains/${core.url.encodePathParam(drainId)}`,
             ),
             method: "GET",
             headers: _headers,
-            queryString: core.url
-                .queryBuilder()
-                .addMany(_queryParams)
-                .mergeAdditional(requestOptions?.queryParams)
-                .build(),
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -284,7 +264,7 @@ export class TasksClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.Task, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.Drain, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -295,8 +275,6 @@ export class TasksClient {
                     throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 429:
-                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.BctrlError({
                         statusCode: _response.error.statusCode,
@@ -306,40 +284,39 @@ export class TasksClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/tasks/{taskId}");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/drains/{drainId}");
     }
 
     /**
-     * Cancel the Task and revoke its delegated credential. Its Conversation remains busy until native cleanup is acknowledged.
+     * Delete a drain. Events not yet sent are not exported.
      *
-     * @param {Bctrl.TaskCancelRequest} request
-     * @param {TasksClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {Bctrl.DeleteDrainsRequest} request
+     * @param {DrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.UnauthorizedError}
      * @throws {@link Bctrl.ForbiddenError}
      * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
      * @throws {@link Bctrl.TooManyRequestsError}
      * @throws {@link errors.BctrlError}
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.tasks.cancel({
-     *         taskId: "taskId"
+     *     await client.drains.delete({
+     *         drainId: "drainId"
      *     })
      */
-    public cancel(
-        request: Bctrl.TaskCancelRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Task> {
-        return core.HttpResponsePromise.fromPromise(this.__cancel(request, requestOptions));
+    public delete(
+        request: Bctrl.DeleteDrainsRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.DrainDeleteResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__delete(request, requestOptions));
     }
 
-    private async __cancel(
-        request: Bctrl.TaskCancelRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Task>> {
-        const { taskId, "Idempotency-Key": idempotencyKey, ..._body } = request;
+    private async __delete(
+        request: Bctrl.DeleteDrainsRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.DrainDeleteResponse>> {
+        const { drainId, "Idempotency-Key": idempotencyKey } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -357,14 +334,11 @@ export class TasksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/tasks/${core.url.encodePathParam(taskId)}/cancel`,
+                `v1/drains/${core.url.encodePathParam(drainId)}`,
             ),
-            method: "POST",
+            method: "DELETE",
             headers: _headers,
-            contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(_body, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -372,7 +346,7 @@ export class TasksClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.Task, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.DrainDeleteResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -383,8 +357,6 @@ export class TasksClient {
                     throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
                     throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -396,44 +368,40 @@ export class TasksClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/tasks/{taskId}/cancel");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/v1/drains/{drainId}");
     }
 
     /**
-     * Answer its current input request by requestId, or steer a running Task. Approval applies only its immutable stored proposal.
+     * Update a drain destination, its category filter, label or enabled state. A disabled drain keeps its place and resumes from it.
      *
-     * @param {Bctrl.TaskInputRequest} request
-     * @param {TasksClient.RequestOptions} requestOptions - Request-specific configuration.
+     * @param {Bctrl.DrainUpdateRequest} request
+     * @param {DrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.BadRequestError}
      * @throws {@link Bctrl.UnauthorizedError}
      * @throws {@link Bctrl.ForbiddenError}
      * @throws {@link Bctrl.NotFoundError}
-     * @throws {@link Bctrl.ConflictError}
      * @throws {@link Bctrl.TooManyRequestsError}
      * @throws {@link errors.BctrlError}
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
-     *     await client.tasks.input({
-     *         taskId: "taskId",
-     *         input: {
-     *             "key": "value"
-     *         }
+     *     await client.drains.update({
+     *         drainId: "drainId"
      *     })
      */
-    public input(
-        request: Bctrl.TaskInputRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): core.HttpResponsePromise<Bctrl.Task> {
-        return core.HttpResponsePromise.fromPromise(this.__input(request, requestOptions));
+    public update(
+        request: Bctrl.DrainUpdateRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.Drain> {
+        return core.HttpResponsePromise.fromPromise(this.__update(request, requestOptions));
     }
 
-    private async __input(
-        request: Bctrl.TaskInputRequest,
-        requestOptions?: TasksClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Bctrl.Task>> {
-        const { taskId, "Idempotency-Key": idempotencyKey, ..._body } = request;
+    private async __update(
+        request: Bctrl.DrainUpdateRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.Drain>> {
+        const { drainId, "Idempotency-Key": idempotencyKey, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -451,9 +419,9 @@ export class TasksClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/tasks/${core.url.encodePathParam(taskId)}/input`,
+                `v1/drains/${core.url.encodePathParam(drainId)}`,
             ),
-            method: "POST",
+            method: "PATCH",
             headers: _headers,
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
@@ -466,7 +434,7 @@ export class TasksClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Bctrl.Task, rawResponse: _response.rawResponse };
+            return { data: _response.body as Bctrl.Drain, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -479,8 +447,6 @@ export class TasksClient {
                     throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
-                case 409:
-                    throw new Bctrl.ConflictError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
                     throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -492,6 +458,90 @@ export class TasksClient {
             }
         }
 
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/tasks/{taskId}/input");
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "PATCH", "/v1/drains/{drainId}");
+    }
+
+    /**
+     * Send one test Event to the drain destination now and report the outcome. The drain position does not move.
+     *
+     * @param {Bctrl.TestDrainsRequest} request
+     * @param {DrainsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Bctrl.UnauthorizedError}
+     * @throws {@link Bctrl.ForbiddenError}
+     * @throws {@link Bctrl.NotFoundError}
+     * @throws {@link Bctrl.TooManyRequestsError}
+     * @throws {@link errors.BctrlError}
+     * @throws {@link errors.BctrlTimeoutError}
+     *
+     * @example
+     *     await client.drains.test({
+     *         drainId: "drainId"
+     *     })
+     */
+    public test(
+        request: Bctrl.TestDrainsRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): core.HttpResponsePromise<Bctrl.DrainTestResult> {
+        return core.HttpResponsePromise.fromPromise(this.__test(request, requestOptions));
+    }
+
+    private async __test(
+        request: Bctrl.TestDrainsRequest,
+        requestOptions?: DrainsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Bctrl.DrainTestResult>> {
+        const { drainId, "Idempotency-Key": idempotencyKey } = request;
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": idempotencyKey,
+                "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
+                "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
+                "BCTRL-Version": requestOptions?.bctrlVersion,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.BctrlEnvironment.Production,
+                `v1/drains/${core.url.encodePathParam(drainId)}/test`,
+            ),
+            method: "POST",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Bctrl.DrainTestResult, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new Bctrl.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Bctrl.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Bctrl.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Bctrl.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.BctrlError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/drains/{drainId}/test");
     }
 }

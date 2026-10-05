@@ -9,6 +9,7 @@ import { AuthClient } from "./api/resources/auth/client/Client.js";
 import { BrowserClient } from "./api/resources/browser/client/Client.js";
 import { BrowsersClient } from "./api/resources/browsers/client/Client.js";
 import { ConversationsClient } from "./api/resources/conversations/client/Client.js";
+import { DrainsClient } from "./api/resources/drains/client/Client.js";
 import { EventsClient } from "./api/resources/events/client/Client.js";
 import { FilesClient } from "./api/resources/files/client/Client.js";
 import { LocationsClient } from "./api/resources/locations/client/Client.js";
@@ -22,6 +23,7 @@ import { SubaccountsClient } from "./api/resources/subaccounts/client/Client.js"
 import { TasksClient } from "./api/resources/tasks/client/Client.js";
 import { ToolCallsClient } from "./api/resources/toolCalls/client/Client.js";
 import { ToolsClient } from "./api/resources/tools/client/Client.js";
+import { TracesClient } from "./api/resources/traces/client/Client.js";
 import { UsageClient } from "./api/resources/usage/client/Client.js";
 import { ViewsClient } from "./api/resources/views/client/Client.js";
 import { WebhooksClient } from "./api/resources/webhooks/client/Client.js";
@@ -47,6 +49,7 @@ export class BctrlClient {
     protected _auth: AuthClient | undefined;
     protected _browsers: BrowsersClient | undefined;
     protected _conversations: ConversationsClient | undefined;
+    protected _drains: DrainsClient | undefined;
     protected _events: EventsClient | undefined;
     protected _files: FilesClient | undefined;
     protected _locations: LocationsClient | undefined;
@@ -60,6 +63,7 @@ export class BctrlClient {
     protected _tasks: TasksClient | undefined;
     protected _toolCalls: ToolCallsClient | undefined;
     protected _tools: ToolsClient | undefined;
+    protected _traces: TracesClient | undefined;
     protected _usage: UsageClient | undefined;
     protected _views: ViewsClient | undefined;
     protected _webhooks: WebhooksClient | undefined;
@@ -92,6 +96,10 @@ export class BctrlClient {
 
     public get conversations(): ConversationsClient {
         return (this._conversations ??= new ConversationsClient(this._options));
+    }
+
+    public get drains(): DrainsClient {
+        return (this._drains ??= new DrainsClient(this._options));
     }
 
     public get events(): EventsClient {
@@ -144,6 +152,10 @@ export class BctrlClient {
 
     public get tools(): ToolsClient {
         return (this._tools ??= new ToolsClient(this._options));
+    }
+
+    public get traces(): TracesClient {
+        return (this._traces ??= new TracesClient(this._options));
     }
 
     public get usage(): UsageClient {

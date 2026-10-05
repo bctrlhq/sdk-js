@@ -2,8 +2,8 @@
 
 import type * as Bctrl from "../index.js";
 
-export interface TasksTraceListResponse {
-    data: Bctrl.TraceSpan[];
+export interface DrainsListResponse {
+    data: Bctrl.Drain[];
     hasMore: boolean;
     nextCursor: string | null;
 }
