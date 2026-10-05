@@ -222,6 +222,7 @@ export * from "./RunStreamEvent.js";
 export * from "./RunsDeleteResponse.js";
 export * from "./RunUsage.js";
 export * from "./Sandbox.js";
+export * from "./SandboxAudit.js";
 export * from "./SandboxCapabilities.js";
 export * from "./SandboxConnection.js";
 export * from "./SandboxConnectionCreateRequest.js";

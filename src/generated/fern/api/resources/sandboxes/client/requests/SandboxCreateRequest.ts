@@ -9,6 +9,7 @@ import type * as Bctrl from "../../../../index.js";
 export interface SandboxCreateRequest {
     /** Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
     "Idempotency-Key"?: string;
+    audit?: Bctrl.SandboxAudit;
     /** Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot. */
     fromSnapshot?: string;
     /** An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`. */

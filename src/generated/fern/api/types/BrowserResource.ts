@@ -3,6 +3,8 @@
 import type * as Bctrl from "../index.js";
 
 export interface BrowserResource {
+    /** Machine audit detail (preview). */
+    audit?: BrowserResource.Audit | undefined;
     autoUpgrade: boolean;
     captcha?: BrowserResource.Captcha | undefined;
     createdAt: Bctrl.Rfc3339Timestamp;
@@ -37,6 +39,23 @@ export interface BrowserResource {
 }
 
 export namespace BrowserResource {
+    /**
+     * Machine audit detail (preview).
+     */
+    export interface Audit {
+        /** File writes in the VM audit: per process and directory per minute (default), or per file. */
+        files: Audit.Files;
+    }
+
+    export namespace Audit {
+        /** File writes in the VM audit: per process and directory per minute (default), or per file. */
+        export const Files = {
+            Summary: "summary",
+            Full: "full",
+        } as const;
+        export type Files = (typeof Files)[keyof typeof Files];
+    }
+
     export interface Captcha {
         autoSolve?: boolean | undefined;
     }

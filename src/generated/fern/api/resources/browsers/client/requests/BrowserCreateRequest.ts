@@ -10,6 +10,8 @@ export interface BrowserCreateRequest {
     wait?: number;
     /** Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
     "Idempotency-Key"?: string;
+    /** Machine audit detail (preview). */
+    audit?: BrowserCreateRequest.Audit;
     autoUpgrade?: boolean;
     captcha?: BrowserCreateRequest.Captcha;
     expireAfterIdleDays?: number;
@@ -33,6 +35,23 @@ export interface BrowserCreateRequest {
 }
 
 export namespace BrowserCreateRequest {
+    /**
+     * Machine audit detail (preview).
+     */
+    export interface Audit {
+        /** File writes in the VM audit: per process and directory per minute (default), or per file. */
+        files: Audit.Files;
+    }
+
+    export namespace Audit {
+        /** File writes in the VM audit: per process and directory per minute (default), or per file. */
+        export const Files = {
+            Summary: "summary",
+            Full: "full",
+        } as const;
+        export type Files = (typeof Files)[keyof typeof Files];
+    }
+
     export interface Captcha {
         autoSolve?: boolean | undefined;
     }
