@@ -14,6 +14,7 @@ export interface SandboxCreateRequest {
     /** An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`. */
     image?: string;
     name?: Bctrl.ResourceName;
+    snapshotSchedule?: Bctrl.SandboxSnapshotSchedule;
     /** Opaque resource ID or unique resource name in the selected Space or tenant. */
     spaceId?: string;
 }

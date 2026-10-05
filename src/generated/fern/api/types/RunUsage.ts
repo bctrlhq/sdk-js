@@ -7,8 +7,10 @@ export interface RunUsage {
     billingStatus: RunUsage.BillingStatus;
     captchaSolves: number;
     computedAt: Bctrl.Rfc3339Timestamp;
+    cpuSeconds: number | null;
     creditsUsed: number | null;
     filesBytes: number;
+    memoryGbSeconds: number | null;
     proxyBytes: number | null;
     runtimeSeconds: number | null;
 }

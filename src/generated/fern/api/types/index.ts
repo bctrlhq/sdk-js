@@ -242,6 +242,7 @@ export * from "./SandboxProcessEvent.js";
 export * from "./SandboxProcessStatus.js";
 export * from "./SandboxSnapshot.js";
 export * from "./SandboxSnapshotDeleteResponse.js";
+export * from "./SandboxSnapshotSchedule.js";
 export * from "./SandboxSshSession.js";
 export * from "./SandboxStatus.js";
 export * from "./SandboxTerminalConnectionRequest.js";

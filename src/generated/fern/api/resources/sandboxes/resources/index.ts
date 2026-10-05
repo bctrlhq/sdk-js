@@ -8,6 +8,8 @@ export * from "./ports/client/requests/index.js";
 export * as ports from "./ports/index.js";
 export * from "./processes/client/requests/index.js";
 export * as processes from "./processes/index.js";
+export * from "./snapshotSchedule/client/requests/index.js";
+export * as snapshotSchedule from "./snapshotSchedule/index.js";
 export * from "./snapshots/client/requests/index.js";
 export * as snapshots from "./snapshots/index.js";
 export * from "./sshSessions/client/requests/index.js";

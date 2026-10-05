@@ -14,6 +14,7 @@ import { ConnectionsClient } from "../resources/connections/client/Client.js";
 import { FilesClient } from "../resources/files/client/Client.js";
 import { PortsClient } from "../resources/ports/client/Client.js";
 import { ProcessesClient } from "../resources/processes/client/Client.js";
+import { SnapshotScheduleClient } from "../resources/snapshotSchedule/client/Client.js";
 import { SnapshotsClient } from "../resources/snapshots/client/Client.js";
 import { SshSessionsClient } from "../resources/sshSessions/client/Client.js";
 
@@ -33,6 +34,7 @@ export class SandboxesClient {
     protected _files: FilesClient | undefined;
     protected _ports: PortsClient | undefined;
     protected _processes: ProcessesClient | undefined;
+    protected _snapshotSchedule: SnapshotScheduleClient | undefined;
     protected _snapshots: SnapshotsClient | undefined;
     protected _sshSessions: SshSessionsClient | undefined;
 
@@ -58,6 +60,10 @@ export class SandboxesClient {
 
     public get processes(): ProcessesClient {
         return (this._processes ??= new ProcessesClient(this._options));
+    }
+
+    public get snapshotSchedule(): SnapshotScheduleClient {
+        return (this._snapshotSchedule ??= new SnapshotScheduleClient(this._options));
     }
 
     public get snapshots(): SnapshotsClient {
