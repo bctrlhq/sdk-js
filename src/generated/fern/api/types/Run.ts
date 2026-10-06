@@ -26,6 +26,7 @@ export interface Run {
     traceId: string | null;
     updatedAt: Bctrl.Rfc3339Timestamp;
     usage?: Bctrl.RunUsage | undefined;
+    warnings?: Bctrl.Warning[] | undefined;
 }
 
 export namespace Run {

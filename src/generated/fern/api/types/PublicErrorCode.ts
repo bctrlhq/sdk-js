@@ -117,6 +117,8 @@ export const PublicErrorCode = {
     BrowserConnectionsUnavailable: "browser.connections_unavailable",
     BrowserAlreadyStarted: "browser.already_started",
     BrowserIdentityInUse: "browser.identity_in_use",
+    BrowserPersonaRequired: "browser.persona_required",
+    BrowserNoSavedState: "browser.no_saved_state",
     BrowserIdentityMissing: "browser.identity_missing",
     BrowserConfigurationMissing: "browser.configuration_missing",
     BrowserStartTimeout: "browser.start_timeout",

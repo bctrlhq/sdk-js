@@ -17,12 +17,16 @@ export interface BrowserCreateRequest {
     expireAfterIdleDays?: number;
     extensions?: string[];
     forceOpenShadowRoots?: boolean;
+    /** Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona. */
+    fromBrowser?: string;
     gpu?: boolean;
     headless?: boolean;
     location?: Bctrl.LocationRequest;
     metadata?: Bctrl.JsonObject;
     name?: Bctrl.ResourceName;
     networkTraffic?: Bctrl.BrowserNetworkTrafficConfig;
+    /** Preview. Required with fromBrowser. */
+    persona?: Bctrl.BrowserPersonaChoice;
     proxy?: BrowserCreateRequest.Proxy;
     recording?: boolean;
     spaceId?: BrowserCreateRequest.SpaceId;
