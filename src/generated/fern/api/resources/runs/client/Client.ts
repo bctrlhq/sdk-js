@@ -192,7 +192,13 @@ export class RunsClient {
     ): Promise<core.WithRawResponse<Bctrl.Run>> {
         const { runId, include, wait } = request;
         const _queryParams: Record<string, unknown> = {
-            include: include != null ? include : undefined,
+            include: Array.isArray(include)
+                ? include.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : include != null
+                  ? typeof include === "string"
+                      ? include
+                      : toJson(include)
+                  : undefined,
             wait,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
