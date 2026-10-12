@@ -12,10 +12,8 @@ export function safeFetcher(delegate: FetchFunction = fetcher): FetchFunction {
   return async <R>(args: Fetcher.Args) => {
     const headers = { ...args.headers };
     const mutating = !['GET', 'HEAD', 'OPTIONS'].includes(args.method.toUpperCase());
-    if (mutating && !Object.keys(headers).some((name) => name.toLowerCase() === 'idempotency-key' && headers[name] != null)) {
-      headers['Idempotency-Key'] = crypto.randomUUID();
-    }
-    const limit = args.maxRetries ?? 2;
+    const explicitlyIdempotent = Object.keys(headers).some((name) => name.toLowerCase() === 'idempotency-key' && headers[name] != null);
+    const limit = mutating && !explicitlyIdempotent ? 0 : (args.maxRetries ?? 2);
     const request = { ...args, headers, maxRetries: 0 };
     for (let attempt = 0; ; attempt++) {
       const result = await delegate<R>(request);

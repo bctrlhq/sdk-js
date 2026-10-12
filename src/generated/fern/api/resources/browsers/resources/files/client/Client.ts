@@ -343,7 +343,7 @@ export class FilesClient {
     /**
      * Upload one file into /downloads or /workspace of the current Browser Run from multipart field file (at most 25 MiB). The file is written atomically; set overwrite to replace an existing file and createParents to create missing directories. An interrupted upload returns unknown.
      *
-     * @param {Bctrl.browsers.UploadFilesRequest} request
+     * @param {Bctrl.browsers.BrowsersFilesUploadRequest} request
      * @param {FilesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Bctrl.BadRequestError}
@@ -356,44 +356,49 @@ export class FilesClient {
      * @throws {@link errors.BctrlTimeoutError}
      *
      * @example
+     *     import { createReadStream } from "fs";
      *     await client.browsers.files.upload({
+     *         file: fs.createReadStream("/path/to/your/file"),
      *         browserId: "browserId",
      *         path: "path"
      *     })
      */
     public upload(
-        request: Bctrl.browsers.UploadFilesRequest,
+        request: Bctrl.browsers.BrowsersFilesUploadRequest,
         requestOptions?: FilesClient.RequestOptions,
     ): core.HttpResponsePromise<Bctrl.BrowserFileUploadResult> {
         return core.HttpResponsePromise.fromPromise(this.__upload(request, requestOptions));
     }
 
     private async __upload(
-        request: Bctrl.browsers.UploadFilesRequest,
+        request: Bctrl.browsers.BrowsersFilesUploadRequest,
         requestOptions?: FilesClient.RequestOptions,
     ): Promise<core.WithRawResponse<Bctrl.BrowserFileUploadResult>> {
-        const { browserId, path, overwrite, createParents, spaceId, "Idempotency-Key": idempotencyKey } = request;
         const _queryParams: Record<string, unknown> = {
-            path,
-            overwrite: overwrite != null ? overwrite : undefined,
-            createParents: createParents != null ? createParents : undefined,
-            spaceId: Array.isArray(spaceId)
-                ? spaceId.map((item) => (typeof item === "string" ? item : toJson(item)))
-                : spaceId != null
-                  ? typeof spaceId === "string"
-                      ? spaceId
-                      : toJson(spaceId)
+            path: request.path,
+            overwrite: request.overwrite != null ? request.overwrite : undefined,
+            createParents: request.createParents != null ? request.createParents : undefined,
+            spaceId: Array.isArray(request.spaceId)
+                ? request.spaceId.map((item) => (typeof item === "string" ? item : toJson(item)))
+                : request.spaceId != null
+                  ? typeof request.spaceId === "string"
+                      ? request.spaceId
+                      : toJson(request.spaceId)
                   : undefined,
         };
+        const _body = await core.newFormData();
+        await _body.appendFile("file", request.file);
+        const _maybeEncodedRequest = await _body.getRequest();
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "Idempotency-Key": idempotencyKey,
+                "Idempotency-Key": request["Idempotency-Key"],
                 "BCTRL-Space": requestOptions?.bctrlSpace ?? this._options?.bctrlSpace,
                 "BCTRL-Subaccount-Id": requestOptions?.bctrlSubaccountId ?? this._options?.bctrlSubaccountId,
                 "BCTRL-Version": requestOptions?.bctrlVersion,
+                ..._maybeEncodedRequest.headers,
             }),
             requestOptions?.headers,
         );
@@ -402,7 +407,7 @@ export class FilesClient {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
                     environments.BctrlEnvironment.Production,
-                `v1/browsers/${core.url.encodePathParam(browserId)}/files/content`,
+                `v1/browsers/${core.url.encodePathParam(request.browserId)}/files/content`,
             ),
             method: "PUT",
             headers: _headers,
@@ -411,6 +416,9 @@ export class FilesClient {
                 .addMany(_queryParams)
                 .mergeAdditional(requestOptions?.queryParams)
                 .build(),
+            requestType: "file",
+            duplex: _maybeEncodedRequest.duplex,
+            body: _maybeEncodedRequest.body,
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,

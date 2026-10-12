@@ -5,15 +5,15 @@ import { Bctrl, BctrlError, waitFor } from '../../src/index.js';
 
 const browser = JSON.parse(readFileSync(new URL('../fixtures/browser.json', import.meta.url), 'utf8'));
 
-test('generated mutation retries reuse an automatic idempotency key and preserve caller keys', async () => {
+test('generated mutation retries require and preserve the caller idempotency key', async () => {
   const requests: Headers[] = [];
   const client = new Bctrl({ token: 'test', fetch: async (_url, options) => {
     requests.push(new Headers(options?.headers));
     return requests.length === 1 ? Response.json({ error: { code: 'capacity.unavailable' } }, { status: 503 }) : Response.json(browser);
   } });
-  const created = await client.browsers.create({ name: 'checkout' });
+  const created = await client.browsers.create({ name: 'checkout', 'Idempotency-Key': 'create-once' });
   assert.equal(created.id, browser.id);
-  assert.ok(requests[0]?.get('Idempotency-Key'));
+  assert.equal(requests[0]?.get('Idempotency-Key'), 'create-once');
   assert.equal(requests[0]?.get('Idempotency-Key'), requests[1]?.get('Idempotency-Key'));
   assert.equal(requests[0]?.get('BCTRL-Version'), '2026-10-03');
   await client.browsers.create({ 'Idempotency-Key': 'caller-key' });

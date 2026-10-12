@@ -7,7 +7,7 @@ const event: Event = {
   channel: 'platform', outcome: 'ok', source: 'runtime', seq: 7,
   actor: { type: 'platform', id: null, name: null }, target: null, data: {},
   runId: 'run_test', runtimeId: 'brw_test', conversationId: null, taskId: null, traceId: null,
-  spaceId: null, pageId: null, spanId: null,
+  spaceId: null, sandboxId: null, pageId: null, spanId: null,
   time: '2026-10-03T00:00:00Z', timestamp: '2026-10-03T00:00:00Z',
   createdAt: '2026-10-03T00:00:00Z', updatedAt: '2026-10-03T00:00:00Z',
 };

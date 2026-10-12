@@ -4738,6 +4738,13 @@ export interface components {
              */
             id: string;
         };
+        BrowsersFilesUploadRequest: {
+            /**
+             * Format: binary
+             * @description File bytes to upload (at most 25 MiB).
+             */
+            file: string;
+        };
         BrowsersPagesNavigateRequest: {
             /** @default 30000 */
             timeoutMs: number;
@@ -5466,9 +5473,7 @@ export interface components {
                 };
             };
         };
-        BuiltinToolHumanRequestOutput: string | number | boolean | null | components["schemas"]["JsonValue"][] | {
-            [key: string]: components["schemas"]["JsonValue"];
-        };
+        BuiltinToolHumanRequestOutput: components["schemas"]["JsonValue"];
         BuiltinToolRunFilesAddCallRequest: {
             input: components["schemas"]["BuiltinToolRunFilesAddInput"];
             /**
@@ -22204,7 +22209,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["BrowsersFilesUploadRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
