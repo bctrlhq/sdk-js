@@ -1,3 +1,5 @@
+import { hasUnknownOutcome, retryDelay } from "./bctrlRetrySafety.js";
+
 const INITIAL_RETRY_DELAY = 1000; // in milliseconds
 const MAX_RETRY_DELAY = 60000; // in milliseconds
 const DEFAULT_MAX_RETRIES = 2;
@@ -51,14 +53,16 @@ function getRetryDelayFromHeaders(response: Response, retryAttempt: number): num
 export async function requestWithRetries(
     requestFn: () => Promise<Response>,
     maxRetries: number = DEFAULT_MAX_RETRIES,
+    abortSignal?: AbortSignal,
 ): Promise<Response> {
     let response: Response = await requestFn();
 
     for (let i = 0; i < maxRetries; ++i) {
-        if (isRetryableStatusCode(response.status)) {
+        if (isRetryableStatusCode(response.status) && !(await hasUnknownOutcome(response))) {
             const delay = getRetryDelayFromHeaders(response, i);
 
-            await new Promise((resolve) => setTimeout(resolve, delay));
+            await response.body?.cancel().catch(() => undefined);
+            await retryDelay(delay, abortSignal);
             response = await requestFn();
         } else {
             break;

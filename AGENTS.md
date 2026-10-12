@@ -1,20 +1,21 @@
-# sdk
+# JavaScript SDK
 
-`@bctrl/sdk` — official TypeScript client (Node 18+, npm) for the BCTRL v1 public API: a type-safe, resource-oriented interface over spaces, runtimes, runs, conversations, files, and tools. Wraps the HTTP API in resource classes and per-entity CRUD clients, with a domain error hierarchy and async-iterator pagination.
+`@bctrl/sdk` 2.x publishes the current generated public API client by default.
+Node.js 22.14 or newer is required. The source of truth is the backend public
+OpenAPI artifact and its deterministic Fern generator adapters.
 
-## Key files
+- `src/index.ts` and `src/api.ts`: current `Bctrl`/`BctrlClient`, errors and `types`.
+- `src/generated/fern`: generated clients; change generator inputs or adapters,
+  then regenerate. Do not edit generated output by hand.
+- `src/node.ts`: current file-based hosted code Tool helper.
+- `src/legacy.ts` and `src/legacyNode.ts`: explicit historical entrypoints for
+  callers targeting older API deployments.
 
-- `src/index.ts` — exports `Bctrl` (alias `BctrlV1`), resources, errors, types.
-- `src/bctrl.ts` — root client; lazy `.spaces`/`.runtimes`/`.runs`/`.conversations`/`.files`/`.tools`.
-- `src/http.ts` — `V1HttpClient` (auth, baseUrl, request lifecycle).
-- `src/types.ts` — hand-written v1 type interfaces. `src/node.ts` — file-based hosted-tool helpers.
+Run `pnpm build`, `pnpm test`, and `pnpm exec tsc --noEmit -p tests/tsconfig.json`
+in a Linux container. Tests cover the current client and explicit legacy helpers;
+legacy live tests require `BCTRL_E2E=1` and an appropriate older API deployment.
 
-## Connects / run / test
-
-`@bctrl/api-contracts` is the schema source of truth. OpenAPI and exact built-in Tool types are generated; resource clients remain hand-written. `pnpm run build` exports from `dist/`, not `src/`; `test:v1` (mock server), `test:v1:e2e` (gated by `BCTRL_E2E=1`), `typecheck`.
-
-## Gotchas
-
-- After editing api-contracts source, build it first or contract tests fail.
-- Tools and Conversations operate on active Runtimes; Runs are observability records, not automation targets.
-- `BCTRL_API_KEY` required; empty key throws early. BaseUrl auto-strips `/v1`.
+Current clients accept `token`, API-origin `baseUrl`, and `bctrlSpace` scope.
+Simple JSON operations flatten fields; some union requests have a `body` field.
+Read generated method signatures. Tools act on active Runtimes; Runs record
+observability. Preserve explicit-key write retry safety and scope boundaries.

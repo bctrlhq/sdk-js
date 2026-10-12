@@ -12,6 +12,7 @@ import { Headers } from "./Headers.js";
 import { makeRequest } from "./makeRequest.js";
 import { abortRawResponse, toRawResponse, unknownRawResponse } from "./RawResponse.js";
 import { redactUrl, SENSITIVE_QUERY_PARAMS } from "./redactUrl.js";
+import { mutationRetryLimit } from "./bctrlRetrySafety.js";
 import { requestWithRetries } from "./requestWithRetries.js";
 
 export type FetchFunction = <R = unknown>(args: Fetcher.Args) => Promise<APIResponse<R, Fetcher.Error>>;
@@ -193,7 +194,8 @@ export async function fetcherImpl<R = unknown>(args: Fetcher.Args): Promise<APIR
                     args.duplex,
                     args.responseType === "streaming" || args.responseType === "sse",
                 ),
-            args.maxRetries,
+            mutationRetryLimit(args.method, headers, args.maxRetries, requestBody),
+            args.abortSignal,
         );
 
         if (response.status >= 200 && response.status < 400) {

@@ -54,6 +54,7 @@ export const makeRequest = async (
     try {
         return await fetchFn(url, {
         method: method,
+        redirect: "error",
         headers,
         body: requestBody,
         signal: newSignals,

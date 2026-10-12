@@ -154,21 +154,21 @@ test('browser lifecycle keeps current Run connections and separates stop state f
   await client.browsers.get({ browserId: 'name / encoded', wait: 2 });
   await client.browsers.start({ browserId: 'br_1', "Idempotency-Key": 'start-1', spaceId: 'default' });
   await client.browsers.stop({ browserId: 'br_1', discardState: true, "Idempotency-Key": 'stop-1' });
-  await client.browsers.update({ browserId: 'br_1', recording: false });
+  await client.browsers.update({ browserId: 'br_1', recording: false, 'Idempotency-Key': 'update-1' });
   assert.equal((await client.browsers.runs.list({ browserId: 'br_1', include: 'usage', status: 'ended' })).data[0]?.id, browser.currentRun!.id);
   await client.browsers.connections.revoke({ browserId: 'br_1', "Idempotency-Key": 'revoke-1' });
-  await client.browsers.delete({ browserId: 'br_1' });
-  assert.ok(requests[4]?.key);
-  assert.ok(requests[7]?.key);
+  await client.browsers.delete({ browserId: 'br_1', 'Idempotency-Key': 'delete-1' });
+  assert.equal(requests[4]?.key, 'update-1');
+  assert.equal(requests[7]?.key, 'delete-1');
   assert.deepEqual(requests, [
     { method: 'POST', path: '/v1/browsers', body: { name: 'Browser', headless: true }, key: 'create-1' },
     { method: 'GET', path: '/v1/browsers/name%20%2F%20encoded?wait=2', body: null, key: null },
     { method: 'POST', path: '/v1/browsers/br_1/start?spaceId=default', body: {}, key: 'start-1' },
     { method: 'POST', path: '/v1/browsers/br_1/stop', body: { discardState: true }, key: 'stop-1' },
-    { method: 'PATCH', path: '/v1/browsers/br_1', body: { recording: false }, key: requests[4]!.key },
+    { method: 'PATCH', path: '/v1/browsers/br_1', body: { recording: false }, key: 'update-1' },
     { method: 'GET', path: '/v1/browsers/br_1/runs?status=ended&include=usage', body: null, key: null },
     { method: 'POST', path: '/v1/browsers/br_1/connections/revoke', body: {}, key: 'revoke-1' },
-    { method: 'DELETE', path: '/v1/browsers/br_1', body: null, key: requests[7]!.key },
+    { method: 'DELETE', path: '/v1/browsers/br_1', body: null, key: 'delete-1' },
   ]);
   if (false) {
     // @ts-expect-error profile flags are removed from browser creation

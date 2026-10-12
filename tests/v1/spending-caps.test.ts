@@ -13,9 +13,9 @@ test('generated account and Space cap transports preserve USD cents, zero and ex
     return Response.json(cap);
   } });
   assert.equal((await client.account.spendingCap.get()).usage.amount, 1.25);
-  await client.account.spendingCap.update({ body: { amount: 0, currency: 'USD' } });
+  await client.account.spendingCap.update({ body: { amount: 0, currency: 'USD' }, 'Idempotency-Key': 'organization-cap' });
   await client.spaces.spendingCap.get({ spaceId: 'team checkout' });
-  await client.spaces.spendingCap.update({ spaceId: 'team checkout', body: { amount: null, currency: 'USD' } });
+  await client.spaces.spendingCap.update({ spaceId: 'team checkout', body: { amount: null, currency: 'USD' }, 'Idempotency-Key': 'space-cap' });
   assert.deepEqual(calls.map(({ method, path, body }) => ({ method, path, body })), [
     { method: 'GET', path: '/v1/account/spending-cap', body: undefined },
     { method: 'PATCH', path: '/v1/account/spending-cap', body: { amount: 0, currency: 'USD' } },

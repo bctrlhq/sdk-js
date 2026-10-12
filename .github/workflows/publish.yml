@@ -24,6 +24,7 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
       - run: pnpm run typecheck
+      - run: pnpm exec tsc --noEmit -p tests/tsconfig.json
       - run: pnpm test
       - run: pnpm run build
       - run: npm pack --dry-run
