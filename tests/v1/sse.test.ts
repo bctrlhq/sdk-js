@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { Bctrl } from '../../src/index.js';
+import { Bctrl } from '../../src/legacy.js';
 
 test('conversation streams resume after a cursor and parse arbitrarily chunked SSE frames', async () => {
   const requested: string[] = [];

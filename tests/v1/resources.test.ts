@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { Bctrl } from '../../src/index.js';
+import { Bctrl } from '../../src/legacy.js';
 
 test('the SDK exposes only the canonical automation resources and routes', async () => {
   const requests: Array<{ method: string; path: string; body: unknown; headers: Headers }> = [];

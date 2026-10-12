@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { BctrlApiError } from '../../src/index.js';
+import { BctrlApiError } from '../../src/legacy.js';
 import { V1HttpClient } from '../../src/http.js';
 
 test('http retries only safe requests or idempotent unsafe requests', async () => {

@@ -9,7 +9,7 @@ import type {
   BuiltinToolInputMap,
   BuiltinToolOutputMap,
   SyncBuiltinToolName,
-} from './generated/tool-types.js';
+} from './generated/legacy-tool-types.js';
 import type {
   JsonObject,
   JsonValue,
