@@ -3,8 +3,5 @@
 import type * as Bctrl from "../index.js";
 
 export interface ResolvedBranding {
-    logo: string | null;
-    productName: string;
-    showPoweredBy: boolean;
     tokens: Bctrl.BrandingTokens;
 }

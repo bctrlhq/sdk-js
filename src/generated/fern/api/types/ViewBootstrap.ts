@@ -2,4 +2,26 @@
 
 import type * as Bctrl from "../index.js";
 
-export type ViewBootstrap = Bctrl.HostedViewBootstrap | Bctrl.EmbeddedViewBootstrap;
+export interface ViewBootstrap {
+    /** Exact sites allowed to embed this View in an iframe. Empty: no site may frame it. */
+    allowedOrigins: unknown[];
+    branding: Bctrl.ResolvedBranding;
+    components: Bctrl.ViewComponents;
+    control: boolean;
+    conversationSend?: boolean | undefined;
+    createdAt: Bctrl.Rfc3339Timestamp;
+    expiresAt: Bctrl.Rfc3339Timestamp;
+    /** Public view resource id. It is safe to expose in URLs and logs. */
+    id: string;
+    object: ViewBootstrap.Object_;
+    scope: Bctrl.ViewScope;
+    spaceName: string;
+    updatedAt: Bctrl.Rfc3339Timestamp;
+}
+
+export namespace ViewBootstrap {
+    export const Object_ = {
+        View: "view",
+    } as const;
+    export type Object_ = (typeof Object_)[keyof typeof Object_];
+}
