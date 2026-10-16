@@ -2,7 +2,4 @@
 
 export interface BrandingConfig {
     accent?: string | undefined;
-    logo?: string | undefined;
-    productName?: string | undefined;
-    showPoweredBy?: boolean | undefined;
 }

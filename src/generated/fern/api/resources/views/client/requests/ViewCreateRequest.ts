@@ -13,6 +13,8 @@ import type * as Bctrl from "../../../../index.js";
 export interface ViewCreateRequest {
     /** Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
     "Idempotency-Key"?: string;
+    /** Exact sites allowed to embed this View in an iframe. Empty: no site may frame it. */
+    allowedOrigins?: string[];
     /** Optional content and notification surfaces for the View. */
     components?: Bctrl.ViewComponentsInput;
     /** Allow live browser interaction and actions from the notification center. */
@@ -21,7 +23,5 @@ export interface ViewCreateRequest {
     conversationSend?: boolean;
     /** View lifetime in seconds. Defaults to 8 hours; maximum 30 days. */
     expiresInSeconds?: number;
-    /** Hosted presentation by default; use embedded with explicit allowed origins. */
-    presentation?: Bctrl.ViewPresentation;
     scope: Bctrl.ViewScopeInput;
 }

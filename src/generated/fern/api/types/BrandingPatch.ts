@@ -2,7 +2,4 @@
 
 export interface BrandingPatch {
     accent?: (string | null) | undefined;
-    logo?: (string | null) | undefined;
-    productName?: (string | null) | undefined;
-    showPoweredBy?: (boolean | null) | undefined;
 }
