@@ -1,4 +1,4 @@
-import type { WaitOptions } from './browserHelpers.js';
+import type { WaitOptions } from './browsers.js';
 
 /** Poll reads only; unknown is a terminal outcome. */
 export async function waitFor<T extends { status: string }>(read: () => Promise<T>, options: WaitOptions & { intervalMs?: number } = {}): Promise<T> {

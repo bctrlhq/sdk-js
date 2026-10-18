@@ -1,8 +1,8 @@
-import { BrowsersClient } from './generated/fern/api/resources/browsers/client/Client.js';
-import { EventsClient } from './generated/fern/api/resources/events/client/Client.js';
+import { BrowsersClient } from '../generated/fern/api/resources/browsers/client/Client.js';
+import { EventsClient } from '../generated/fern/api/resources/events/client/Client.js';
 import type { BrowserResource, BrowserCreateRequest, BrowserFetchStreamRequest, GetBrowsersRequest, ListEventsRequest,
-  StreamEventsRequest } from './generated/fern/api/index.js';
-import { HttpResponsePromise, type BinaryResponse } from './generated/fern/core/fetcher/index.js';
+  StreamEventsRequest } from '../generated/fern/api/index.js';
+import { HttpResponsePromise, type BinaryResponse } from '../generated/fern/core/fetcher/index.js';
 
 export type WaitOptions = { timeoutMs?: number; signal?: AbortSignal };
 export type PlaywrightConnector<T> = { chromium: { connectOverCDP: (url: string) => Promise<T> } };

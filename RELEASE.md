@@ -1,35 +1,12 @@
 # Release
 
-This package is intended to live at `bctrlhq/sdk-js` and publish `@bctrl/sdk`.
+`@bctrl/sdk` and the Python `bctrl` package release together under one version.
 
-## Manual Publish
+1. In the platform repo, set the version and regenerate both SDKs:
+   `node scripts/generate/fern-clients.mjs --release 3.1.0` (with `BCTRL_SDK_JS_DIR`, `BCTRL_SDK_PY_DIR` and
+   `BCTRL_CLI_DIR` pointing at checkouts of this repo, `sdk-py` and `cli`).
+2. Merge the resulting changes here and in `sdk-py` after CI passes.
+3. Publish a GitHub release tagged `v3.1.0` on the merge commit (`gh release create v3.1.0 --generate-notes`).
+   The Publish workflow verifies the tag against `package.json` and publishes to npm through trusted publishing.
 
-Publish from a local terminal with the `bctrlhq` npm account:
-
-```bash
-npm whoami
-npm publish --access public --provenance=false
-```
-
-Use `--provenance=false` for local publishes. Provenance is only available from supported CI providers. Complete npm's 2FA prompt when it appears.
-
-After npm publish succeeds, tag the exact commit and create a GitHub release:
-
-```bash
-git tag -a v1.0.10 -m "@bctrl/sdk v1.0.10"
-git push origin v1.0.10
-gh release create v1.0.10 --title "@bctrl/sdk v1.0.10" --notes "Published @bctrl/sdk v1.0.10."
-```
-
-The GitHub Actions release workflow is a verification gate only. It does not publish to npm.
-
-## Contract Sync
-
-Public OpenAPI types are generated from the private platform repo:
-
-```bash
-cd ../bctrl
-pnpm generate:sdk-contracts
-```
-
-Commit the generated `src/generated/openapi-types.ts` change in this repo.
+npm trusted publishing must name this repository, the `publish.yml` workflow and the `npm` environment.

@@ -6,13 +6,8 @@ second product model.
 ## Source Of Truth
 
 - The public HTTP contract is the source of truth for SDK request and response
-  types.
-- Short term: keep TypeScript `sdk/src/types.ts` synchronized against
-  `packages/api-contracts` with compile-time contract tests. Keep Python route
-  methods covered by local HTTP contract tests.
-- Long term: generate SDK types from `openapi/public-openapi.json` into a
-  generated file, then hand-write only transport, resources, and small
-  ergonomic helpers.
+  types: Fern generates both SDKs from `openapi/public-openapi.json`.
+- Hand-write only small ergonomic helpers (`src/lib`, `bctrl/lib`).
 
 ## Public Shape
 

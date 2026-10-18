@@ -119,6 +119,8 @@ export const PublicErrorCode = {
     BrowserIdentityMissing: "browser.identity_missing",
     BrowserConfigurationMissing: "browser.configuration_missing",
     BrowserStartTimeout: "browser.start_timeout",
+    BrowserStartFailed: "browser.start_failed",
+    BrowserProxyUnavailable: "browser.proxy_unavailable",
     BrowserStopPending: "browser.stop_pending",
     CapabilitiesInvalidOverrideValue: "capabilities.invalid_override_value",
     CapabilitiesOrganizationNotFound: "capabilities.organization_not_found",

@@ -1,8 +1,8 @@
 {
   "inputs": {
     "cli": "5.46.1",
-    "version": "2.0.0",
-    "spec": "e209045aa72306a7e774754e1deb5d0e2fdf0efe5f5ccb71535b36026efe7bec",
+    "version": "3.0.0",
+    "spec": "3352a65fe25f610e94add083a58876563fb43956f07b2aca9b77cd9e91e8ac98",
     "config": "6b01ef99281d7534f99f504059b56fc97d2730e578af600ff07ce676f2312ba1",
     "adapter": "987b2e03d3c0a4ed4355a7814267fb2bf2c57374479e4ff2bf3d99e5ee369abc"
   },
@@ -666,7 +666,7 @@
     "api/types/BrowserFileListResult.ts": "46780e8fe8886b93e60585cfe5490a4099ec3d4fce157b796e301027b6ee4432",
     "api/types/BrowserFileMoveResult.ts": "f415df16bfbee3af65df7f5a3a391b7e5dca95319923a46efc34e96a89e5d0ea",
     "api/types/BrowserFileUploadResult.ts": "7d9835856c89eae27b3dafcd94bfcdc9f85b0754488f3ebb5b7a300a5195f92f",
-    "api/types/BrowserInlineCustomProxyConnectionInput.ts": "04a92c37f2f6098f9f559ef3845ce7475cac07421bc60d1624e9f8666e27844d",
+    "api/types/BrowserInlineCustomProxyConnectionInput.ts": "be7768b9b8a985716638458bf36059aebdc86bec0f383abae3f737bfa4328b0b",
     "api/types/BrowserInlineCustomProxyUrlInput.ts": "68ce45fb1fdb6cfae9d30b8729067d955c7415798832d744f31823c4255c2ef3",
     "api/types/BrowserInlineManagedRotatingDefaultProxyInput.ts": "52462fc8f984806e522ee69789cf0370b91fc2def0fd241e4a45fef93432987f",
     "api/types/BrowserInlineManagedRotatingProxyInput.ts": "1fe388ac50be279cee6881ab3abc6349778d03afbbd9032a0bd2bf8cc6e2bd7b",
@@ -804,7 +804,7 @@
     "api/types/Proxy.ts": "dfc5817fb00da667d64e48bebbc3147b6dc99ad29a07c8242dea7878943f7b39",
     "api/types/ProxyCreateRequest.ts": "df195309c6a8346ca5a9e7281b8435f8360ba214ceceb23c834471d01c6b7c4a",
     "api/types/ProxyCustom.ts": "2af3fcb3db1e62d140bff3f5918f4698e96b4aee1f7bfb7523f765749d0fe75d",
-    "api/types/ProxyCustomCreateRequest.ts": "0c432ab85e57b4859340a048afeeaba592a270c121438d6828010821939f9b49",
+    "api/types/ProxyCustomCreateRequest.ts": "0ba62b0d4750c540e8646448a6e0ef9c7705b6883585821f84bb082bde873036",
     "api/types/ProxyDeleteResponse.ts": "bcd1fd2befae6f20a9e2893dd803fe8a16f606daa626d61bffcaaa98927ef486",
     "api/types/ProxyListResponse.ts": "dd5f444c22d825c4235a0ad386cf8621c7b248b437c117f487a8a7ca752ded79",
     "api/types/ProxyLocation.ts": "5e2eb52f92a84e16ddd379f898e5b797f9b0af1aa1c4a27bd14a932e4e95cf54",
@@ -815,7 +815,7 @@
     "api/types/ProxyPool.ts": "c62ae25f901ca48f7eb91fbf69c65edbb37305013007d099190bac594d4e7174",
     "api/types/ProxyPoolListResponse.ts": "01f9db509a9fcb0b921744d58ce4b084520123ed3ba76e11c1bf063e7f6cd47c",
     "api/types/ProxyTestResponse.ts": "02d51d5a63a91a534e0d4730ade7860d15a823e32cf667dffc911ccca47c62c3",
-    "api/types/PublicErrorCode.ts": "0c210d55f233680a037e31ae9a2b91caecddc9024685901bca656a947de14573",
+    "api/types/PublicErrorCode.ts": "c8d805337b65622f8a76b24adc15570e2ccf3a331de5275609221af6d36be212",
     "api/types/ReadClipboardRequestSpaceId.ts": "1d4307657952ff40c947ef137368a1eb605903ed4f9aa71bf68602419b6e11c9",
     "api/types/Recording.ts": "562eca24242501bd078e4deabd849b662c9a4f53a09575e435b2d2f7ed54fc2e",
     "api/types/RecordingsList.ts": "893cb7d30284af5aa3bc34d567d26fb62993aa307ec532618a5160e26122cd4f",

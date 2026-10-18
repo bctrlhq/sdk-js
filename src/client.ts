@@ -1,14 +1,9 @@
 import { BctrlClient } from './generated/fern/Client.js';
-import type { BaseClientOptions } from './generated/fern/BaseClient.js';
-import { Browsers } from './browserHelpers.js';
-import { Conversations } from './conversationHelpers.js';
-import { safeFetcher } from './retries.js';
+import { Browsers } from './lib/browsers.js';
+import { Conversations } from './lib/conversations.js';
 
+/** The generated client, with browser and conversation helpers on their resources. */
 export class Bctrl extends BctrlClient {
-  constructor(options: BaseClientOptions) {
-    super({ ...options, fetcher: safeFetcher(options.fetcher) });
-  }
-
   override get browsers(): Browsers {
     return (this._browsers ??= new Browsers(this._options)) as Browsers;
   }
