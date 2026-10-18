@@ -1,6 +1,6 @@
-import { ConversationsClient } from './generated/fern/api/resources/conversations/client/Client.js';
-import { EventsClient } from './generated/fern/api/resources/events/client/Client.js';
-import type { ListEventsRequest } from './generated/fern/api/index.js';
+import { ConversationsClient } from '../generated/fern/api/resources/conversations/client/Client.js';
+import { EventsClient } from '../generated/fern/api/resources/events/client/Client.js';
+import type { ListEventsRequest } from '../generated/fern/api/index.js';
 
 export class Conversations extends ConversationsClient {
   /** A Conversation's history: the one Event log filtered by `conversation`, oldest first unless `order` says otherwise. */

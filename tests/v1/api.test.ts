@@ -2,10 +2,8 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import test from 'node:test';
 import { Bctrl, BctrlError } from '../../src/index.js';
-import { Bctrl as ApiBctrl } from '../../src/api.js';
 
 test('current API sends scoped authenticated requests and follows pagination', async () => {
-  assert.equal(Bctrl, ApiBctrl);
   const requests: { path: string; headers: Record<string, string | string[] | undefined> }[] = [];
   const server = createServer((req, res) => {
     requests.push({ path: req.url!, headers: req.headers });

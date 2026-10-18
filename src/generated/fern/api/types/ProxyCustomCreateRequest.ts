@@ -9,6 +9,7 @@ export interface ProxyCustomCreateRequest {
     /** The proxy password, or a secret reference such as `secret:proxies/office#password`. */
     password?: string | undefined;
     port?: number | undefined;
+    /** Defaults to socks5, also for a url without a scheme. */
     protocol?: ProxyCustomCreateRequest.Protocol | undefined;
     udpMode?: ProxyCustomCreateRequest.UdpMode | undefined;
     url?: string | undefined;
@@ -21,6 +22,7 @@ export namespace ProxyCustomCreateRequest {
         Proxy: "proxy",
     } as const;
     export type DnsResolution = (typeof DnsResolution)[keyof typeof DnsResolution];
+    /** Defaults to socks5, also for a url without a scheme. */
     export const Protocol = {
         Http: "http",
         Socks5: "socks5",

@@ -5,7 +5,8 @@ export interface BrowserInlineCustomProxyConnectionInput {
     host: string;
     password?: string | undefined;
     port: number;
-    protocol: BrowserInlineCustomProxyConnectionInput.Protocol;
+    /** Defaults to socks5. */
+    protocol?: BrowserInlineCustomProxyConnectionInput.Protocol | undefined;
     type?: BrowserInlineCustomProxyConnectionInput.Type | undefined;
     udpMode?: BrowserInlineCustomProxyConnectionInput.UdpMode | undefined;
     username?: string | undefined;
@@ -17,6 +18,7 @@ export namespace BrowserInlineCustomProxyConnectionInput {
         Proxy: "proxy",
     } as const;
     export type DnsResolution = (typeof DnsResolution)[keyof typeof DnsResolution];
+    /** Defaults to socks5. */
     export const Protocol = {
         Http: "http",
         Socks5: "socks5",

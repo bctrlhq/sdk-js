@@ -42,8 +42,9 @@ const download = await client.browsers.files.download({
 
 Clients support async pagination, streaming, binary downloads, multipart uploads,
 AbortSignal, and request-specific options. `@bctrl/sdk/node` provides
-`createCodeToolFromFile` for the current client. Current model types are exported
-under `types`; `@bctrl/sdk/api` remains an alias for the current API entrypoint.
+`createCodeToolFromFile` for the current client. Model types are exported
+under `Api`. The package ships ES modules and CommonJS, so both `import` and
+`require` work.
 
 Requests pin `BCTRL-Version: 2026-10-03`. Use `bctrlSpace` and `bctrlSubaccountId`
 for authorized scope selectors. Custom `baseUrl` values identify the API origin,
@@ -61,6 +62,9 @@ The default `Bctrl` import now uses the current generated client. Replace
 to Browsers/Sandboxes and Agents/Tasks. JSON requests may wrap fields in `body`;
 the generated TypeScript signatures and API reference show each operation's shape.
 
-Historical helper types remain under `@bctrl/sdk/legacy` and
-`@bctrl/sdk/legacy/node` for callers targeting an older API. Their retired routes
-are not supported by the current production API.
+## Migrating to 3.0
+
+The `@bctrl/sdk/legacy`, `@bctrl/sdk/legacy/node` and `@bctrl/sdk/api` entry points
+are removed; import everything from `@bctrl/sdk`. Model types moved from `types` to
+`Api`. `toOutputSchema` takes a JSON Schema object or any Standard JSON Schema
+(Zod 4.2+, ArkType, Valibot); the SDK no longer depends on Zod.
